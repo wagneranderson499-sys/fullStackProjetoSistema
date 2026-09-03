@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceControl Pro - Gráficos</title>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-slate-900 text-slate-50 font-sans antialiased min-h-screen">
+ <div class="flex min-h-screen w-full">
+<aside class="w-64 min-w-[256px] bg-slate-800 border-r border-slate-700 flex flex-col p-6 h-screen sticky top-0">   
+<div class="flex items-center gap-3 mb-8">
+<div class="flex items-center justify-center w-10 h-10 bg-sky-500/10 p-2 rounded-lg">
+  <img src="logo.png" alt="Logo" class="w-full h-full object-contain">
+ </div>
+<div>
+       <h2 class="text-lg font-bold leading-tight">Finance<span class="text-sky-400">Contol</span></h2>
+    <span class="text-xs text-slate-400">Controle Financeiro</span>
+    </div>
+</div>
+ <nav class="flex flex-col gap-2 flex-1">
+                <a href="index.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-700/50 hover:text-slate-50 rounded-xl font-medium transition">
+                    
+                    <span>Meu Painel</span>
+                </a>
+                 <a href="grafico.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-700/50 hover:text-slate-50 rounded-xl font-medium transition">
+        <span>Gráficos e Relatórios</span>
+    </a>
+            </nav>
+
+            <div class="border-t border-slate-700 pt-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-sky-400 text-slate-900 font-bold rounded-full flex items-center justify-center">
+                        AW
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-semibold">Anderson Wagner</span>
+                        <span class="text-xs text-slate-400">Conta Pessoal</span>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+   
+        <main class="flex-1 bg-slate-900 p-8 flex flex-col gap-8 overflow-y-auto">
+            
+        
+            <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-50">Análise de Gastos</h1>
+                    <p class="text-sm text-slate-400 mt-1">Veja em quais categorias você mais gastou no mês selecionado.</p>
+                </div>
+
+              
+                <div class="flex items-center gap-3 bg-slate-800 border border-slate-700 p-2 rounded-xl">
+                    <label for="selectMes" class="text-xs text-slate-400 pl-2 font-medium">Mês:</label>
+                    <select id="selectMes" class="bg-slate-900 text-slate-50 text-sm rounded-lg px-3 py-1.5 border border-slate-700 focus:outline-none focus:border-sky-400 transition">
+                        <option value="2026-09" selected>Setembro / 2026</option>
+                        <option value="2026-08">Agosto / 2026</option>
+                        <option value="2026-07">Julho / 2026</option>
+                    </select>
+                </div>
+            </header>
+
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+               
+                <div class="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col items-center">
+                    <h3 class="text-base font-semibold text-slate-50 self-start mb-6">Distribuição de Gastos por Categoria</h3>
+                    <div class="w-full max-w-md h-80 flex justify-center items-center">
+                        <canvas id="expensesChart"></canvas>
+                    </div>
+                </div>
+
+            
+                <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-semibold text-slate-50 mb-4">Destaques do Mês</h3>
+                        
+                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 mb-4">
+                            <span class="text-xs text-slate-400">Maior Categoria de Gasto</span>
+                            <h4 class="text-lg font-bold text-sky-400 mt-1" id="topCategory">Contas Fixas</h4>
+                            <span class="text-sm text-slate-300 font-semibold" id="topCategoryAmount">R$ 1.250,00</span>
+                        </div>
+
+                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4">
+                            <span class="text-xs text-slate-400">Total Gastos no Mês</span>
+                            <h4 class="text-xl font-bold text-rose-500 mt-1" id="monthTotal">R$ 1.845,00</h4>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-700 text-xs text-slate-400">
+                        Dica: Tente manter seus gastos do dia a dia abaixo de 30% do seu saldo disponível.
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script>
+        const ctx = document.getElementById('expensesChart').getContext('2d');
+        
+
+        const expensesChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Gastos Dia a Dia', 'Contas Fixas Mensais', 'Emergência / Imprevisto'],
+                datasets: [{
+                    data: [420.00, 1250.00, 175.00], 
+                    backgroundColor: [
+                        '#38bdf8',
+                        '#fbbf24', 
+                        '#f87171'  
+                    ],
+                    borderColor: '#1e293b',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#94a3b8',
+                            font: {
+                                family: 'Inter',
+                                size: 13
+                            },
+                            padding: 20
+                        }
+                    }
+                }
+            }
+        });
+
+       
+    </script>
+
+</body>
+</html>
