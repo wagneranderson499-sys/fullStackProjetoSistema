@@ -4,51 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinanceControl Pro</title>
-    
-<link rel="preconnect" href="https://fonts.googleapis.com">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-   
+  
     <script>
- tailwind.config = {
-  theme: {
-    extend: {
-     fontFamily: {
-   sans: ['Inter', 'sans-serif'],
-                             }
-  }
-}            
-  }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
     </script>
 </head>
 <body class="bg-slate-900 text-slate-50 font-sans antialiased min-h-screen">
-
-    
-    <div class="flex min-h-screen w-full">
-
-       
-<aside class="w-65 min-w-[260px] bg-slate-800 border-r border-slate-700 flex flex-col p-6 h-screen sticky top-0">
- <div class="flex items-center gap-3 mb-8">
- <div class="flex items-center justify-center w-10 h-10 bg-sky-500/10 p-2 rounded-lg">
-  <img src="logo.png" alt="Logo" class="w-full h-full object-contain">
-</div>
- <div>
+<div class="flex min-h-screen w-full">
+<aside class="w-64 min-w-[256px] bg-slate-800 border-r border-slate-700 flex flex-col p-6 h-screen sticky top-0">
+            
+            <div class="flex items-center gap-3 mb-8">
+                <div class="flex items-center justify-center w-10 h-10 bg-sky-500/10 p-2 rounded-lg">
+                    <img src="logo.png" alt="Logo" class="w-full h-full object-contain">
+                </div>
+                <div>
                     <h2 class="text-lg font-bold leading-tight">Finance<span class="text-sky-400">Control</span></h2>
-                    
+                    <span class="text-xs text-slate-400">Controle Financeiro</span>
                 </div>
             </div>
             <nav class="flex flex-col gap-2 flex-1">
                 <a href="index.html" class="flex items-center gap-3 px-4 py-3 bg-slate-700 text-slate-50 rounded-xl font-medium transition">
-                
+                    
                     <span>Meu Painel</span>
                 </a>
             </nav>
-
             <div class="border-t border-slate-700 pt-4">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-sky-400 text-slate-900 font-bold rounded-full flex items-center justify-center">
@@ -63,7 +59,134 @@
 
         </aside>
 
-        <main class="flex-1 bg-slate-900 p-8">
+        <main class="flex-1 bg-slate-900 p-8 flex flex-col gap-8 overflow-y-auto">
+            <header>
+                <h1 class="text-2xl font-bold text-slate-50">Controle de Gastos</h1>
+                <p class="text-sm text-slate-400 mt-1">Gerencie seu saldo, contas fixas e compras do dia a dia de forma rápida.</p>
+            </header>
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col justify-between gap-4">
+                    <h3 class="text-sm font-medium text-slate-400 flex items-center gap-2">
+                       
+                        Definir / Atualizar Saldo Total
+                    </h3>
+                    <div class="flex gap-3">
+                        <input 
+                            type="number" 
+                            id="inputSaldo" 
+                            placeholder="Ex: 2500.00" 
+                            step="0.01"
+                            class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:border-sky-400 transition"
+                        >
+                        <button 
+                            id="btnSalvarSaldo" 
+                            class="bg-sky-400 hover:bg-sky-500 text-slate-900 font-semibold px-4 py-2.5 rounded-lg text-sm transition"
+                        >
+                            Atualizar
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col justify-between">
+                    <span class="text-sm font-medium text-slate-400">Saldo Livre Disponível</span>
+                    <span class="text-2xl font-bold text-sky-400 mt-2" id="totalBalance">R$ 0,00</span>
+                </div>
+                <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col justify-between">
+                    <span class="text-sm font-medium text-slate-400">Total de Gastos</span>
+                    <span class="text-2xl font-bold text-rose-500 mt-2" id="totalExpenses">R$ 0,00</span>
+                </div>
+
+            </section>
+            <section class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+                <h3 class="text-base font-semibold text-slate-50 mb-4"> Cadastrar Nova Despesa</h3>
+                
+                <form id="expenseForm" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    <div class="flex flex-col gap-2">
+                        <label for="desc" class="text-xs text-slate-400">Nome / Descrição</label>
+                        <input 
+                            type="text" 
+                            id="desc" 
+                            placeholder="Ex: Uber, Feira, Net..." 
+                            required 
+                            class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:border-sky-400 transition"
+                        >
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="amount" class="text-xs text-slate-400">Valor (R$)</label>
+                        <input 
+                            type="number" 
+                            id="amount" 
+                            step="0.01" 
+                            placeholder="0.00" 
+                            required 
+                            class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:border-sky-400 transition"
+                        >
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="category" class="text-xs text-slate-400">Tipo de Gasto</label>
+                        <select 
+                            id="category" 
+                            required 
+                            class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-50 focus:outline-none focus:border-sky-400 transition"
+                        >
+                            <option value="dia_a_dia">Gastos do Dia a Dia</option>
+                            <option value="fixo">Contas Fixas Mensais</option>
+                            <option value="emergencia">Emergência / Imprevisto</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <button 
+                            type="submit" 
+                            class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-4 py-2.5 rounded-lg text-sm transition"
+                        >
+                            Adicionar Gasto
+                        </button>
+                    </div>
+                </form>
+            </section>
+            <section class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <h2 class="text-lg font-semibold text-slate-50">Lista de Compras e Gastos</h2>
+                    <span class="bg-slate-700 text-slate-400 text-xs px-2.5 py-1 rounded-full" id="expenseCount">1 item</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-700 text-slate-400 font-medium">
+                                <th class="py-3 px-4">Descrição</th>
+                                <th class="py-3 px-4">Tipo</th>
+                                <th class="py-3 px-4 text-right">Valor</th>
+                                <th class="py-3 px-4 text-center w-32">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenseListBody" class="divide-y divide-slate-700/50">
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="py-3.5 px-4 font-medium text-slate-200">Uber para o trabalho</td>
+                                <td class="py-3.5 px-4">
+                                    <span class="bg-sky-500/10 text-sky-400 text-xs px-2.5 py-1 rounded-full font-medium">
+                                        Dia a Dia
+                                    </span>
+                                </td>
+                                <td class="py-3.5 px-4 text-right text-rose-500 font-semibold">- R$ 25,00</td>
+                                <td class="py-3.5 px-4 text-center">
+                                  <div class="flex justify-center gap-2">
+    <button class="p-1.5 hover:bg-slate-700 rounded transition" title="Editar">
+        <img src="text_edit_14943.png" alt="Editar" class="w-5 h-5 object-contain">
+    </button>
+
+    <button class="p-1.5 hover:bg-slate-700 rounded transition" title="Excluir">
+        <img src="trashcan-icon_34337.png" alt="Excluir" class="w-5 h-5 object-contain">
+    </button>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
         </main>
 
