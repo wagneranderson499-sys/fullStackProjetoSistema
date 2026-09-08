@@ -3,125 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinanceControl Pro - Gráficos</title>
-
-
+    <title>FinanceControl - Relatórios</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <script src="https://cdn.tailwindcss.com"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                 },
             },
         }
     </script>
+    <script src="script.js" defer></script>
 </head>
-<body class="bg-slate-900 text-slate-50 font-sans antialiased min-h-screen">
- <div class="flex min-h-screen w-full">
-<aside class="w-64 min-w-[256px] bg-slate-800 border-r border-slate-700 flex flex-col p-6 h-screen sticky top-0">   
-<div class="flex items-center gap-3 mb-8">
-<div class="flex items-center justify-center w-10 h-10 bg-sky-500/10 p-2 rounded-lg">
-  <img src="logo.png" alt="Logo" class="w-full h-full object-contain">
- </div>
-<div>
-       <h2 class="text-lg font-bold leading-tight">Finance<span class="text-sky-400">Contol</span></h2>
-    <span class="text-xs text-slate-400">Controle Financeiro</span>
-    </div>
-</div>
- <nav class="flex flex-col gap-2 flex-1">
-                <a href="index.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-700/50 hover:text-slate-50 rounded-xl font-medium transition">
-                    
-                    <span>Meu Painel</span>
-                </a>
-                 <a href="grafico.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-700/50 hover:text-slate-50 rounded-xl font-medium transition">
-        <span>Gráficos e Relatórios</span>
-    </a>
-            </nav>
-
-            <div class="border-t border-slate-700 pt-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-sky-400 text-slate-900 font-bold rounded-full flex items-center justify-center">
-                        AW
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-sm font-semibold">Anderson Wagner</span>
-                        <span class="text-xs text-slate-400">Conta Pessoal</span>
-                    </div>
+<body class="bg-zinc-950 text-zinc-100 font-sans antialiased min-h-screen">
+    <div class="flex min-h-screen w-full">
+        
+    
+        
+        <aside class="w-64 min-w-[256px] bg-zinc-900 border-r border-zinc-800/80 flex flex-col p-6 h-screen sticky top-0">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="flex items-center justify-center w-10 h-10 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                    <img src="logo.png" alt="Logo" class="w-6 h-6 object-contain">
+                </div>
+                <div>
+                    <h2 class="text-base font-bold tracking-wide">Finance<span class="text-emerald-500">Control</span></h2>
+                    <span class="text-[11px] text-zinc-400 uppercase tracking-wider font-semibold">Gestão Pessoal</span>
                 </div>
             </div>
 
+    
+
+<nav class="flex flex-col gap-1.5 flex-1">
+    <a href="index.html" class="flex items-center gap-3 px-3.5 py-2.5 text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200 rounded-lg text-sm font-medium transition">
+        <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 00-1 1m-6 0h6"></path></svg>
+        <span>Painel Geral</span>
+    </a>
+    
+    <a href="grafico.html" class="flex items-center gap-3 px-3.5 py-2.5 bg-zinc-800/80 text-zinc-100 rounded-lg text-sm font-medium transition border border-zinc-700/50">
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        <span>Gráfico</span>
+    </a>
+</nav>
+
+            <div class="border-t border-zinc-800/80 pt-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-zinc-800 text-emerald-400 border border-zinc-700/60 font-semibold text-xs rounded-lg flex items-center justify-center">
+                        AW
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xs font-semibold text-zinc-200">Anderson Wagner</span>
+                        <span class="text-[11px] text-zinc-500">Conta Ativa</span>
+                    </div>
+                </div>
+            </div>
         </aside>
 
-   
-        <main class="flex-1 bg-slate-900 p-8 flex flex-col gap-8 overflow-y-auto">
-            
-        
-            <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 class="text-2xl font-bold text-slate-50">Análise de Gastos</h1>
-                    <p class="text-sm text-slate-400 mt-1">Veja em quais categorias você mais gastou no mês selecionado.</p>
-                </div>
 
-              
-                <div class="flex items-center gap-3 bg-slate-800 border border-slate-700 p-2 rounded-xl">
-                    <label for="selectMes" class="text-xs text-slate-400 pl-2 font-medium">Mês:</label>
-                    <select id="selectMes" class="bg-slate-900 text-slate-50 text-sm rounded-lg px-3 py-1.5 border border-slate-700 focus:outline-none focus:border-sky-400 transition">
-                        <option value="2026-09" selected>Setembro / 2026</option>
-                        <option value="2026-08">Agosto / 2026</option>
-                        <option value="2026-07">Julho / 2026</option>
-                    </select>
+
+        <main class="flex-1 bg-zinc-950 p-8 flex flex-col gap-6 overflow-y-auto">
+            <header class="flex items-center justify-between border-b border-zinc-800/60 pb-5">
+                <div>
+                    <h1 class="text-xl font-bold text-zinc-100">Relatório e Análise de Gastos</h1>
+                    <p class="text-xs text-zinc-400 mt-1">Visualize a distribuição dos seus gastos por categoria.</p>
                 </div>
             </header>
 
-            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
-               
-                <div class="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col items-center">
-                    <h3 class="text-base font-semibold text-slate-50 self-start mb-6">Distribuição de Gastos por Categoria</h3>
-                    <div class="w-full max-w-md h-80 flex justify-center items-center">
-                        <canvas id="expensesChart"></canvas>
-                    </div>
+
+
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="bg-zinc-900 border border-zinc-800/80 rounded-xl p-5">
+                    <span class="text-xs font-semibold text-zinc-400 tracking-wider uppercase">Maior Categoria de Gasto</span>
+                    <h2 class="text-2xl font-bold text-zinc-100 mt-2" id="topCategory">--</h2>
+                    <span class="text-xs text-zinc-500 mt-1 block" id="topCategoryAmount">R$ 0,00</span>
                 </div>
 
-            
-                <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-base font-semibold text-slate-50 mb-4">Destaques do Mês</h3>
-                        
-                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 mb-4">
-                            <span class="text-xs text-slate-400">Maior Categoria de Gasto</span>
-                            <h4 class="text-lg font-bold text-sky-400 mt-1" id="topCategory">Contas Fixas</h4>
-                            <span class="text-sm text-slate-300 font-semibold" id="topCategoryAmount">R$ 1.250,00</span>
-                        </div>
-
-                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4">
-                            <span class="text-xs text-slate-400">Total Gastos no Mês</span>
-                            <h4 class="text-xl font-bold text-rose-500 mt-1" id="monthTotal">R$ 1.845,00</h4>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 pt-4 border-t border-slate-700 text-xs text-slate-400">
-                        Dica: Tente manter seus gastos do dia a dia abaixo de 30% do seu saldo disponível.
-                    </div>
+                <div class="bg-zinc-900 border border-zinc-800/80 rounded-xl p-5">
+                    <span class="text-xs font-semibold text-zinc-400 tracking-wider uppercase">Total de Gastos no Período</span>
+                    <h2 class="text-2xl font-bold text-rose-400 mt-2" id="monthTotal">R$ 0,00</h2>
                 </div>
-
             </section>
 
+
+
+            <section class="bg-zinc-900 border border-zinc-800/80 rounded-xl p-6 flex flex-col items-center">
+                <h3 class="text-sm font-semibold text-zinc-200 mb-6 self-start">Distribuição por Categoria</h3>
+                <div class="w-full max-w-md h-80 relative">
+                    <canvas id="expensesChart"></canvas>
+                </div>
+            </section>
         </main>
-
     </div>
-
-    <script src="script.js">
- 
-    </script>
-
 </body>
 </html>
