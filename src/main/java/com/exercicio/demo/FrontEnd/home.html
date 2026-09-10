@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceControl Pro - Controle Financeiro Simples e Eficiente</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-zinc-950">
+
+
+
+    <header class="w-full border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md fixed top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="flex items-center justify-center w-9 h-9 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                    <img src="logo.png" alt="Logo" class="w-5 h-5 object-contain">
+                </div>
+                <span class="text-base font-bold tracking-wide">Finance<span class="text-emerald-500">Control</span></span>
+            </div>
+
+            <nav class="flex items-center gap-4">
+                <a href="telaLogin.html" class="text-xs font-medium text-zinc-400 hover:text-zinc-100 transition px-3 py-2">
+                    Entrar
+                </a>
+                <a href="cadastro.html" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs px-4 py-2 rounded-lg transition shadow-lg shadow-emerald-950">
+                    Criar Conta
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    
+
+    <main class="flex-1 max-w-5xl mx-auto px-6 pt-32 pb-16 flex flex-col items-center text-center justify-center">
+        
+    
+        <div class="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full mb-6">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-xs font-medium text-zinc-300">Gestão financeira pessoal descomplicada</span>
+        </div>
+
+  
+        <h1 class="text-3xl md:text-5xl font-bold text-zinc-100 tracking-tight leading-tight max-w-3xl">
+            Assuma o controle total das suas finanças com clareza e precisão
+        </h1>
+
+        <p class="text-sm md:text-base text-zinc-400 mt-4 max-w-2xl leading-relaxed">
+            Organize suas contas fixas, acompanhe gastos diários e visualize relatórios dinâmicos em um painel moderno, limpo e livre de distrações.
+        </p>
+
+       
+
+
+        <div class="flex flex-col sm:flex-row gap-3 mt-8 w-full sm:w-auto">
+            <a href="cadastro.html" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-3 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xl shadow-emerald-950">
+                Começar Agora
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+            <a href="telaLogin.html" class="bg-zinc-900 hover:bg-zinc-800/80 border border-zinc-800 text-zinc-300 font-medium px-6 py-3 rounded-xl text-sm transition flex items-center justify-center">
+                Já tenho uma conta
+            </a>
+        </div>
+
+     
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 text-left w-full">
+            <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-6">
+                <div class="w-10 h-10 bg-zinc-800 border border-zinc-700/60 text-emerald-400 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h3 class="text-sm font-semibold text-zinc-100 mb-1">Painel Dinâmico</h3>
+                <p class="text-xs text-zinc-400 leading-relaxed">Acompanhe seu saldo livre disponível e o total de gastos atualizado em tempo real.</p>
+            </div>
+
+            <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-6">
+                <div class="w-10 h-10 bg-zinc-800 border border-zinc-700/60 text-emerald-400 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 11h.01M7 15h.01M11 7h8M11 11h8M11 15h8"></path></svg>
+                </div>
+                <h3 class="text-sm font-semibold text-zinc-100 mb-1">Categorização Clara</h3>
+                <p class="text-xs text-zinc-400 leading-relaxed">Classifique cada transação entre contas fixas, despesas do dia a dia ou imprevistos.</p>
+            </div>
+
+            <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-6">
+                <div class="w-10 h-10 bg-zinc-800 border border-zinc-700/60 text-emerald-400 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path></svg>
+                </div>
+                <h3 class="text-sm font-semibold text-zinc-100 mb-1">Relatórios Visuais</h3>
+                <p class="text-xs text-zinc-400 leading-relaxed">Entenda para onde vai o seu dinheiro com gráficos de rosca práticos e objetivos.</p>
+            </div>
+        </div>
+    </main>
+
+
+
+    <footer class="w-full border-t border-zinc-800/80 py-6 text-center text-xs text-zinc-500">
+        <p>© FinanceControl Pro. Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+</html>
