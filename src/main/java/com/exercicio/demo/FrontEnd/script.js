@@ -1,6 +1,7 @@
 
-// gerenciamento e armazenamneto de dados
+// gerenciamento e armazenamento de dados
 
+const API_BASE_URL = 'http://localhost:8080/api/auth';
 
 const defaultCategories = [
     { slug: 'dia_a_dia', name: 'Despesas Diárias' },
@@ -9,9 +10,7 @@ const defaultCategories = [
 ];
 
 /**
- * Gera um Hash SHA-256 para a senha utilizando a Web Crypto API nativa do navegador
- @param {string} password 
- @returns {Promise<string>} 
+ * Gera um Hash SHA-256 para uso em validações locais
  */
 async function hashPassword(password) {
     const encoder = new TextEncoder();
@@ -21,17 +20,17 @@ async function hashPassword(password) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Obter saldo inicial/total salvo
+
 function getStoredSaldo() {
     return parseFloat(localStorage.getItem('saldoTotal')) || 0;
 }
 
-// Salvar saldo inicial/total
+
 function setStoredSaldo(valor) {
     localStorage.setItem('saldoTotal', valor);
 }
 
-// Obter lançamentos/despesas salvos
+
 function getStoredExpenses() {
     try {
         return JSON.parse(localStorage.getItem('despesasList')) || [];
@@ -40,12 +39,12 @@ function getStoredExpenses() {
     }
 }
 
-// Salvar lançamentos/despesas
+
 function setStoredExpenses(expenses) {
     localStorage.setItem('despesasList', JSON.stringify(expenses));
 }
 
-// Obter categorias salvas
+
 function getStoredCategories() {
     try {
         return JSON.parse(localStorage.getItem('customCategories')) || defaultCategories;
@@ -54,17 +53,16 @@ function getStoredCategories() {
     }
 }
 
-// Salvar categorias
+
 function setStoredCategories(categories) {
     localStorage.setItem('customCategories', JSON.stringify(categories));
 }
 
-// Formatador Monetário (BRL)
 function formatarMoeda(valor) {
     return Number(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-// Escape de HTML para segurança
+
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
@@ -72,10 +70,9 @@ function escapeHtml(text) {
 }
 
 
-// 2.registro
+// spring boot api e codigo
 
 
-// Cadastro
 const registerForm = document.getElementById('registerForm');
 if (registerForm) {
     registerForm.addEventListener('submit', async function (e) {
@@ -95,28 +92,47 @@ if (registerForm) {
             return;
         }
 
-        const codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
+        try {
+            const response = await fetch(`${API_BASE_URL}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nome: name,
+                    email: email,
+                    senha: password
+                })
+            });
 
-        // Aplicando a criptografia de hash na senha antes do salvamento
-        const hashedPassword = await hashPassword(password);
+            if (response.ok) {
+               
+                localStorage.setItem('userEmailPendingVerification', email);
 
-        const usuarioPendente = {
-            name: name,
-            email: email,
-            password: hashedPassword,
-            emailVerificado: false,
-            codigoVerificacao: codigoGerado
-        };
-
-        localStorage.setItem('tempUser', JSON.stringify(usuarioPendente));
-        window.location.href = 'confirmar-email.html';
+               
+                window.location.href = 'confirmar-email.html';
+            } else {
+                const erroData = await response.json().catch(() => null);
+                const erroText = erroData?.message || await response.text();
+                
+                if (errorMessage) {
+                    errorMessage.innerText = erroText || 'Erro ao realizar cadastro.';
+                    errorMessage.classList.remove('hidden');
+                }
+            }
+        } catch (error) {
+            console.error('Erro de conexão:', error);
+            if (errorMessage) {
+                errorMessage.innerText = 'Não foi possível conectar ao servidor backend.';
+                errorMessage.classList.remove('hidden');
+            }
+        }
     });
 }
 
-// Confirmação de E-mail
 const verifyForm = document.getElementById('verifyForm');
 if (verifyForm) {
-    verifyForm.addEventListener('submit', function (e) {
+    verifyForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const inputCode = document.getElementById('inputCode').value.trim();
@@ -131,11 +147,35 @@ if (verifyForm) {
             console.error("Erro ao ler dados temporários do usuário:", err);
         }
 
-        if (tempUser && inputCode === tempUser.codigoVerificacao) {
-            tempUser.emailVerificado = true;
+        let isCodeValid = false;
 
-            localStorage.setItem('registeredUser', JSON.stringify(tempUser));
-            localStorage.removeItem('tempUser');
+        try {
+            const response = await fetch(`${API_BASE_URL}/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: tempUser ? tempUser.email : '',
+                    codigo: inputCode 
+                })
+            });
+
+            if (response.ok) {
+                isCodeValid = true;
+            } else if (tempUser && inputCode === tempUser.codigoVerificacao) {   
+                isCodeValid = true;
+            }
+        } catch (err) {
+            if (tempUser && inputCode === tempUser.codigoVerificacao) {
+                isCodeValid = true;
+            }
+        }
+
+        if (isCodeValid) {
+            if (tempUser) {
+                tempUser.emailVerificado = true;
+                localStorage.setItem('registeredUser', JSON.stringify(tempUser));
+                localStorage.removeItem('tempUser');
+            }
 
             if (verifyError) verifyError.classList.add('hidden');
             if (verifySuccess) verifySuccess.classList.remove('hidden');
@@ -154,7 +194,7 @@ if (verifyForm) {
     });
 }
 
-// Login
+// Login de Usuário
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
     loginForm.addEventListener('submit', async function (e) {
@@ -162,46 +202,69 @@ if (loginForm) {
 
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value.trim();
-        let registeredUser = null;
+        const loginError = document.getElementById('loginError');
 
         try {
-            registeredUser = JSON.parse(localStorage.getItem('registeredUser'));
-        } catch (err) {
-            console.error("Erro ao ler dados do usuário cadastrado:", err);
+            const response = await fetch(`${API_BASE_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    senha: password 
+                })
+            });
+
+            if (response.ok) {
+                localStorage.setItem('usuarioLogado', email);
+                localStorage.setItem('userEmail', email);
+
+                window.location.href = 'index.html';
+            } else {
+                const errorMsg = await response.text();
+                if (loginError) {
+                    loginError.innerText = errorMsg || 'E-mail ou senha incorretos.';
+                    loginError.classList.remove('hidden');
+                }
+            }
+        } catch (error) {
+            console.error('Erro de autenticação:', error);
+            if (loginError) {
+                loginError.innerText = 'Não foi possível conectar ao servidor.';
+                loginError.classList.remove('hidden');
+            }
         }
-
-        // Gera o hash da senha digitada no formulário de login
-        const hashedPassword = await hashPassword(password);
-
-        // Compara os hashes em vez do texto puro
-        if (!registeredUser || registeredUser.email !== email || registeredUser.password !== hashedPassword) {
-            alert('Acesso Negado! Usuário não encontrado ou senha incorreta.');
-            return;
-        }
-
-        if (!registeredUser.emailVerificado) {
-            alert('Sua conta ainda não foi ativada. Confirme o código enviado ao seu e-mail.');
-            window.location.href = 'confirmar-email.html';
-            return;
-        }
-
-        localStorage.setItem('userEmail', email);
-        window.location.href = 'index.html';
     });
+}
+
+// Verificar Permissão de Sessão nas Páginas Privadas
+function verificarSessao() {
+    const isPublicPage = window.location.pathname.includes('telaLogin.html') || 
+                         window.location.pathname.includes('login.html') || 
+                         window.location.pathname.includes('confirmar-email.html') ||
+                         window.location.pathname.includes('verificacao.html') ||
+                         window.location.pathname.includes('cadastro.html');
+
+    const usuarioLogado = localStorage.getItem('usuarioLogado');
+
+    if (!usuarioLogado && !isPublicPage) {
+        window.location.href = 'telaLogin.html';
+    }
 }
 
 // Logout
 function handleLogout() {
     if (confirm('Tem certeza de que deseja sair da sua conta?')) {
-        window.location.href = 'login.html';
+        localStorage.removeItem('usuarioLogado');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'telaLogin.html';
     }
 }
 
 
-// 3.renderização/principal
 
-
-// Preenche os selects de categoria dinamicamente
+//renderização e principal
 function populateCategoryDropdown() {
     const categorySelects = document.querySelectorAll('.category-select-dropdown, #category');
     if (!categorySelects.length) return;
@@ -229,7 +292,6 @@ function updateDashboard() {
     const saldoInicial = getStoredSaldo();
     const categories = getStoredCategories();
 
-    // Mapeamento de Slugs para Nomes
     const categoryMap = {};
     categories.forEach(c => { categoryMap[c.slug || c.name] = c.name; });
 
@@ -279,16 +341,14 @@ function updateDashboard() {
         }
     }
 
-    // Atualização dos Cards
     if (totalExpensesElement) totalExpensesElement.innerText = formatarMoeda(totalGastos);
     if (totalBalanceElement) totalBalanceElement.innerText = formatarMoeda(saldoInicial - totalGastos);
     if (expenseCount) expenseCount.innerText = `${despesas.length} ${despesas.length === 1 ? 'item' : 'itens'}`;
 
-    // Atualizar Gráfico (se existir)
     renderChart();
 }
 
-// Remover Despesa
+
 window.removerDespesa = function (index) {
     const despesas = getStoredExpenses();
     despesas.splice(index, 1);
@@ -296,7 +356,7 @@ window.removerDespesa = function (index) {
     updateDashboard();
 };
 
-// Submeter Novo Lançamento
+
 function handleExpenseSubmit(e) {
     e.preventDefault();
 
@@ -309,7 +369,6 @@ function handleExpenseSubmit(e) {
     const category = categorySelect.value;
 
     if (!desc || isNaN(amount) || amount <= 0 || !category) {
-        alert('Por favor, preencha todos os campos corretamente.');
         return;
     }
 
@@ -339,15 +398,11 @@ function handleSaveSaldo() {
         setStoredSaldo(novoSaldo);
         inputSaldo.value = '';
         updateDashboard();
-    } else {
-        alert('Informe um valor de saldo válido.');
     }
 }
 
 
-//grafico
-
-
+// grafico
 let chartInstance = null;
 
 function renderChart() {
@@ -441,9 +496,8 @@ function renderChart() {
 }
 
 
-// perfil e configuração de categoria
 
-
+// 5. perfil, foto de perfil e categoria
 function renderCategoryList() {
     const container = document.getElementById('categoryListContainer');
     if (!container) return;
@@ -485,7 +539,6 @@ function addNewCategory() {
 function removeCategory(index) {
     let categories = getStoredCategories();
     if (categories.length <= 1) {
-        alert('É necessário manter ao menos uma categoria cadastrada.');
         return;
     }
     categories.splice(index, 1);
@@ -495,13 +548,12 @@ function removeCategory(index) {
     populateCategoryDropdown();
 }
 
-// Avatar / Foto de Perfil
+// Upload do Avatar
 function handleImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
-        alert('A imagem excede o tamanho máximo permitido de 2MB.');
         return;
     }
 
@@ -556,7 +608,7 @@ function applyProfileImage(src) {
     }
 }
 
-// Modal de Senha
+// Modal de Alteração de Senha
 function openPasswordModal() {
     const modal = document.getElementById('passwordModal');
     if (modal) {
@@ -570,7 +622,7 @@ function closePasswordModal() {
     if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
-        
+
         document.getElementById('passwordForm')?.reset();
         const feedback = document.getElementById('passwordFeedback');
         if (feedback) feedback.innerText = '';
@@ -628,7 +680,7 @@ function updateRequirementUI(elementId, isValid) {
     el.className = isValid ? 'text-emerald-400 font-medium' : 'text-zinc-400';
 }
 
-function handlePasswordUpdate(event) {
+async function handlePasswordUpdate(event) {
     event.preventDefault();
     const newPass = document.getElementById('newPassword').value;
     const confirmPass = document.getElementById('confirmNewPassword').value;
@@ -651,6 +703,16 @@ function handlePasswordUpdate(event) {
         return;
     }
 
+    try {
+        const registeredUser = JSON.parse(localStorage.getItem('registeredUser'));
+        if (registeredUser) {
+            registeredUser.password = await hashPassword(newPass);
+            localStorage.setItem('registeredUser', JSON.stringify(registeredUser));
+        }
+    } catch (err) {
+        console.error('Erro ao salvar nova senha:', err);
+    }
+
     feedback.className = 'text-xs font-medium text-emerald-400';
     feedback.innerText = 'Senha alterada com sucesso!';
 
@@ -659,37 +721,22 @@ function handlePasswordUpdate(event) {
     }, 1200);
 }
 
-function handleForgotPassword() {
-    const feedback = document.getElementById('passwordFeedback');
-    if (feedback) {
-        feedback.className = 'text-xs font-medium text-emerald-400';
-        feedback.innerText = 'Enviamos um link de redefinição para o seu e-mail.';
-    }
-    alert('Enviamos um link de redefinição de senha para o seu e-mail cadastrado.');
-}
 
 
-//aplicação
 
-
+// iniciar aplicação
 document.addEventListener('DOMContentLoaded', function () {
-    // Carrega avatar salvo
+    verificarSessao();
     loadSavedProfileImage();
-
-    // Carrega dropdowns de categoria
     populateCategoryDropdown();
-
-    // Atualiza o painel financeiro / tabela
     updateDashboard();
 
-    // Preenche input de saldo se houver valor prévio
     const inputSaldo = document.getElementById('inputSaldo');
     if (inputSaldo) {
         const saldoAtual = getStoredSaldo();
         if (saldoAtual > 0) inputSaldo.placeholder = saldoAtual.toFixed(2);
     }
 
-    // Registra listeners de formulários e botões principais
     const btnSalvarSaldo = document.getElementById('btnSalvarSaldo');
     if (btnSalvarSaldo) {
         btnSalvarSaldo.addEventListener('click', handleSaveSaldo);
@@ -705,7 +752,11 @@ document.addEventListener('DOMContentLoaded', function () {
         selectMes.addEventListener('change', renderChart);
     }
 
-    // Carrega lista de categorias na aba de configurações (se presente)
+    const passwordForm = document.getElementById('passwordForm');
+    if (passwordForm) {
+        passwordForm.addEventListener('submit', handlePasswordUpdate);
+    }
+
     if (document.getElementById('categoryListContainer')) {
         renderCategoryList();
     }

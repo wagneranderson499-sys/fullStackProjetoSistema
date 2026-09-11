@@ -19,12 +19,10 @@
             },
         }
     </script>
-    <script src="script.js" defer></script>
 </head>
 <body class="bg-zinc-950 text-zinc-100 font-sans antialiased min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-zinc-900 border border-zinc-800/80 rounded-2xl p-8 shadow-2xl">
         
- 
         <div class="flex flex-col items-center mb-6">
             <div class="flex items-center justify-center w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl mb-3">
                 <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,20 +31,11 @@
             </div>
             <h1 class="text-xl font-bold tracking-wide text-zinc-100">Verifique seu E-mail</h1>
             <p class="text-xs text-zinc-400 mt-1 text-center">
-                Digite o código de 6 dígitos para ativar sua conta.
+                Enviamos um código de 6 dígitos para o seu e-mail.<br>Insira-o abaixo para ativar sua conta.
             </p>
         </div>
 
-       
-        <div id="demoCodeBanner" class="bg-zinc-950 border border-emerald-500/30 rounded-xl p-4 mb-6 text-center">
-            <span class="text-[11px] uppercase tracking-wider text-emerald-400 font-semibold block mb-1">
-                Código Enviado
-            </span>
-            <span id="displayCode" class="text-2xl font-mono font-bold tracking-widest text-zinc-100">-------</span>
-            <p class="text-[11px] text-zinc-500 mt-1">Copie o código acima e insira no campo abaixo.</p>
-        </div>
-
-
+    
         <div id="verifySuccess" class="hidden bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs p-3 rounded-lg mb-4 text-center font-medium">
             ✓ E-mail verificado com sucesso! Redirecionando para o login...
         </div>
@@ -86,14 +75,63 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                const tempUser = JSON.parse(localStorage.getItem('tempUser'));
-                if (tempUser && tempUser.codigoVerificacao) {
-                    document.getElementById('displayCode').innerText = tempUser.codigoVerificacao;
+        const API_BASE_URL = 'http://localhost:8080/api/auth';
+
+        const verifyForm = document.getElementById('verifyForm');
+        const verifySuccess = document.getElementById('verifySuccess');
+        const verifyError = document.getElementById('verifyError');
+
+        if (verifyForm) {
+            verifyForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                // Oculta alertas prévios
+                verifySuccess.classList.add('hidden');
+                verifyError.classList.add('hidden');
+
+                const codeInput = document.getElementById('inputCode').value.trim();
+                const email = localStorage.getItem('userEmailPendingVerification');
+
+                if (!email) {
+                    verifyError.innerText = "Sessão expirada. Faça o cadastro novamente.";
+                    verifyError.classList.remove('hidden');
+                    setTimeout(() => {
+                        window.location.href = 'cadastro.html';
+                    }, 2000);
+                    return;
                 }
-            } catch(e) {}
-        });
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/verify`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: email,
+                            codigo: codeInput
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        verifySuccess.innerText = "✓ " + (data.message || "E-mail verificado com sucesso!");
+                        verifySuccess.classList.remove('hidden');
+                        localStorage.removeItem('userEmailPendingVerification');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'telaLogin.html';
+                        }, 2000);
+                    } else {
+                        verifyError.innerText = data.message || "Código incorreto. Por favor, tente novamente.";
+                        verifyError.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    verifyError.innerText = "Erro ao conectar com o servidor backend.";
+                    verifyError.classList.remove('hidden');
+                }
+            });
+        }
     </script>
 </body>
 </html>
