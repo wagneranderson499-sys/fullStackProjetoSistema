@@ -2,8 +2,9 @@ package com.exercicio.demo.Repository;
 
 import org.hibernate.boot.archive.scan.spi.ClassDescriptor.Categorization;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.exercicio.demo.Model.Categoria; // <-- Garanta que importou a SUA entidade Categoria
 
-@Repository
-public interface CategoriaRepository extends JpaRepository <Categorization, Long> {
+public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
+
+    Categorization save(Categorization categoria);
 }

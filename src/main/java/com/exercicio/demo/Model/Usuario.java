@@ -50,7 +50,6 @@ public class Usuario {
     public String getPassword() { return senha; }
     public void setPassword(String password) { this.senha = password; }
 
-    
     public String getCodigoVerificacao() { return codigoVerificacao; }
     public void setCodigoVerificacao(String codigoVerificacao) { this.codigoVerificacao = codigoVerificacao; }
 

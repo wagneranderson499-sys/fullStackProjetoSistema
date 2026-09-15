@@ -520,22 +520,41 @@ function renderCategoryList() {
     });
 }
 
-function addNewCategory() {
+async function addNewCategory() {
     const input = document.getElementById('newCategoryName');
     const name = input?.value.trim();
+   
     if (!name) return;
 
-    const categories = getStoredCategories();
-    const slug = name.toLowerCase().replace(/\s+/g, '_');
+    try {
+        // Envia os dados para a API Spring Boot
+        const response = await fetch('http://localhost:8080/api/categorias', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nome: name }) // Envia o JSON esperado pelo DTO/Entity Categoria
+        });
 
-    categories.push({ slug, name });
-    setStoredCategories(categories);
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.status}`);
+        }
 
-    input.value = '';
-    renderCategoryList();
-    populateCategoryDropdown();
+        const novaCategoria = await response.json();
+        console.log('Categoria salva no banco:', novaCategoria);
+
+        // Limpa o campo de texto
+        input.value = '';
+
+        // Atualiza a interface gráfica chamando as funções que buscam do backend
+        renderCategoryList();
+        populateCategoryDropdown();
+
+    } catch (error) {
+        console.error('Falha ao salvar a categoria no backend:', error);
+        alert('Não foi possível salvar a categoria. Verifique se o servidor Spring Boot está rodando.');
+    }
 }
-
 function removeCategory(index) {
     let categories = getStoredCategories();
     if (categories.length <= 1) {

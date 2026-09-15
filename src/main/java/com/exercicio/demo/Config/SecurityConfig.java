@@ -12,17 +12,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**", "/api/**").permitAll()
-                .anyRequest().authenticated()
-            );
-
-        return http.build();
-    }
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+            // Libera o HTML principal, subpáginas, scripts e o endpoint da API
+            .requestMatchers("/", "/*.html", "/*.js", "/*.css", "/*.png", "/api/**").permitAll()
+            .anyRequest().authenticated()
+        );
+    return http.build();
+}
 
     @Bean
     public PasswordEncoder passwordEncoder() {
