@@ -64,6 +64,11 @@
                     required
                     class="bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/80 transition"
                 >
+                <ul class="text-[11px] space-y-1 mt-1 pl-1">
+                    <li id="ruleLength" class="text-zinc-500 transition-colors duration-200">• Mínimo de 8 caracteres</li>
+                    <li id="ruleNumber" class="text-zinc-500 transition-colors duration-200">• Pelo menos um número</li>
+                    <li id="ruleSpecial" class="text-zinc-500 transition-colors duration-200">• Pelo menos um caractere especial (@, #, $, etc.)</li>
+                </ul>
             </div>
 
             <div class="flex flex-col gap-1.5">
@@ -77,11 +82,17 @@
                 >
             </div>
 
+            <!-- Botão com Estado de Carregamento (Spinner) -->
             <button 
                 type="submit" 
-                class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg text-sm transition mt-2"
+                id="btnRegister"
+                class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2"
             >
-                Cadastrar
+                <span id="btnRegisterText">Criar Conta</span>
+                <svg id="btnRegisterSpinner" class="w-4 h-4 text-white animate-spin hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
             </button>
         </form>
 
@@ -90,6 +101,43 @@
                 Já possui uma conta? 
                 <a href="telaLogin.html" class="text-emerald-400 hover:underline font-medium">Fazer Login</a>
             </p>
+        </div>
+    </div>
+
+    <!-- MODAL DE VERIFICAÇÃO DE CÓDIGO POR E-MAIL -->
+    <div id="verifyModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-zinc-900 border border-zinc-800/80 p-6 rounded-2xl max-w-sm w-full text-center shadow-2xl">
+            <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-zinc-100 mb-1">Confirme seu E-mail</h3>
+            <p class="text-xs text-zinc-400 mb-4">Enviamos um código de verificação para o seu e-mail. Digite-o abaixo:</p>
+            
+            <div id="verifyError" class="hidden bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs p-2.5 rounded-lg mb-4 text-center"></div>
+
+            <form id="verifyForm" class="flex flex-col gap-4">
+                <input 
+                    type="text" 
+                    id="verificationCode" 
+                    placeholder="Digite o código (ex: 123456)" 
+                    maxlength="6"
+                    required
+                    class="bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2.5 text-center text-lg tracking-widest font-mono text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/80 transition"
+                >
+                <button 
+                    type="submit" 
+                    id="btnConfirmCode"
+                    class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2"
+                >
+                    <span id="btnConfirmText">Validar e Entrar</span>
+                    <svg id="btnConfirmSpinner" class="w-4 h-4 text-white animate-spin hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </form>
         </div>
     </div>
 </body>

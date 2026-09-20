@@ -1,485 +1,871 @@
+// ==========================================
+// CONFIGURAÇÕES GLOBAIS
+// ==========================================
+const API_BASE_URL = 'http://localhost:8080/api';
+let instanceChart = null; // Instância do Chart.js
+let listaTransacoesCache = []; // Cache local de transações para filtros rápidos
 
-// gerenciamento e armazenamento de dados
-
-const API_BASE_URL = 'http://localhost:8080/api/auth';
-
-const defaultCategories = [
-    { slug: 'dia_a_dia', name: 'Despesas Diárias' },
-    { slug: 'fixo', name: 'Contas Fixas' },
-    { slug: 'emergencia', name: 'Imprevistos' }
-];
-
-/**
- * Gera um Hash SHA-256 para uso em validações locais
- */
-async function hashPassword(password) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+// Recupera o token JWT do localStorage
+function getToken() {
+    return localStorage.getItem('token');
 }
 
-
-function getStoredSaldo() {
-    return parseFloat(localStorage.getItem('saldoTotal')) || 0;
+// Configuração padrão de cabeçalhos HTTP com Autenticação Bearer
+function getHeaders() {
+    const token = getToken();
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : ''
+    };
 }
 
+// Redireciona para o login caso o token/usuário não exista
+function checarAutenticacao() {
+    const usuarioId = localStorage.getItem('usuarioId');
+    const paginasPublicas = ['login.html', 'telaLogin.html', 'registro.html', 'confirmar-email.html'];
+    const paginaAtual = window.location.pathname.split('/').pop() || 'index.html';
 
-function setStoredSaldo(valor) {
-    localStorage.setItem('saldoTotal', valor);
-}
-
-
-function getStoredExpenses() {
-    try {
-        return JSON.parse(localStorage.getItem('despesasList')) || [];
-    } catch (err) {
-        return [];
-    }
-}
-
-
-function setStoredExpenses(expenses) {
-    localStorage.setItem('despesasList', JSON.stringify(expenses));
-}
-
-
-function getStoredCategories() {
-    try {
-        return JSON.parse(localStorage.getItem('customCategories')) || defaultCategories;
-    } catch (err) {
-        return defaultCategories;
-    }
-}
-
-
-function setStoredCategories(categories) {
-    localStorage.setItem('customCategories', JSON.stringify(categories));
-}
-
-function formatarMoeda(valor) {
-    return Number(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
-
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-
-// spring boot api e codigo
-
-
-const registerForm = document.getElementById('registerForm');
-if (registerForm) {
-    registerForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const name = document.getElementById('regName').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const password = document.getElementById('regPassword').value;
-        const confirmPassword = document.getElementById('regConfirmPassword').value;
-        const errorMessage = document.getElementById('errorMessage');
-
-        if (password !== confirmPassword) {
-            if (errorMessage) {
-                errorMessage.innerText = "As senhas não coincidem.";
-                errorMessage.classList.remove('hidden');
-            }
-            return;
-        }
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    nome: name,
-                    email: email,
-                    senha: password
-                })
-            });
-
-            if (response.ok) {
-               
-                localStorage.setItem('userEmailPendingVerification', email);
-
-               
-                window.location.href = 'confirmar-email.html';
-            } else {
-                const erroData = await response.json().catch(() => null);
-                const erroText = erroData?.message || await response.text();
-                
-                if (errorMessage) {
-                    errorMessage.innerText = erroText || 'Erro ao realizar cadastro.';
-                    errorMessage.classList.remove('hidden');
-                }
-            }
-        } catch (error) {
-            console.error('Erro de conexão:', error);
-            if (errorMessage) {
-                errorMessage.innerText = 'Não foi possível conectar ao servidor backend.';
-                errorMessage.classList.remove('hidden');
-            }
-        }
-    });
-}
-
-const verifyForm = document.getElementById('verifyForm');
-if (verifyForm) {
-    verifyForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const inputCode = document.getElementById('inputCode').value.trim();
-        const verifyError = document.getElementById('verifyError');
-        const verifySuccess = document.getElementById('verifySuccess');
-        const btnVerify = document.getElementById('btnVerify');
-        let tempUser = null;
-
-        try {
-            tempUser = JSON.parse(localStorage.getItem('tempUser'));
-        } catch (err) {
-            console.error("Erro ao ler dados temporários do usuário:", err);
-        }
-
-        let isCodeValid = false;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/verify`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: tempUser ? tempUser.email : '',
-                    codigo: inputCode 
-                })
-            });
-
-            if (response.ok) {
-                isCodeValid = true;
-            } else if (tempUser && inputCode === tempUser.codigoVerificacao) {   
-                isCodeValid = true;
-            }
-        } catch (err) {
-            if (tempUser && inputCode === tempUser.codigoVerificacao) {
-                isCodeValid = true;
-            }
-        }
-
-        if (isCodeValid) {
-            if (tempUser) {
-                tempUser.emailVerificado = true;
-                localStorage.setItem('registeredUser', JSON.stringify(tempUser));
-                localStorage.removeItem('tempUser');
-            }
-
-            if (verifyError) verifyError.classList.add('hidden');
-            if (verifySuccess) verifySuccess.classList.remove('hidden');
-            if (btnVerify) {
-                btnVerify.disabled = true;
-                btnVerify.classList.add('opacity-50', 'cursor-not-allowed');
-            }
-
-            setTimeout(() => {
-                window.location.href = 'telaLogin.html';
-            }, 1500);
-        } else {
-            if (verifySuccess) verifySuccess.classList.add('hidden');
-            if (verifyError) verifyError.classList.remove('hidden');
-        }
-    });
-}
-
-// Login de Usuário
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const email = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value.trim();
-        const loginError = document.getElementById('loginError');
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    senha: password 
-                })
-            });
-
-            if (response.ok) {
-                localStorage.setItem('usuarioLogado', email);
-                localStorage.setItem('userEmail', email);
-
-                window.location.href = 'index.html';
-            } else {
-                const errorMsg = await response.text();
-                if (loginError) {
-                    loginError.innerText = errorMsg || 'E-mail ou senha incorretos.';
-                    loginError.classList.remove('hidden');
-                }
-            }
-        } catch (error) {
-            console.error('Erro de autenticação:', error);
-            if (loginError) {
-                loginError.innerText = 'Não foi possível conectar ao servidor.';
-                loginError.classList.remove('hidden');
-            }
-        }
-    });
-}
-
-// Verificar Permissão de Sessão nas Páginas Privadas
-function verificarSessao() {
-    const isPublicPage = window.location.pathname.includes('telaLogin.html') || 
-                         window.location.pathname.includes('login.html') || 
-                         window.location.pathname.includes('confirmar-email.html') ||
-                         window.location.pathname.includes('verificacao.html') ||
-                         window.location.pathname.includes('cadastro.html');
-
-    const usuarioLogado = localStorage.getItem('usuarioLogado');
-
-    if (!usuarioLogado && !isPublicPage) {
+    if (!usuarioId && !paginasPublicas.includes(paginaAtual)) {
         window.location.href = 'telaLogin.html';
     }
 }
 
-// Logout
-function handleLogout() {
-    if (confirm('Tem certeza de que deseja sair da sua conta?')) {
-        localStorage.removeItem('usuarioLogado');
-        localStorage.removeItem('userEmail');
-        window.location.href = 'telaLogin.html';
+function fazerLogout() {
+    localStorage.removeItem('usuarioId');
+    localStorage.removeItem('usuarioNome');
+    localStorage.removeItem('usuarioSaldo');
+    localStorage.removeItem('usuarioLogado');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('token');
+
+    sessionStorage.clear();
+    window.location.href = 'telaLogin.html';
+}
+
+// ==========================================
+// INICIALIZAÇÃO ÚNICA DA APLICAÇÃO
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Inicializa formulário de Login
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', fazerLogin);
     }
-}
 
+    // 2. Inicializa formulário de Cadastro e Modal de Verificação
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        const passwordInput = document.getElementById('regPassword');
+        passwordInput?.addEventListener('input', () => validarSenhaEmTempoReal(passwordInput.value));
+        registerForm.addEventListener('submit', executarCadastro);
+    }
 
+    const verifyForm = document.getElementById('verifyForm');
+    if (verifyForm) {
+        verifyForm.addEventListener('submit', executarVerificacaoCodigo);
+    }
 
-//renderização e principal
-function populateCategoryDropdown() {
-    const categorySelects = document.querySelectorAll('.category-select-dropdown, #category');
-    if (!categorySelects.length) return;
+    // 3. Checagem e carregamento de páginas autenticadas
+    const exibeDashboard = document.getElementById('expenseListBody') || document.getElementById('totalBalance');
+    if (exibeDashboard) {
+        checarAutenticacao();
+        carregarUsuario();
+        carregarCategorias();
+        carregarTransacoes();
 
-    const categories = getStoredCategories();
+        document.getElementById('btnSalvarSaldo')?.addEventListener('click', atualizarSaldoInicial);
+        document.getElementById('expenseForm')?.addEventListener('submit', salvarTransacao);
+        document.getElementById('editExpenseForm')?.addEventListener('submit', salvarEdicaoTransacao);
+        document.getElementById('categoryForm')?.addEventListener('submit', salvarNovaCategoria);
+        document.getElementById('btnLogout')?.addEventListener('click', fazerLogout);
 
-    categorySelects.forEach(select => {
-        const currentValue = select.value;
-        select.innerHTML = '<option value="" disabled selected>Selecione uma categoria</option>';
+        // Eventos de Filtro e Busca
+        document.getElementById('searchInput')?.addEventListener('input', aplicarFiltros);
+        document.getElementById('filterCategory')?.addEventListener('change', aplicarFiltros);
+        document.getElementById('filterType')?.addEventListener('change', aplicarFiltros);
 
-        categories.forEach(cat => {
-            const option = document.createElement('option');
-            option.value = cat.slug || cat.name;
-            option.textContent = cat.name;
-            select.appendChild(option);
-        });
+        // Exportação
+        document.getElementById('btnExportCSV')?.addEventListener('click', exportarTransacoesCSV);
 
-        if (currentValue) select.value = currentValue;
-    });
-}
+        // Formatação de entrada de moeda
+        const inputAmount = document.getElementById('amount');
+        if (inputAmount) {
+            inputAmount.addEventListener('input', (e) => aplicarMascaraMoeda(e.target));
+        }
 
-// Atualiza lista e resumos financeiros da Dashboard
-function updateDashboard() {
-    const despesas = getStoredExpenses();
-    const saldoInicial = getStoredSaldo();
-    const categories = getStoredCategories();
-
-    const categoryMap = {};
-    categories.forEach(c => { categoryMap[c.slug || c.name] = c.name; });
-
-    const expenseListBody = document.getElementById('expenseListBody');
-    const totalExpensesElement = document.getElementById('totalExpenses');
-    const totalBalanceElement = document.getElementById('totalBalance');
-    const expenseCount = document.getElementById('expenseCount');
-
-    let totalGastos = 0;
-
-    if (expenseListBody) {
-        expenseListBody.innerHTML = '';
-
-        if (despesas.length === 0) {
-            expenseListBody.innerHTML = `
-                <tr>
-                    <td colspan="4" class="py-6 text-center text-slate-500 text-xs">
-                        Nenhuma transação cadastrada.
-                    </td>
-                </tr>
-            `;
-        } else {
-            despesas.forEach((item, index) => {
-                const valorNum = Number(item.valor || item.amount) || 0;
-                const desc = item.descricao || item.description || '';
-                const catKey = item.categoria || item.category || '';
-                totalGastos += valorNum;
-
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-700/30 transition';
-                tr.innerHTML = `
-                    <td class="py-3.5 px-4 font-medium text-slate-200">${escapeHtml(desc)}</td>
-                    <td class="py-3.5 px-4">
-                        <span class="bg-sky-500/10 text-sky-400 text-xs px-2.5 py-1 rounded-full font-medium">
-                            ${escapeHtml(categoryMap[catKey] || catKey)}
-                        </span>
-                    </td>
-                    <td class="py-3.5 px-4 text-right text-rose-400 font-semibold">- ${formatarMoeda(valorNum)}</td>
-                    <td class="py-3.5 px-4 text-center">
-                        <button onclick="removerDespesa(${index})" class="p-1.5 hover:bg-slate-700 rounded transition text-slate-400 hover:text-rose-400" title="Excluir">
-                            ✕
-                        </button>
-                    </td>
-                `;
-                expenseListBody.appendChild(tr);
-            });
+        const editInputAmount = document.getElementById('editAmount');
+        if (editInputAmount) {
+            editInputAmount.addEventListener('input', (e) => aplicarMascaraMoeda(e.target));
         }
     }
 
-    if (totalExpensesElement) totalExpensesElement.innerText = formatarMoeda(totalGastos);
-    if (totalBalanceElement) totalBalanceElement.innerText = formatarMoeda(saldoInicial - totalGastos);
-    if (expenseCount) expenseCount.innerText = `${despesas.length} ${despesas.length === 1 ? 'item' : 'itens'}`;
+    // 4. Inicializa visualização do Gráfico
+    if (document.getElementById('expensesChart')) {
+        checarAutenticacao();
+        carregarDadosEExibirGrafico();
+    }
+});
 
-    renderChart();
-}
+// ==========================================
+// AUTENTICAÇÃO, CADASTRO E MODAL DE CÓDIGO
+// ==========================================
+async function fazerLogin(event) {
+    event.preventDefault();
 
+    const email = document.getElementById('loginEmail')?.value.trim();
+    const senha = document.getElementById('loginPassword')?.value.trim();
 
-window.removerDespesa = function (index) {
-    const despesas = getStoredExpenses();
-    despesas.splice(index, 1);
-    setStoredExpenses(despesas);
-    updateDashboard();
-};
-
-
-function handleExpenseSubmit(e) {
-    e.preventDefault();
-
-    const descInput = document.getElementById('description');
-    const amountInput = document.getElementById('amount');
-    const categorySelect = document.getElementById('category');
-
-    const desc = descInput.value.trim();
-    const amount = parseFloat(amountInput.value);
-    const category = categorySelect.value;
-
-    if (!desc || isNaN(amount) || amount <= 0 || !category) {
+    if (!email || !senha) {
+        alert('Preencha o e-mail e a senha.');
         return;
     }
 
-    const despesas = getStoredExpenses();
-    despesas.unshift({
-        descricao: desc,
-        valor: amount,
-        categoria: category,
-        data: new Date().toISOString()
-    });
+    const btnLoginText = document.getElementById('btnLoginText');
+    const btnLoginSpinner = document.getElementById('btnLoginSpinner');
+    const btnLogin = document.getElementById('btnLogin');
 
-    setStoredExpenses(despesas);
-    updateDashboard();
+    if (btnLoginSpinner && btnLoginText) {
+        btnLoginSpinner.classList.remove('hidden');
+        btnLoginText.textContent = 'Entrando...';
+        btnLogin.disabled = true;
+    }
 
-    descInput.value = '';
-    amountInput.value = '';
-    categorySelect.selectedIndex = 0;
+    try {
+        const response = await fetch(`${API_BASE_URL}/usuarios/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, senha })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            if (data.token) localStorage.setItem('token', data.token);
+            localStorage.setItem('usuarioId', data.id);
+            if (data.nome) localStorage.setItem('usuarioNome', data.nome);
+            if (data.saldo !== undefined) localStorage.setItem('usuarioSaldo', data.saldo);
+            localStorage.setItem('usuarioLogado', JSON.stringify(data));
+
+            window.location.href = 'index.html';
+        } else {
+            alert('Falha ao entrar: ' + (data.message || 'E-mail ou senha incorretos.'));
+        }
+    } catch (error) {
+        console.error('Erro de conexão:', error);
+        alert('Não foi possível conectar ao servidor Spring Boot.');
+    } finally {
+        if (btnLoginSpinner && btnLoginText) {
+            btnLoginSpinner.classList.add('hidden');
+            btnLoginText.textContent = 'Entrar';
+            btnLogin.disabled = false;
+        }
+    }
 }
 
-// Salvar Saldo Inicial
-function handleSaveSaldo() {
+async function executarCadastro(e) {
+    e.preventDefault();
+
+    const nome = document.getElementById('regName')?.value.trim();
+    const email = document.getElementById('regEmail')?.value.trim();
+    const senha = document.getElementById('regPassword')?.value;
+    const confirmSenha = document.getElementById('regConfirmPassword')?.value;
+
+    if (senha !== confirmSenha) {
+        mostrarErro('As senhas não coincidem!');
+        return;
+    }
+
+    const temOito = senha.length >= 8;
+    const temNumero = /\d/.test(senha);
+    const temEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
+
+    if (!temOito || !temNumero || !temEspecial) {
+        mostrarErro('A senha precisa atender a todos os requisitos de segurança.');
+        return;
+    }
+
+    setLoadingState('btnRegisterText', 'btnRegisterSpinner', 'btnRegister', true);
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/usuarios/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome, email, senha })
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (response.ok) {
+            localStorage.setItem('tempEmailVerification', email);
+            exibirModalVerificacao();
+        } else {
+            mostrarErro(data?.message || 'Erro ao realizar cadastro.');
+        }
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        mostrarErro('Erro ao conectar com o servidor Spring Boot.');
+    } finally {
+        setLoadingState('btnRegisterText', 'btnRegisterSpinner', 'btnRegister', false, 'Criar Conta');
+    }
+}
+
+async function executarVerificacaoCodigo(e) {
+    e.preventDefault();
+
+    const codeInput = document.getElementById('verificationCode')?.value.trim();
+    const verifyError = document.getElementById('verifyError');
+    const email = localStorage.getItem('tempEmailVerification');
+
+    if (verifyError) verifyError.classList.add('hidden');
+
+    if (!codeInput) {
+        mostrarErroModal('Por favor, informe o código enviado.');
+        return;
+    }
+
+    setLoadingState('btnConfirmText', 'btnConfirmSpinner', 'btnConfirmCode', true);
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/usuarios/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, codigo: codeInput })
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (response.ok) {
+            localStorage.removeItem('tempEmailVerification');
+            alert('E-mail verificado com sucesso!');
+            window.location.href = 'telaLogin.html';
+        } else {
+            mostrarErroModal(data?.message || 'Código inválido ou expirado.');
+        }
+    } catch (error) {
+        console.error('Erro na verificação do código:', error);
+        mostrarErroModal('Falha de comunicação com o servidor.');
+    } finally {
+        setLoadingState('btnConfirmText', 'btnConfirmSpinner', 'btnConfirmCode', false, 'Validar e Entrar');
+    }
+}
+
+function exibirModalVerificacao() {
+    const modal = document.getElementById('verifyModal') || document.getElementById('successModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        document.getElementById('btnIrParaLogin')?.addEventListener('click', () => {
+            window.location.href = 'telaLogin.html';
+        });
+    } else {
+        window.location.href = 'telaLogin.html';
+    }
+}
+
+function setLoadingState(textId, spinnerId, buttonId, isLoading, defaultText = '') {
+    const textEl = document.getElementById(textId);
+    const spinnerEl = document.getElementById(spinnerId);
+    const buttonEl = document.getElementById(buttonId);
+
+    if (!buttonEl) return;
+
+    if (isLoading) {
+        if (textEl) textEl.textContent = 'Carregando...';
+        if (spinnerEl) spinnerEl.classList.remove('hidden');
+        buttonEl.disabled = true;
+        buttonEl.classList.add('opacity-80', 'cursor-not-allowed');
+    } else {
+        if (textEl) textEl.textContent = defaultText;
+        if (spinnerEl) spinnerEl.classList.add('hidden');
+        buttonEl.disabled = false;
+        buttonEl.classList.remove('opacity-80', 'cursor-not-allowed');
+    }
+}
+
+function validarSenhaEmTempoReal(senha) {
+    atualizarRegra('ruleLength', senha.length >= 8);
+    atualizarRegra('ruleNumber', /\d/.test(senha));
+    atualizarRegra('ruleSpecial', /[!@#$%^&*(),.?":{}|<>]/.test(senha));
+}
+
+function atualizarRegra(idElemento, estaValido) {
+    const el = document.getElementById(idElemento);
+    if (!el) return;
+    if (estaValido) {
+        el.classList.remove('text-zinc-500');
+        el.classList.add('text-emerald-400', 'font-medium');
+    } else {
+        el.classList.remove('text-emerald-400', 'font-medium');
+        el.classList.add('text-zinc-500');
+    }
+}
+
+function mostrarErro(mensagem) {
+    const errorMessage = document.getElementById('errorMessage');
+    if (errorMessage) {
+        errorMessage.innerText = mensagem;
+        errorMessage.classList.remove('hidden');
+    }
+}
+
+function mostrarErroModal(mensagem) {
+    const verifyError = document.getElementById('verifyError');
+    if (verifyError) {
+        verifyError.innerText = mensagem;
+        verifyError.classList.remove('hidden');
+    } else {
+        mostrarErro(mensagem);
+    }
+}
+
+// ==========================================
+// USUÁRIO E SALDO
+// ==========================================
+async function carregarUsuario() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/usuario/me`, {
+            headers: getHeaders()
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            fazerLogout();
+            return;
+        }
+
+        const usuario = await response.json();
+
+        const nomeSidebar = document.getElementById('nomeUsuarioSidebar');
+        const avatarSidebar = document.getElementById('avatarUsuario');
+
+        if (nomeSidebar) nomeSidebar.textContent = usuario.nome;
+        if (avatarSidebar && usuario.nome) {
+            const iniciais = usuario.nome
+                .split(' ')
+                .map(n => n[0])
+                .slice(0, 2)
+                .join('')
+                .toUpperCase();
+            avatarSidebar.textContent = iniciais;
+        }
+
+        document.body.dataset.saldoInicial = usuario.saldoInicial || 0;
+
+    } catch (error) {
+        console.error('Erro ao carregar usuário:', error);
+    }
+}
+
+async function atualizarSaldoInicial() {
     const inputSaldo = document.getElementById('inputSaldo');
-    if (!inputSaldo) return;
+    const valor = parseFloat(inputSaldo.value);
 
-    const novoSaldo = parseFloat(inputSaldo.value);
-    if (!isNaN(novoSaldo)) {
-        setStoredSaldo(novoSaldo);
-        inputSaldo.value = '';
-        updateDashboard();
+    if (isNaN(valor) || valor < 0) {
+        alert('Por favor, insira um valor de saldo válido.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/usuario/saldo`, {
+            method: 'PUT',
+            headers: getHeaders(),
+            body: JSON.stringify({ saldoInicial: valor })
+        });
+
+        if (response.ok) {
+            inputSaldo.value = '';
+            await carregarUsuario();
+            await carregarTransacoes();
+        } else {
+            alert('Falha ao atualizar o saldo inicial.');
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar saldo:', error);
     }
 }
 
+// ==========================================
+// CATEGORIAS
+// ==========================================
+async function carregarCategorias() {
+    const selectCategory = document.getElementById('category');
+    const filterCategory = document.getElementById('filterCategory');
+    const editCategory = document.getElementById('editCategory');
 
-// grafico
-let chartInstance = null;
+    try {
+        const response = await fetch(`${API_BASE_URL}/categorias`, {
+            headers: getHeaders()
+        });
 
-function renderChart() {
-    const expensesChartCanvas = document.getElementById('expensesChart');
-    if (!expensesChartCanvas || typeof Chart === 'undefined') return;
+        if (!response.ok) return;
 
-    const selectMes = document.getElementById('selectMes');
-    const topCategory = document.getElementById('topCategory');
-    const topCategoryAmount = document.getElementById('topCategoryAmount');
-    const monthTotal = document.getElementById('monthTotal');
+        const categorias = await response.json();
 
-    const despesas = getStoredExpenses();
-    const categories = getStoredCategories();
-    const mesSelecionado = selectMes ? selectMes.value : '';
-
-    const despesasFiltradas = despesas.filter(item => {
-        if (!mesSelecionado || !item.data) return true;
-        const dataItem = new Date(item.data);
-        const mesItem = `${dataItem.getFullYear()}-${String(dataItem.getMonth() + 1).padStart(2, '0')}`;
-        return mesItem === mesSelecionado;
-    });
-
-    const totaisPorCategoria = {};
-    let totalGastoMes = 0;
-
-    categories.forEach(c => { totaisPorCategoria[c.slug || c.name] = 0; });
-
-    despesasFiltradas.forEach(item => {
-        const cat = item.categoria || item.category;
-        const valorNum = Number(item.valor || item.amount) || 0;
-
-        if (totaisPorCategoria.hasOwnProperty(cat)) {
-            totaisPorCategoria[cat] += valorNum;
-        } else {
-            totaisPorCategoria[cat] = valorNum;
+        if (selectCategory) {
+            selectCategory.innerHTML = '<option value="" disabled selected>Selecione uma categoria</option>';
+            categorias.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.nome;
+                selectCategory.appendChild(option);
+            });
         }
-        totalGastoMes += valorNum;
-    });
 
-    let maiorCatKey = '';
-    let maiorValor = -1;
-
-    for (const catKey in totaisPorCategoria) {
-        if (totaisPorCategoria[catKey] > maiorValor) {
-            maiorValor = totaisPorCategoria[catKey];
-            maiorCatKey = catKey;
+        if (editCategory) {
+            editCategory.innerHTML = '<option value="" disabled selected>Selecione uma categoria</option>';
+            categorias.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.nome;
+                editCategory.appendChild(option);
+            });
         }
+
+        if (filterCategory) {
+            filterCategory.innerHTML = '<option value="">Todas as Categorias</option>';
+            categorias.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.nome;
+                filterCategory.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Erro ao carregar categorias:', error);
+    }
+}
+
+async function salvarNovaCategoria(e) {
+    e.preventDefault();
+
+    const nomeInput = document.getElementById('newCategoryName');
+    const nome = nomeInput?.value.trim();
+
+    if (!nome) {
+        alert('Digite o nome da categoria.');
+        return;
     }
 
-    if (monthTotal) monthTotal.innerText = formatarMoeda(totalGastoMes);
-    if (topCategory && topCategoryAmount) {
-        if (totalGastoMes > 0 && maiorValor > 0) {
-            const catObj = categories.find(c => (c.slug || c.name) === maiorCatKey);
-            topCategory.innerText = catObj ? catObj.name : maiorCatKey;
-            topCategoryAmount.innerText = formatarMoeda(maiorValor);
+    try {
+        const response = await fetch(`${API_BASE_URL}/categorias`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ nome })
+        });
+
+        if (response.ok) {
+            if (nomeInput) nomeInput.value = '';
+            await carregarCategorias();
+            alert('Categoria cadastrada com sucesso!');
         } else {
-            topCategory.innerText = 'Sem gastos';
-            topCategoryAmount.innerText = 'R$ 0,00';
+            alert('Erro ao cadastrar categoria.');
         }
+    } catch (error) {
+        console.error('Erro ao salvar categoria:', error);
+    }
+}
+
+// ==========================================
+// TRANSAÇÕES
+// ==========================================
+async function carregarTransacoes() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/transacoes`, {
+            headers: getHeaders()
+        });
+
+        if (!response.ok) return;
+
+        const transacoes = await response.json();
+        listaTransacoesCache = transacoes;
+        renderizarTabela(transacoes);
+        atualizarDashboard(transacoes);
+    } catch (error) {
+        console.error('Erro ao carregar transações:', error);
+    }
+}
+
+async function salvarTransacao(e) {
+    e.preventDefault();
+
+    const descricao = document.getElementById('description').value.trim();
+    const rawAmount = document.getElementById('amount').value;
+    const valor = parseFloat(rawAmount.replace(/[^\d.]/g, ''));
+    const tipo = document.getElementById('transactionType').value;
+    const categoriaId = document.getElementById('category').value;
+
+    if (!descricao || isNaN(valor) || !categoriaId) {
+        alert('Preencha todos os campos corretamente.');
+        return;
     }
 
-    if (chartInstance) chartInstance.destroy();
+    const payload = {
+        descricao: descricao,
+        valor: valor,
+        tipo: tipo,
+        categoriaId: parseInt(categoriaId),
+        categoria: { id: parseInt(categoriaId) }
+    };
 
-    const labels = categories.map(c => c.name);
-    const dataValues = categories.map(c => totaisPorCategoria[c.slug || c.name] || 0);
-    const backgroundColors = ['#38bdf8', '#fbbf24', '#f87171', '#a78bfa', '#34d399', '#f472b6'];
+    try {
+        const response = await fetch(`${API_BASE_URL}/transacoes`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(payload)
+        });
 
-    const ctx = expensesChartCanvas.getContext('2d');
-    chartInstance = new Chart(ctx, {
+        if (response.ok) {
+            document.getElementById('expenseForm').reset();
+            await carregarTransacoes();
+            if (document.getElementById('expensesChart')) {
+                await carregarDadosEExibirGrafico();
+            }
+        } else {
+            alert('Erro ao cadastrar transação.');
+        }
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+    }
+}
+
+async function deletarTransacao(id) {
+    if (!confirm('Deseja realmente excluir esta transação?')) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/transacoes/${id}`, {
+            method: 'DELETE',
+            headers: getHeaders()
+        });
+
+        if (response.ok) {
+            await carregarTransacoes();
+            if (document.getElementById('expensesChart')) {
+                await carregarDadosEExibirGrafico();
+            }
+        } else {
+            alert('Erro ao excluir a transação.');
+        }
+    } catch (error) {
+        console.error('Erro ao deletar transação:', error);
+    }
+}
+
+// ==========================================
+// EDIÇÃO DE TRANSAÇÃO
+// ==========================================
+function abrirModalEdicao(id) {
+    const transacao = listaTransacoesCache.find(t => t.id === id);
+    if (!transacao) return;
+
+    const elId = document.getElementById('editId');
+    const elDesc = document.getElementById('editDescription');
+    const elAmount = document.getElementById('editAmount');
+    const elType = document.getElementById('editTransactionType');
+    const elCategory = document.getElementById('editCategory');
+
+    if (elId) elId.value = transacao.id;
+    if (elDesc) elDesc.value = transacao.descricao;
+    if (elAmount) elAmount.value = Number(transacao.valor).toFixed(2);
+    if (elType) elType.value = transacao.tipo;
+    if (elCategory) elCategory.value = transacao.categoria ? transacao.categoria.id : '';
+
+    const modal = document.getElementById('editModal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+async function salvarEdicaoTransacao(e) {
+    e.preventDefault();
+
+    const id = document.getElementById('editId').value;
+    const descricao = document.getElementById('editDescription').value.trim();
+    const rawAmount = document.getElementById('editAmount').value;
+    const valor = parseFloat(rawAmount.replace(/[^\d.]/g, ''));
+    const tipo = document.getElementById('editTransactionType').value;
+    const categoriaId = document.getElementById('editCategory').value;
+
+    if (!id || !descricao || isNaN(valor) || !categoriaId) {
+        alert('Preencha todos os campos do formulário de edição.');
+        return;
+    }
+
+    const payload = {
+        descricao,
+        valor,
+        tipo,
+        categoriaId: parseInt(categoriaId),
+        categoria: { id: parseInt(categoriaId) }
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/transacoes/${id}`, {
+            method: 'PUT',
+            headers: getHeaders(),
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            const modal = document.getElementById('editModal');
+            if (modal) modal.classList.add('hidden');
+            await carregarTransacoes();
+            if (document.getElementById('expensesChart')) {
+                await carregarDadosEExibirGrafico();
+            }
+        } else {
+            alert('Erro ao atualizar transação.');
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar transação:', error);
+    }
+}
+
+// ==========================================
+// FILTROS E BUSCA
+// ==========================================
+function aplicarFiltros() {
+    const termoBusca = document.getElementById('searchInput')?.value.toLowerCase() || '';
+    const categoriaFiltro = document.getElementById('filterCategory')?.value || '';
+    const tipoFiltro = document.getElementById('filterType')?.value || '';
+
+    const filtradas = listaTransacoesCache.filter(t => {
+        const bateNome = t.descricao.toLowerCase().includes(termoBusca);
+        const bateCategoria = !categoriaFiltro || (t.categoria && t.categoria.id == categoriaFiltro);
+        const bateTipo = !tipoFiltro || t.tipo === tipoFiltro;
+
+        return bateNome && bateCategoria && bateTipo;
+    });
+
+    renderizarTabela(filtradas);
+}
+
+// ==========================================
+// EXPORTAÇÃO CSV
+// ==========================================
+function exportarTransacoesCSV() {
+    if (listaTransacoesCache.length === 0) {
+        alert('Não há transações para exportar.');
+        return;
+    }
+
+    let csvContent = 'data:text/csv;charset=utf-8,ID;Descrição;Tipo;Categoria;Valor\n';
+
+    listaTransacoesCache.forEach(t => {
+        const catNome = t.categoria ? t.categoria.nome : 'Sem Categoria';
+        csvContent += `${t.id};"${t.descricao}";${t.tipo};"${catNome}";${t.valor}\n`;
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `transacoes_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// ==========================================
+// MÁSCARA E FORMATAÇÃO
+// ==========================================
+function aplicarMascaraMoeda(input) {
+    let valor = input.value.replace(/\D/g, '');
+    if (!valor) {
+        input.value = '';
+        return;
+    }
+    valor = (parseFloat(valor) / 100).toFixed(2);
+    input.value = valor;
+}
+
+function formatarMoeda(valor) {
+    const num = Number(valor);
+    if (isNaN(num)) return 'R$ 0,00';
+    return num.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    });
+}
+
+// ==========================================
+// RENDERIZAÇÃO E DASHBOARD
+// ==========================================
+function renderizarTabela(transacoes) {
+    const tbody = document.getElementById('expenseListBody');
+    const countSpan = document.getElementById('expenseCount');
+
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    if (countSpan) countSpan.textContent = `${transacoes.length} itens`;
+
+    if (transacoes.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" class="py-6 text-center text-zinc-500 text-xs">
+                    Nenhuma transação cadastrada.
+                </td>
+            </tr>`;
+        return;
+    }
+
+    transacoes.forEach(t => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-zinc-900/50 transition';
+
+        const isReceita = t.tipo === 'RECEITA';
+        const corValor = isReceita ? 'text-emerald-400' : 'text-rose-400';
+        const sinal = isReceita ? '+' : '-';
+
+        tr.innerHTML = `
+            <td class="py-3 px-4 font-medium text-zinc-200">${t.descricao}</td>
+            <td class="py-3 px-4">
+                <span class="bg-zinc-800 text-zinc-400 text-xs px-2 py-1 rounded border border-zinc-700/40">
+                    ${t.categoria ? t.categoria.nome : 'Sem Categoria'}
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-mono font-semibold ${corValor}">
+                ${sinal} R$ ${Math.abs(t.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </td>
+            <td class="py-3 px-4 text-center">
+                <button onclick="abrirModalEdicao(${t.id})" title="Editar" class="text-zinc-500 hover:text-amber-400 transition p-1 mr-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                </button>
+                <button onclick="deletarTransacao(${t.id})" title="Excluir" class="text-zinc-500 hover:text-rose-400 transition p-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function atualizarDashboard(transacoes) {
+    const totalBalanceSpan = document.getElementById('totalBalance');
+    const totalExpensesSpan = document.getElementById('totalExpenses');
+
+    if (!totalBalanceSpan || !totalExpensesSpan) return;
+
+    const saldoInicial = parseFloat(document.body.dataset.saldoInicial) || 0;
+
+    let totalEntradas = 0;
+    let totalSaidas = 0;
+
+    transacoes.forEach(t => {
+        if (t.tipo === 'RECEITA') {
+            totalEntradas += t.valor;
+        } else {
+            totalSaidas += t.valor;
+        }
+    });
+
+    const saldoLiquido = saldoInicial + totalEntradas - totalSaidas;
+
+    totalExpensesSpan.textContent = `R$ ${totalSaidas.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    totalBalanceSpan.textContent = `R$ ${saldoLiquido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    if (saldoLiquido < 0) {
+        totalBalanceSpan.className = 'text-2xl font-bold text-rose-400 mt-1';
+    } else {
+        totalBalanceSpan.className = 'text-2xl font-bold text-emerald-400 mt-1';
+    }
+}
+
+// ==========================================
+// RELATÓRIOS E GRÁFICOS (CHART.JS)
+// ==========================================
+async function carregarDadosEExibirGrafico() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/transacoes`, {
+            headers: getHeaders()
+        });
+
+        let transacoes = [];
+        if (response.ok) {
+            transacoes = await response.json();
+        } else {
+            console.warn('Buscando dados do cache local...');
+            transacoes = listaTransacoesCache || [];
+        }
+
+        // Filtra apenas as despesas para a renderização do gráfico de rosca
+        const despesas = transacoes.filter(t => t.tipo === 'DESPESA' || !t.tipo);
+        processarEGerarGrafico(despesas);
+
+    } catch (error) {
+        console.error('Erro de conexão ao buscar transações para o gráfico:', error);
+        const despesasLocais = listaTransacoesCache.filter(t => t.tipo === 'DESPESA');
+        processarEGerarGrafico(despesasLocais);
+    }
+}
+
+function processarEGerarGrafico(despesas) {
+    const categoriasAgrupadas = {};
+    let valorTotalGeral = 0;
+
+    despesas.forEach(item => {
+        const valor = parseFloat(item.valor || item.amount || 0);
+
+        let nomeCategoria = 'Outros';
+        if (typeof item.categoria === 'object' && item.categoria !== null) {
+            nomeCategoria = item.categoria.nome || 'Outros';
+        } else if (typeof item.categoria === 'string' && item.categoria.trim() !== '') {
+            nomeCategoria = item.categoria;
+        } else if (item.categoriaNome) {
+            nomeCategoria = item.categoriaNome;
+        }
+
+        if (valor > 0) {
+            valorTotalGeral += valor;
+            categoriasAgrupadas[nomeCategoria] = (categoriasAgrupadas[nomeCategoria] || 0) + valor;
+        }
+    });
+
+    let maiorCategoriaNome = '--';
+    let maiorCategoriaValor = 0;
+
+    Object.entries(categoriasAgrupadas).forEach(([cat, val]) => {
+        if (val > maiorCategoriaValor) {
+            maiorCategoriaValor = val;
+            maiorCategoriaNome = cat;
+        }
+    });
+
+    const elTopCategory = document.getElementById('topCategory');
+    const elTopCategoryAmount = document.getElementById('topCategoryAmount');
+    const elMonthTotal = document.getElementById('monthTotal');
+
+    if (elTopCategory) elTopCategory.innerText = maiorCategoriaNome;
+    if (elTopCategoryAmount) elTopCategoryAmount.innerText = formatarMoeda(maiorCategoriaValor);
+    if (elMonthTotal) elMonthTotal.innerText = formatarMoeda(valorTotalGeral);
+
+    const labels = Object.keys(categoriasAgrupadas);
+    const dataValues = Object.values(categoriasAgrupadas);
+
+    renderizarChartJS(labels, dataValues, labels.length === 0);
+}
+
+function renderizarChartJS(labels, dataValues, semDados = false) {
+    const canvas = document.getElementById('expensesChart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (instanceChart) {
+        instanceChart.destroy();
+    }
+
+    const coresBase = ['#10b981', '#f43f5e', '#3b82f6', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899', '#64748b'];
+    const backgroundColors = semDados ? ['#27272a'] : coresBase.slice(0, labels.length);
+
+    instanceChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: labels,
+            labels: semDados ? ['Sem registros'] : labels,
             datasets: [{
-                data: dataValues,
-                backgroundColor: backgroundColors.slice(0, labels.length),
-                borderColor: '#1e293b',
-                borderWidth: 3
+                data: semDados ? [1] : dataValues,
+                backgroundColor: backgroundColors,
+                borderColor: '#18181b',
+                borderWidth: 2,
+                hoverOffset: 6
             }]
         },
         options: {
@@ -488,295 +874,25 @@ function renderChart() {
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: { color: '#94a3b8', font: { family: 'Inter', size: 13 }, padding: 20 }
+                    labels: {
+                        color: '#a1a1aa',
+                        font: { family: 'Inter', size: 12 },
+                        padding: 16,
+                        usePointStyle: true
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            if (semDados) return ' Nenhuma despesa cadastrada';
+                            const label = context.label || '';
+                            const valor = context.raw || 0;
+                            return ` ${label}: ${formatarMoeda(valor)}`;
+                        }
+                    }
                 }
-            }
-        }
-    });
-}
-
-
-
-// 5. perfil, foto de perfil e categoria
-function renderCategoryList() {
-    const container = document.getElementById('categoryListContainer');
-    if (!container) return;
-
-    const categories = getStoredCategories();
-    container.innerHTML = '';
-
-    categories.forEach((cat, index) => {
-        const item = document.createElement('div');
-        item.className = 'flex items-center justify-between bg-zinc-950 border border-zinc-800/80 rounded-lg px-4 py-2.5';
-        item.innerHTML = `
-            <span class="text-sm font-medium text-zinc-200">${escapeHtml(cat.name)}</span>
-            <button onclick="removeCategory(${index})" class="text-zinc-500 hover:text-rose-400 transition p-1" title="Excluir Categoria">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                </svg>
-            </button>
-        `;
-        container.appendChild(item);
-    });
-}
-
-async function addNewCategory() {
-    const input = document.getElementById('newCategoryName');
-    const name = input?.value.trim();
-   
-    if (!name) return;
-
-    try {
-        // Envia os dados para a API Spring Boot
-        const response = await fetch('http://localhost:8080/api/categorias', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ nome: name }) // Envia o JSON esperado pelo DTO/Entity Categoria
-        });
-
-        if (!response.ok) {
-            throw new Error(`Erro na requisição: ${response.status}`);
+            cutout: '70%'
         }
-
-        const novaCategoria = await response.json();
-        console.log('Categoria salva no banco:', novaCategoria);
-
-        // Limpa o campo de texto
-        input.value = '';
-
-        // Atualiza a interface gráfica chamando as funções que buscam do backend
-        renderCategoryList();
-        populateCategoryDropdown();
-
-    } catch (error) {
-        console.error('Falha ao salvar a categoria no backend:', error);
-        alert('Não foi possível salvar a categoria. Verifique se o servidor Spring Boot está rodando.');
-    }
+    });
 }
-function removeCategory(index) {
-    let categories = getStoredCategories();
-    if (categories.length <= 1) {
-        return;
-    }
-    categories.splice(index, 1);
-    setStoredCategories(categories);
-
-    renderCategoryList();
-    populateCategoryDropdown();
-}
-
-// Upload do Avatar
-function handleImageUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (file.size > 2 * 1024 * 1024) {
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const base64Image = e.target.result;
-        localStorage.setItem('userAvatar', base64Image);
-        applyProfileImage(base64Image);
-    };
-    reader.readAsDataURL(file);
-}
-
-function removeProfileImage() {
-    localStorage.removeItem('userAvatar');
-
-    const avatarImg = document.getElementById('avatarImg');
-    const avatarInitials = document.getElementById('avatarInitials');
-    if (avatarImg) avatarImg.classList.add('hidden');
-    if (avatarInitials) avatarInitials.classList.remove('hidden');
-
-    const sidebarAvatarImg = document.getElementById('sidebarAvatarImg');
-    const sidebarAvatarText = document.getElementById('sidebarAvatarText');
-    if (sidebarAvatarImg) sidebarAvatarImg.classList.add('hidden');
-    if (sidebarAvatarText) sidebarAvatarText.classList.remove('hidden');
-
-    const fileInput = document.getElementById('profileImageInput');
-    if (fileInput) fileInput.value = '';
-}
-
-function loadSavedProfileImage() {
-    const savedAvatar = localStorage.getItem('userAvatar');
-    if (savedAvatar) {
-        applyProfileImage(savedAvatar);
-    }
-}
-
-function applyProfileImage(src) {
-    const avatarImg = document.getElementById('avatarImg');
-    const avatarInitials = document.getElementById('avatarInitials');
-    if (avatarImg && avatarInitials) {
-        avatarImg.src = src;
-        avatarImg.classList.remove('hidden');
-        avatarInitials.classList.add('hidden');
-    }
-
-    const sidebarAvatarImg = document.getElementById('sidebarAvatarImg');
-    const sidebarAvatarText = document.getElementById('sidebarAvatarText');
-    if (sidebarAvatarImg && sidebarAvatarText) {
-        sidebarAvatarImg.src = src;
-        sidebarAvatarImg.classList.remove('hidden');
-        sidebarAvatarText.classList.add('hidden');
-    }
-}
-
-// Modal de Alteração de Senha
-function openPasswordModal() {
-    const modal = document.getElementById('passwordModal');
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
-}
-
-function closePasswordModal() {
-    const modal = document.getElementById('passwordModal');
-    if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-
-        document.getElementById('passwordForm')?.reset();
-        const feedback = document.getElementById('passwordFeedback');
-        if (feedback) feedback.innerText = '';
-        const meter = document.getElementById('strengthMeter');
-        if (meter) meter.style.width = '0%';
-    }
-}
-
-function togglePasswordVisibility(fieldId) {
-    const field = document.getElementById(fieldId);
-    if (!field) return;
-    field.type = field.type === 'password' ? 'text' : 'password';
-}
-
-function evaluatePasswordStrength() {
-    const pass = document.getElementById('newPassword')?.value || '';
-    const meter = document.getElementById('strengthMeter');
-
-    const hasLength = pass.length >= 8;
-    const hasUpper = /[A-Z]/.test(pass);
-    const hasNumber = /[0-9]/.test(pass);
-    const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pass);
-
-    updateRequirementUI('req-length', hasLength);
-    updateRequirementUI('req-uppercase', hasUpper);
-    updateRequirementUI('req-number', hasNumber);
-    updateRequirementUI('req-special', hasSpecial);
-
-    let score = 0;
-    if (hasLength) score++;
-    if (hasUpper) score++;
-    if (hasNumber) score++;
-    if (hasSpecial) score++;
-
-    if (!meter) return;
-
-    if (pass.length === 0) {
-        meter.style.width = '0%';
-        meter.className = 'h-full transition-all duration-300';
-    } else if (score <= 1) {
-        meter.style.width = '25%';
-        meter.className = 'h-full bg-rose-500 transition-all duration-300';
-    } else if (score === 2 || score === 3) {
-        meter.style.width = '65%';
-        meter.className = 'h-full bg-amber-500 transition-all duration-300';
-    } else {
-        meter.style.width = '100%';
-        meter.className = 'h-full bg-emerald-500 transition-all duration-300';
-    }
-}
-
-function updateRequirementUI(elementId, isValid) {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-    el.className = isValid ? 'text-emerald-400 font-medium' : 'text-zinc-400';
-}
-
-async function handlePasswordUpdate(event) {
-    event.preventDefault();
-    const newPass = document.getElementById('newPassword').value;
-    const confirmPass = document.getElementById('confirmNewPassword').value;
-    const feedback = document.getElementById('passwordFeedback');
-
-    const hasLength = newPass.length >= 8;
-    const hasUpper = /[A-Z]/.test(newPass);
-    const hasNumber = /[0-9]/.test(newPass);
-    const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newPass);
-
-    if (!hasLength || !hasUpper || !hasNumber || !hasSpecial) {
-        feedback.className = 'text-xs font-medium text-rose-400';
-        feedback.innerText = 'A nova senha precisa atender a todos os requisitos de segurança.';
-        return;
-    }
-
-    if (newPass !== confirmPass) {
-        feedback.className = 'text-xs font-medium text-rose-400';
-        feedback.innerText = 'A nova senha e a confirmação não coincidem.';
-        return;
-    }
-
-    try {
-        const registeredUser = JSON.parse(localStorage.getItem('registeredUser'));
-        if (registeredUser) {
-            registeredUser.password = await hashPassword(newPass);
-            localStorage.setItem('registeredUser', JSON.stringify(registeredUser));
-        }
-    } catch (err) {
-        console.error('Erro ao salvar nova senha:', err);
-    }
-
-    feedback.className = 'text-xs font-medium text-emerald-400';
-    feedback.innerText = 'Senha alterada com sucesso!';
-
-    setTimeout(() => {
-        closePasswordModal();
-    }, 1200);
-}
-
-
-
-
-// iniciar aplicação
-document.addEventListener('DOMContentLoaded', function () {
-    verificarSessao();
-    loadSavedProfileImage();
-    populateCategoryDropdown();
-    updateDashboard();
-
-    const inputSaldo = document.getElementById('inputSaldo');
-    if (inputSaldo) {
-        const saldoAtual = getStoredSaldo();
-        if (saldoAtual > 0) inputSaldo.placeholder = saldoAtual.toFixed(2);
-    }
-
-    const btnSalvarSaldo = document.getElementById('btnSalvarSaldo');
-    if (btnSalvarSaldo) {
-        btnSalvarSaldo.addEventListener('click', handleSaveSaldo);
-    }
-
-    const expenseForm = document.getElementById('expenseForm');
-    if (expenseForm) {
-        expenseForm.addEventListener('submit', handleExpenseSubmit);
-    }
-
-    const selectMes = document.getElementById('selectMes');
-    if (selectMes) {
-        selectMes.addEventListener('change', renderChart);
-    }
-
-    const passwordForm = document.getElementById('passwordForm');
-    if (passwordForm) {
-        passwordForm.addEventListener('submit', handlePasswordUpdate);
-    }
-
-    if (document.getElementById('categoryListContainer')) {
-        renderCategoryList();
-    }
-});
