@@ -43,7 +43,6 @@ public class UsuarioService {
             emailService.enviarCodigoVerificacao(usuarioSalvo.getEmail(), codigoGerado);
         } catch (Exception e) {
             System.err.println("Erro ao enviar e-mail de verificação: " + e.getMessage());
-            // Opcional: pode lançar uma exceção ou apenas registrar o log
         }
 
         return usuarioSalvo;
@@ -57,5 +56,42 @@ public class UsuarioService {
 
         Usuario usuario = opt.get();
         return passwordEncoder.matches(rawPassword, usuario.getSenha());
+    }
+
+    // -----------------------------------------------------------
+    // MÉTODO 1: Atualizar senha verificando a senha atual (Tela de Configurações)
+    // -----------------------------------------------------------
+    public boolean atualizarSenha(String email, String senhaAtual, String novaSenha) {
+        Optional<Usuario> opt = repository.findByEmail(email);
+        if (opt.isEmpty()) {
+            return false;
+        }
+
+        Usuario usuario = opt.get();
+
+        // Valida se a senha atual está correta
+        if (!passwordEncoder.matches(senhaAtual, usuario.getSenha())) {
+            return false;
+        }
+
+        // Criptografa e salva a nova senha
+        usuario.setSenha(passwordEncoder.encode(novaSenha));
+        repository.save(usuario);
+        return true;
+    }
+
+    // -----------------------------------------------------------
+    // MÉTODO 2: Sobreposição para redefinir direto sem senha antiga (Fluxo "Esqueci a Senha")
+    // -----------------------------------------------------------
+    public boolean atualizarSenha(String email, String novaSenha) {
+        Optional<Usuario> opt = repository.findByEmail(email);
+        if (opt.isEmpty()) {
+            return false;
+        }
+
+        Usuario usuario = opt.get();
+        usuario.setSenha(passwordEncoder.encode(novaSenha));
+        repository.save(usuario);
+        return true;
     }
 }

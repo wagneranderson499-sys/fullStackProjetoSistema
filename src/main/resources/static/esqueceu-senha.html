@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceControl - Recuperar Senha</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans antialiased min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-zinc-900 border border-zinc-800/80 rounded-2xl p-8 shadow-2xl">
+        <div class="flex flex-col items-center mb-8">
+            <div class="flex items-center justify-center w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl mb-3">
+                <img src="logo.png" alt="Logo" class="w-7 h-7 object-contain">
+            </div>
+            <h1 class="text-xl font-bold tracking-wide">Finance<span class="text-emerald-500">Control</span></h1>
+            <p class="text-xs text-zinc-400 mt-1 text-center">Digite seu e-mail para receber as instruções de redefinição</p>
+        </div>
+
+        <!-- Mensagem de Feedback -->
+        <div id="mensagemFeedback" class="hidden mb-4 p-3 border rounded-lg text-xs text-center"></div>
+
+        <form id="formEsqueceuSenha" class="flex flex-col gap-4">
+            <div class="flex flex-col gap-1.5">
+                <label for="email" class="text-xs font-medium text-zinc-400">E-mail cadastrado</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    placeholder="seu@email.com" 
+                    required
+                    class="bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/80 transition"
+                >
+            </div>
+
+            <button 
+                type="submit" 
+                id="btnEnviar"
+                class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2 mt-2"
+            >
+                Enviar link de recuperação
+            </button>
+        </form>
+
+        <div class="mt-6 border-t border-zinc-800/80 pt-4 text-center">
+            <p class="text-xs text-zinc-400">
+                Lembrou a senha? 
+                <a href="telaLogin.html" class="text-emerald-400 hover:underline font-medium">Voltar para o Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Import do JS externo -->
+    <script src="esqueci-senha.js"></script>
+</body>
+</html>

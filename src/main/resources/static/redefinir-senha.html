@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark h-full bg-zinc-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redefinir Senha - FinanceControl</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="h-full font-sans text-zinc-100 flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md space-y-6">
+        <!-- Header com Logo -->
+        <div class="text-center space-y-2">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 mb-2 border border-emerald-500/20">
+                <i class="fa-solid fa-key text-xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight text-white">Criar Nova Senha</h1>
+            <p class="text-sm text-zinc-400">Digite sua nova senha abaixo para reestabelecer o acesso.</p>
+        </div>
+
+        <!-- Card do Formulário -->
+        <div class="bg-zinc-900 border border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-xl">
+            <!-- Mensagem de Erro Alerta -->
+            <div id="errorMessage" class="hidden mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm flex items-center gap-2">
+                <i class="fa-solid fa-circle-exclamation text-base flex-shrink-0"></i>
+                <span id="errorText">Ocorreu um erro ao redefinir a senha.</span>
+            </div>
+
+            <form id="resetPasswordForm" class="space-y-5">
+                <!-- Nova Senha -->
+                <div>
+                    <label for="newPassword" class="block text-sm font-medium text-zinc-300 mb-1">Nova Senha</label>
+                    <div class="relative">
+                        <input type="password" id="newPassword" required
+                            class="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition text-sm pr-10"
+                            placeholder="••••••••">
+                    </div>
+                </div>
+
+                <!-- Confirmar Senha -->
+                <div>
+                    <label for="confirmPassword" class="block text-sm font-medium text-zinc-300 mb-1">Confirmar Nova Senha</label>
+                    <div class="relative">
+                        <input type="password" id="confirmPassword" required
+                            class="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition text-sm pr-10"
+                            placeholder="••••••••">
+                    </div>
+                </div>
+
+                <!-- Requisitos de Senha -->
+                <div class="space-y-1.5 p-3 bg-zinc-950/50 rounded-xl border border-zinc-800/50 text-xs">
+                    <p class="font-medium text-zinc-400 mb-1">A senha deve conter:</p>
+                    <div id="ruleLength" class="text-zinc-500 flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-circle text-[6px]"></i>
+                        <span>Pelo menos 8 caracteres</span>
+                    </div>
+                    <div id="ruleNumber" class="text-zinc-500 flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-circle text-[6px]"></i>
+                        <span>Pelo menos 1 número</span>
+                    </div>
+                    <div id="ruleSpecial" class="text-zinc-500 flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-circle text-[6px]"></i>
+                        <span>Pelo menos 1 caractere especial (!@#$%...)</span>
+                    </div>
+                </div>
+
+                <!-- Botão de Ação -->
+                <button type="submit" id="btnReset"
+                    class="w-full py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold transition duration-200 flex items-center justify-center gap-2 text-sm shadow-lg shadow-emerald-500/10">
+                    <i id="btnSpinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                    <span id="btnText">Redefinir Senha</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center">
+            <a href="telaLogin.html" class="text-xs text-zinc-400 hover:text-emerald-400 transition flex items-center justify-center gap-1">
+                <i class="fa-solid fa-arrow-left"></i>
+                Voltar para o Login
+            </a>
+        </div>
+    </div>
+
+    <!-- Script de Validação e Envio -->
+    <script>
+        const API_BASE_URL = 'http://localhost:8080/api';
+
+        // Pega o e-mail passado no parâmetro da URL (?email=xxx)
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+
+        const newPasswordInput = document.getElementById('newPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const form = document.getElementById('resetPasswordForm');
+
+        // Validação em tempo real
+        newPasswordInput.addEventListener('input', () => {
+            const val = newPasswordInput.value;
+            atualizarRegra('ruleLength', val.length >= 8);
+            atualizarRegra('ruleNumber', /\d/.test(val));
+            atualizarRegra('ruleSpecial', /[!@#$%^&*(),.?":{}|<>]/.test(val));
+        });
+
+        function atualizarRegra(id, valido) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (valido) {
+                el.classList.remove('text-zinc-500');
+                el.classList.add('text-emerald-400', 'font-medium');
+            } else {
+                el.classList.remove('text-emerald-400', 'font-medium');
+                el.classList.add('text-zinc-500');
+            }
+        }
+
+        function mostrarErro(msg) {
+            const errDiv = document.getElementById('errorMessage');
+            const errText = document.getElementById('errorText');
+            errText.textContent = msg;
+            errDiv.classList.remove('hidden');
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!email) {
+                mostrarErro("Link de redefinição inválido ou incompleto.");
+                return;
+            }
+
+            const novaSenha = newPasswordInput.value;
+            const confirmSenha = confirmPasswordInput.value;
+
+            if (novaSenha !== confirmSenha) {
+                mostrarErro("As senhas não coincidem!");
+                return;
+            }
+
+            if (novaSenha.length < 8 || !/\d/.test(novaSenha) || !/[!@#$%^&*(),.?":{}|<>]/.test(novaSenha)) {
+                mostrarErro("A nova senha não atende aos requisitos de segurança.");
+                return;
+            }
+
+            // Ativa o estado de carregamento
+            document.getElementById('btnSpinner').classList.remove('hidden');
+            document.getElementById('btnText').textContent = 'Salvando...';
+            document.getElementById('btnReset').disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/usuarios/redefinir-senha`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, novaSenha })
+                });
+
+                const data = await response.json().catch(() => null);
+
+                if (response.ok) {
+                    alert('Senha redefinida com sucesso!');
+                    window.location.href = 'telaLogin.html';
+                } else {
+                    mostrarErro(data?.message || 'Erro ao redefinir a senha.');
+                }
+            } catch (err) {
+                console.error(err);
+                mostrarErro('Não foi possível conectar ao servidor.');
+            } finally {
+                document.getElementById('btnSpinner').classList.add('hidden');
+                document.getElementById('btnText').textContent = 'Redefinir Senha';
+                document.getElementById('btnReset').disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

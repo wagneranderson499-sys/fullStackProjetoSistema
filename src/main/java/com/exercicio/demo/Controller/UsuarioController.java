@@ -3,7 +3,13 @@ package com.exercicio.demo.Controller;
 import com.exercicio.demo.Model.Usuario;
 import com.exercicio.demo.Repository.UsuarioRepository;
 import com.exercicio.demo.Service.UsuarioService;
+import com.exercicio.demo.Service.EmailService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -18,21 +24,25 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepository;
+    private final JavaMailSender mailSender;
 
-    public UsuarioController(UsuarioService usuarioService, UsuarioRepository usuarioRepository) {
+    @Autowired
+    private EmailService emailService;
+
+    // Injeção via Construtor das dependências
+    public UsuarioController(UsuarioService usuarioService, UsuarioRepository usuarioRepository, JavaMailSender mailSender) {
         this.usuarioService = usuarioService;
         this.usuarioRepository = usuarioRepository;
+        this.mailSender = mailSender;
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registrar(@RequestBody Usuario usuario) {
         try {
-            // Check de e-mail duplicado
             if (usuarioRepository.existsByEmail(usuario.getEmail())) {
                 return ResponseEntity.badRequest().body(Map.of("message", "E-mail já cadastrado no sistema!"));
             }
 
-            // Executa a criação através da service
             usuarioService.cadastrar(
                 usuario.getNome(), 
                 usuario.getEmail(), 
@@ -76,7 +86,8 @@ public class UsuarioController {
 
         return ResponseEntity.badRequest().body(Map.of("message", "Código de verificação inválido!"));
     }
-@PostMapping("/login")
+
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String senha = request.get("senha");
@@ -86,19 +97,9 @@ public class UsuarioController {
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
 
-            // Validação da senha
             boolean senhaValida = usuarioService.autenticar(email, senha);
 
             if (senhaValida) {
-                // Caso queira reativar a obrigatoriedade de e-mail, basta descomentar abaixo:
-                /*
-                if (Boolean.FALSE.equals(usuario.isEmailVerificado())) {
-                    Map<String, String> erroEmail = new HashMap<>();
-                    erroEmail.put("message", "Por favor, verifique seu e-mail antes de fazer login.");
-                    return ResponseEntity.badRequest().body(erroEmail);
-                }
-                */
-
                 Map<String, Object> response = new HashMap<>();
                 response.put("id", usuario.getId());
                 response.put("email", usuario.getEmail() != null ? usuario.getEmail() : "");
@@ -151,6 +152,76 @@ public class UsuarioController {
             ));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", "Erro ao atualizar saldo: " + e.getMessage()));
+        }
+    }
+
+    // Endpoint de solicitação por E-mail (Tela de Esqueci Senha / Configurações)
+    @PostMapping("/esqueci-senha")
+    public ResponseEntity<?> solicitarRedefinicaoSenha(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+
+        if (email == null || email.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "O e-mail é obrigatório."));
+        }
+
+        String emailLimpo = email.trim().toLowerCase();
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(emailLimpo);
+
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "E-mail não encontrado no sistema."));
+        }
+
+        return enviarEmailRedefinicao(usuarioOpt.get().getEmail());
+    }
+
+    // Endpoint de solicitação por ID (Usado caso já tenha o ID na sessão)
+    @PostMapping("/{id}/solicitar-redefinicao")
+    public ResponseEntity<?> solicitarRedefinicaoPorId(@PathVariable Long id) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Usuário não encontrado no sistema."));
+        }
+
+        return enviarEmailRedefinicao(usuarioOpt.get().getEmail());
+    }
+
+    // Método auxiliar reutilizável para o envio da mensagem
+    private ResponseEntity<?> enviarEmailRedefinicao(String email) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("wagneranderson499@gmail.com");
+            message.setTo(email.trim().toLowerCase());
+            message.setSubject("Redefinição de Senha - FinanceControl");
+            message.setText("Olá!\n\nVocê solicitou a redefinição de senha da sua conta no FinanceControl.\n\n" +
+                           "Para redefinir sua senha, acesse o link abaixo:\n" +
+                           "http://localhost:5500/redefinir-senha.html?email=" + email.trim().toLowerCase() + "\n\n" +
+                           "Se você não fez esta solicitação, desconsidere este e-mail.");
+
+            mailSender.send(message);
+
+            return ResponseEntity.ok(Map.of("message", "Instruções enviadas para o seu e-mail com sucesso!"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(Map.of("message", "Erro ao enviar e-mail: " + e.getMessage()));
+        }
+    }
+
+    // Endpoint para efetivar a redefinição da senha
+    @PostMapping("/redefinir-senha")
+    public ResponseEntity<?> redefinirSenha(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        String novaSenha = payload.get("novaSenha");
+
+        if (email == null || novaSenha == null || email.isBlank() || novaSenha.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "E-mail e nova senha são obrigatórios."));
+        }
+
+        boolean atualizado = usuarioService.atualizarSenha(email.trim().toLowerCase(), novaSenha);
+        if (atualizado) {
+            return ResponseEntity.ok(Map.of("message", "Senha redefinida com sucesso!"));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Usuário não encontrado."));
         }
     }
 }
