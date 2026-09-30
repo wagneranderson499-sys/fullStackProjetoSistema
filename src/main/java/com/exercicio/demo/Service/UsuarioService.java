@@ -13,12 +13,12 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final EmailService emailService;
+
 
     public UsuarioService(UsuarioRepository repository, BCryptPasswordEncoder passwordEncoder, EmailService emailService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
-        this.emailService = emailService;
+      
     }
 
     public Usuario cadastrar(String name, String email, String rawPassword) {
@@ -33,14 +33,14 @@ public class UsuarioService {
         usuario.setEmail(email);
         usuario.setSenha(passwordHash);
         usuario.setCodigoVerificacao(codigoGerado);
-        usuario.setEmailVerificado(false);
+        usuario.setEmailVerificado(true);
 
         // Salva o usuário no banco de dados (schema app)
         Usuario usuarioSalvo = repository.save(usuario);
 
         // Tenta enviar o e-mail de verificação
         try {
-            emailService.enviarCodigoVerificacao(usuarioSalvo.getEmail(), codigoGerado);
+          //  emailService.enviarCodigoVerificacao(usuarioSalvo.getEmail(), codigoGerado);
         } catch (Exception e) {
             System.err.println("Erro ao enviar e-mail de verificação: " + e.getMessage());
         }

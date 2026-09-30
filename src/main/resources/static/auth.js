@@ -17,7 +17,7 @@ function getHeaders() {
 
 function checarAutenticacao() {
     const usuarioId = localStorage.getItem('usuarioId');
-    const paginasPublicas = ['login.html', 'telaLogin.html', 'registro.html', 'confirmar-email.html'];
+    const paginasPublicas = ['login.html', 'telaLogin.html', 'cadastro.html',];
     
     // Pega o nome do arquivo da URL atual (ex: index.html)
     const paginaAtual = window.location.pathname.split('/').pop() || 'index.html';
@@ -182,7 +182,7 @@ async function executarVerificacaoCodigo(e) {
         if (response.ok) {
             localStorage.removeItem('tempEmailVerification');
             alert('E-mail verificado com sucesso! Faça seu login.');
-            window.location.href = 'telaLogin.html';
+            window.location.href = 'cadastro.html';
         } else {
             mostrarErroModal(data?.message || 'Código inválido ou expirado.');
         }

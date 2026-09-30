@@ -1,21 +1,27 @@
 package com.exercicio.demo.Controller;
 
-import com.exercicio.demo.Model.Usuario;
-import com.exercicio.demo.Repository.UsuarioRepository;
-import com.exercicio.demo.Service.UsuarioService;
-import com.exercicio.demo.Service.EmailService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.exercicio.demo.Model.Usuario;
+import com.exercicio.demo.Repository.UsuarioRepository;
+import com.exercicio.demo.Service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -26,8 +32,8 @@ public class UsuarioController {
     private final UsuarioRepository usuarioRepository;
     private final JavaMailSender mailSender;
 
-    @Autowired
-    private EmailService emailService;
+    // @Autowired
+    // private EmailService emailService;
 
     // Injeção via Construtor das dependências
     public UsuarioController(UsuarioService usuarioService, UsuarioRepository usuarioRepository, JavaMailSender mailSender) {
@@ -155,16 +161,22 @@ public class UsuarioController {
         }
     }
 
-    // Endpoint de solicitação por E-mail (Tela de Esqueci Senha / Configurações)
+    // Suporta recebimento via Query Param (?email=...) ou JSON Body
     @PostMapping("/esqueci-senha")
-    public ResponseEntity<?> solicitarRedefinicaoSenha(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
+    public ResponseEntity<?> solicitarRedefinicaoSenha(
+            @RequestParam(required = false) String email,
+            @RequestBody(required = false) Map<String, String> request) {
+        
+        String targetEmail = email;
+        if ((targetEmail == null || targetEmail.isBlank()) && request != null) {
+            targetEmail = request.get("email");
+        }
 
-        if (email == null || email.trim().isEmpty()) {
+        if (targetEmail == null || targetEmail.trim().isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("message", "O e-mail é obrigatório."));
         }
 
-        String emailLimpo = email.trim().toLowerCase();
+        String emailLimpo = targetEmail.trim().toLowerCase();
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(emailLimpo);
 
         if (usuarioOpt.isEmpty()) {
@@ -174,7 +186,6 @@ public class UsuarioController {
         return enviarEmailRedefinicao(usuarioOpt.get().getEmail());
     }
 
-    // Endpoint de solicitação por ID (Usado caso já tenha o ID na sessão)
     @PostMapping("/{id}/solicitar-redefinicao")
     public ResponseEntity<?> solicitarRedefinicaoPorId(@PathVariable Long id) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
@@ -186,7 +197,6 @@ public class UsuarioController {
         return enviarEmailRedefinicao(usuarioOpt.get().getEmail());
     }
 
-    // Método auxiliar reutilizável para o envio da mensagem
     private ResponseEntity<?> enviarEmailRedefinicao(String email) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -207,7 +217,6 @@ public class UsuarioController {
         }
     }
 
-    // Endpoint para efetivar a redefinição da senha
     @PostMapping("/redefinir-senha")
     public ResponseEntity<?> redefinirSenha(@RequestBody Map<String, String> payload) {
         String email = payload.get("email");
@@ -223,5 +232,34 @@ public class UsuarioController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Usuário não encontrado."));
         }
+    }
+
+    // Endpoint de alteração de senha logado (valida senha antiga)
+    @PutMapping("/alterar-senha")
+    public ResponseEntity<?> alterarSenha(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        String senhaAtual = payload.get("senhaAtual");
+        String novaSenha = payload.get("novaSenha");
+
+        if (email == null || senhaAtual == null || novaSenha == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Todos os campos são obrigatórios."));
+        }
+
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email.trim().toLowerCase());
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Usuário não encontrado."));
+        }
+
+        boolean autenticado = usuarioService.autenticar(email.trim().toLowerCase(), senhaAtual);
+        if (!autenticado) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Senha atual incorreta."));
+        }
+
+        boolean atualizado = usuarioService.atualizarSenha(email.trim().toLowerCase(), novaSenha);
+        if (atualizado) {
+            return ResponseEntity.ok(Map.of("message", "Senha alterada com sucesso!"));
+        }
+
+        return ResponseEntity.internalServerError().body(Map.of("message", "Erro ao atualizar a senha."));
     }
 }

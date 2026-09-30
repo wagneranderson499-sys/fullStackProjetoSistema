@@ -14,7 +14,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    private static final String REMETENTE = "wagneranderson499@gmail.com";
+    private static final String REMETENTE = "email novo aqui";
     private static final String IP_LOCAL = "192.168.18.19";
     private static final String PORTA_FRONT = "5500";
 

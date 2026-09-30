@@ -36,14 +36,14 @@
     </script>
     <script src="auth.js" defer></script>
 </head>
-<body class="bg-zinc-950 text-zinc-100 font-sans antialiased min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-zinc-900 border border-zinc-800/80 rounded-2xl p-8 shadow-2xl">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800/80 rounded-2xl p-8 shadow-2xl">
         <div class="flex flex-col items-center mb-8">
-            <div class="flex items-center justify-center w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl mb-3">
+            <div class="flex items-center justify-center w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl mb-3">
                 <img src="logo.png" alt="Logo" class="w-7 h-7 object-contain">
             </div>
-            <h1 class="text-xl font-bold tracking-wide">Finance<span class="text-emerald-500">Control</span></h1>
-            <p class="text-xs text-zinc-400 mt-1">Acesse sua conta para gerenciar suas finanças</p>
+            <h1 class="text-xl font-bold tracking-wide">Finance<span class="text-indigo-500">Control</span></h1>
+            <p class="text-xs text-slate-400 mt-1">Acesse sua conta para gerenciar suas finanças</p>
         </div>
 
         <!-- Área de Mensagem de Erro -->
@@ -53,20 +53,20 @@
 
         <form id="loginForm" onsubmit="return fazerLogin(event)" class="flex flex-col gap-4">
             <div class="flex flex-col gap-1.5">
-                <label for="loginEmail" class="text-xs font-medium text-zinc-400">E-mail</label>
+                <label for="loginEmail" class="text-xs font-medium text-slate-400">E-mail</label>
                 <input 
                     type="email" 
                     id="loginEmail" 
                     placeholder="seu@email.com" 
                     required
-                    class="bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/80 transition"
+                    class="bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500/80 transition"
                 >
             </div>
 
             <div class="flex flex-col gap-1.5">
                 <div class="flex items-center justify-between">
-                    <label for="loginPassword" class="text-xs font-medium text-zinc-400">Senha</label>
-                    <a href="esqueceu-senha.html" class="text-xs text-emerald-400 hover:underline font-medium transition">Esqueceu sua senha?</a>
+                    <label for="loginPassword" class="text-xs font-medium text-slate-400">Senha</label>
+                    <a href="esqueceu-senha.html" class="text-xs text-indigo-400 hover:underline font-medium transition">Esqueceu sua senha?</a>
                 </div>
                 <div class="relative">
                     <input 
@@ -74,12 +74,12 @@
                         id="loginPassword" 
                         placeholder="••••••••" 
                         required
-                        class="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-3.5 pr-10 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/80 transition"
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3.5 pr-10 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500/80 transition"
                     >
                     <button 
                         type="button" 
                         onclick="alternarSenha()"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition focus:outline-none"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition focus:outline-none"
                     >
                         <svg id="iconeOlho" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -92,7 +92,7 @@
             <button 
                 type="submit" 
                 id="btnLogin"
-                class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2 mt-2"
+                class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2 mt-2 shadow-lg shadow-indigo-600/20"
             >
                 <span id="btnLoginText">Entrar</span>
                 <svg id="btnLoginSpinner" class="w-4 h-4 text-white animate-spin hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -102,10 +102,10 @@
             </button>
         </form>
 
-        <div class="mt-6 border-t border-zinc-800/80 pt-4 text-center">
-            <p class="text-xs text-zinc-400">
+        <div class="mt-6 border-t border-slate-800/80 pt-4 text-center">
+            <p class="text-xs text-slate-400">
                 Ainda não tem uma conta? 
-                <a href="cadastro.html" class="text-emerald-400 hover:underline font-medium">Cadastre-se</a>
+                <a href="cadastro.html" class="text-indigo-400 hover:underline font-medium">Cadastre-se</a>
             </p>
         </div>
     </div>

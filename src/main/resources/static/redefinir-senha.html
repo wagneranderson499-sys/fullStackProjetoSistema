@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark h-full bg-zinc-950">
+<html lang="pt-BR" class="dark h-full bg-slate-950">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,10 +13,10 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#ecfdf5',
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857'
+                            50: '#eef2ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca'
                         }
                     }
                 }
@@ -25,20 +25,20 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="h-full font-sans text-zinc-100 flex items-center justify-center p-4">
+<body class="h-full font-sans text-slate-100 flex items-center justify-center p-4 selection:bg-indigo-500 selection:text-slate-950">
 
     <div class="w-full max-w-md space-y-6">
         <!-- Header com Logo -->
         <div class="text-center space-y-2">
-            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 mb-2 border border-emerald-500/20">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 mb-2 border border-indigo-500/20">
                 <i class="fa-solid fa-key text-xl"></i>
             </div>
             <h1 class="text-2xl font-bold tracking-tight text-white">Criar Nova Senha</h1>
-            <p class="text-sm text-zinc-400">Digite sua nova senha abaixo para reestabelecer o acesso.</p>
+            <p class="text-sm text-slate-400">Digite sua nova senha abaixo para reestabelecer o acesso.</p>
         </div>
 
         <!-- Card do Formulário -->
-        <div class="bg-zinc-900 border border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-xl">
+        <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl">
             <!-- Mensagem de Erro Alerta -->
             <div id="errorMessage" class="hidden mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm flex items-center gap-2">
                 <i class="fa-solid fa-circle-exclamation text-base flex-shrink-0"></i>
@@ -48,36 +48,36 @@
             <form id="resetPasswordForm" class="space-y-5">
                 <!-- Nova Senha -->
                 <div>
-                    <label for="newPassword" class="block text-sm font-medium text-zinc-300 mb-1">Nova Senha</label>
+                    <label for="newPassword" class="block text-sm font-medium text-slate-300 mb-1">Nova Senha</label>
                     <div class="relative">
                         <input type="password" id="newPassword" required
-                            class="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition text-sm pr-10"
+                            class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm pr-10"
                             placeholder="••••••••">
                     </div>
                 </div>
 
                 <!-- Confirmar Senha -->
                 <div>
-                    <label for="confirmPassword" class="block text-sm font-medium text-zinc-300 mb-1">Confirmar Nova Senha</label>
+                    <label for="confirmPassword" class="block text-sm font-medium text-slate-300 mb-1">Confirmar Nova Senha</label>
                     <div class="relative">
                         <input type="password" id="confirmPassword" required
-                            class="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition text-sm pr-10"
+                            class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm pr-10"
                             placeholder="••••••••">
                     </div>
                 </div>
 
                 <!-- Requisitos de Senha -->
-                <div class="space-y-1.5 p-3 bg-zinc-950/50 rounded-xl border border-zinc-800/50 text-xs">
-                    <p class="font-medium text-zinc-400 mb-1">A senha deve conter:</p>
-                    <div id="ruleLength" class="text-zinc-500 flex items-center gap-1.5 transition-colors">
+                <div class="space-y-1.5 p-3 bg-slate-950/50 rounded-xl border border-slate-800/50 text-xs">
+                    <p class="font-medium text-slate-400 mb-1">A senha deve conter:</p>
+                    <div id="ruleLength" class="text-slate-500 flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-circle text-[6px]"></i>
                         <span>Pelo menos 8 caracteres</span>
                     </div>
-                    <div id="ruleNumber" class="text-zinc-500 flex items-center gap-1.5 transition-colors">
+                    <div id="ruleNumber" class="text-slate-500 flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-circle text-[6px]"></i>
                         <span>Pelo menos 1 número</span>
                     </div>
-                    <div id="ruleSpecial" class="text-zinc-500 flex items-center gap-1.5 transition-colors">
+                    <div id="ruleSpecial" class="text-slate-500 flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-circle text-[6px]"></i>
                         <span>Pelo menos 1 caractere especial (!@#$%...)</span>
                     </div>
@@ -85,7 +85,7 @@
 
                 <!-- Botão de Ação -->
                 <button type="submit" id="btnReset"
-                    class="w-full py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold transition duration-200 flex items-center justify-center gap-2 text-sm shadow-lg shadow-emerald-500/10">
+                    class="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition duration-200 flex items-center justify-center gap-2 text-sm shadow-lg shadow-indigo-600/20">
                     <i id="btnSpinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
                     <span id="btnText">Redefinir Senha</span>
                 </button>
@@ -93,7 +93,7 @@
         </div>
 
         <div class="text-center">
-            <a href="telaLogin.html" class="text-xs text-zinc-400 hover:text-emerald-400 transition flex items-center justify-center gap-1">
+            <a href="telaLogin.html" class="text-xs text-slate-400 hover:text-indigo-400 transition flex items-center justify-center gap-1">
                 <i class="fa-solid fa-arrow-left"></i>
                 Voltar para o Login
             </a>
@@ -124,11 +124,11 @@
             const el = document.getElementById(id);
             if (!el) return;
             if (valido) {
-                el.classList.remove('text-zinc-500');
-                el.classList.add('text-emerald-400', 'font-medium');
+                el.classList.remove('text-slate-500');
+                el.classList.add('text-indigo-400', 'font-medium');
             } else {
-                el.classList.remove('text-emerald-400', 'font-medium');
-                el.classList.add('text-zinc-500');
+                el.classList.remove('text-indigo-400', 'font-medium');
+                el.classList.add('text-slate-500');
             }
         }
 

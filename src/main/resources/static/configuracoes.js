@@ -409,4 +409,39 @@ async function handleForgotPassword() {
 }
 
 // Garante que o evento onClick do HTML consiga encontrar a função globalmente
-window.handleForgotPassword = handleForgotPassword;
+window.handleForgotPassword = handleForgotPassword
+
+function carregarUsuarioSidebar() {
+    // 1. Pega o nome do usuário salvo no login usando a chave correta
+    const nomeUsuario = localStorage.getItem('usuarioNome') || 'Usuário';
+    
+    // 2. Seleciona os elementos do HTML da tela de configurações
+    const elNome = document.getElementById('nomeUsuarioSidebar');
+    const elAvatar = document.getElementById('avatarUsuario');
+
+    // 3. Preenche o nome do usuário
+    if (elNome) {
+        elNome.textContent = nomeUsuario;
+    }
+
+    // 4. Calcula e insere as iniciais do avatar
+    if (elAvatar) {
+        const partesNome = nomeUsuario.trim().split(' ');
+        let iniciais = '';
+
+        if (partesNome.length >= 2) {
+            // Primeira letra do primeiro nome + Primeira letra do segundo nome
+            iniciais = partesNome[0][0] + partesNome[1][0];
+        } else if (partesNome.length === 1 && partesNome[0].length > 0) {
+            // Se for nome único, pega as duas primeiras letras
+            iniciais = partesNome[0].slice(0, 2);
+        } else {
+            iniciais = 'US';
+        }
+
+        elAvatar.textContent = iniciais.toUpperCase();
+    }
+}
+
+// Executa automaticamente quando a página de configurações terminar de carregar
+document.addEventListener('DOMContentLoaded', carregarUsuarioSidebar);
