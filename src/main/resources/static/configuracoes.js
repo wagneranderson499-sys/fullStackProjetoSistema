@@ -335,7 +335,7 @@ async function handlePasswordUpdate(event) {
             feedback.className = "text-xs font-medium min-h-[16px] text-zinc-400";
         }
 
-        const response = await fetch('http://localhost:8080/api/usuarios/alterar-senha', {
+        const response = await fetch(`${API_BASE_URL}/usuarios/alterar-senha`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
