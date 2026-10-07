@@ -133,6 +133,7 @@ async function executarCadastro(e) {
     }
 
     setLoadingState('btnRegisterText', 'btnRegisterSpinner', 'btnRegister', true);
+document.getElementById('btnRegisterText').textContent = 'Criando conta...';
 
     try {
         const response = await fetch(`${API_BASE_URL}/usuarios/register`, {
