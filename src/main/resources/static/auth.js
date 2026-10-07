@@ -215,7 +215,7 @@ function setLoadingState(textId, spinnerId, buttonId, isLoading, defaultText = '
     if (!buttonEl) return;
 
     if (isLoading) {
-        if (textEl) textEl.textContent = 'Carregando...';
+        if (textEl) textEl.textContent = 'Redirecionando...';
         if (spinnerEl) spinnerEl.classList.remove('hidden');
         buttonEl.disabled = true;
         buttonEl.classList.add('opacity-80', 'cursor-not-allowed');

@@ -387,7 +387,7 @@ async function handleForgotPassword() {
 
     if (confirm(`Deseja enviar um e-mail de redefinição para ${email}?`)) {
         try {
-            const response = await fetch('http://localhost:8080/api/usuarios/esqueci-senha', {
+            const response = await fetch(`${API_BASE_URL}/usuarios/alterar-senha`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
