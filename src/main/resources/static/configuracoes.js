@@ -339,17 +339,17 @@ async function handlePasswordUpdate(event) {
     console.log("URL:", `${API_BASE_URL}/usuarios/alterar-senha`);
     console.log("Email:", email);
 
-    const response = await fetch(`${API_BASE_URL}/usuarios/alterar-senha`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: email,
-            senhaAtual: currentPassword,
-            novaSenha: newPassword
-        })
-    });
+ const response = await fetch('/api/usuarios/alterar-senha', {
+    method: 'PUT',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        email: email,
+        senhaAtual: currentPassword,
+        novaSenha: newPassword
+    })
+});
 
         if (response.ok) {
             if (feedback) {
