@@ -281,7 +281,8 @@ public class UsuarioController {
 
         String emailLimpo =
                 targetEmail.trim().toLowerCase();
-
+System.out.println("E-MAIL RECEBIDO: [" + targetEmail + "]");
+System.out.println("E-MAIL LIMPO: [" + emailLimpo + "]");
         Optional<Usuario> usuarioOpt =
                 usuarioRepository.findByEmail(emailLimpo);
 
