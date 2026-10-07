@@ -1,3 +1,4 @@
+
 // ==========================================
 // RECUPERAÇÃO DE SENHA (esqueceu-senha.js)
 // ==========================================
@@ -6,14 +7,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('formEsqueceuSenha');
     const mensagemFeedback = document.getElementById('mensagemFeedback');
-    const btnEnviar = document.getElementById('btnEnviar');
 
+    const btnEnviar = document.getElementById('btnEnviar');
     const campoEmail = document.getElementById('campoEmail');
     const campoCodigo = document.getElementById('campoCodigo');
     const btnValidarCodigo = document.getElementById('btnValidarCodigo');
     const textoInstrucao = document.getElementById('textoInstrucao');
 
+    // Modal de redefinição
+    const modalRedefinirSenha = document.getElementById('modalRedefinirSenha');
+    const formRedefinirSenha = document.getElementById('formRedefinirSenha');
+
     if (!form) return;
+
 
     // ==========================================
     // ETAPA 1 - ENVIAR CÓDIGO POR E-MAIL
@@ -71,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Mostra o campo do código
                 if (campoCodigo) {
-                    campoCodigo.style.display = 'block';
+                    campoCodigo.style.display = 'flex';
                 }
 
                 // Esconde o botão de enviar e-mail
@@ -79,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Mostra o botão de validar código
                 if (btnValidarCodigo) {
-                    btnValidarCodigo.style.display = 'block';
+                    btnValidarCodigo.style.display = 'flex';
                 }
 
                 // Atualiza a instrução
@@ -175,17 +181,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
 
-                    exibirMensagem(
-                        data.mensagem ||
-                        data.message ||
-                        'Código validado com sucesso!',
-                        '#10b981'
-                    );
-
                     console.log('Código validado com sucesso.');
 
-                    // A próxima etapa será criada aqui:
-                    // mostrar os campos para criar a nova senha.
+                    // Esconde a mensagem da etapa anterior
+                    if (mensagemFeedback) {
+                        mensagemFeedback.style.display = 'none';
+                    }
+
+                    // Esconde o formulário de código
+                    if (form) {
+                        form.style.display = 'none';
+                    }
+
+                    // Abre o modal de redefinição
+                    if (modalRedefinirSenha) {
+                        modalRedefinirSenha.classList.remove('hidden');
+                    }
 
                 } else {
 
@@ -215,7 +226,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ==========================================
-    // FUNÇÃO AUXILIAR
+    // ETAPA 3 - NOVA SENHA
+    // ==========================================
+
+    if (formRedefinirSenha) {
+
+        formRedefinirSenha.addEventListener('submit', (e) => {
+
+            e.preventDefault();
+
+            const novaSenha =
+                document.getElementById('novaSenha').value;
+
+            const confirmarNovaSenha =
+                document.getElementById('confirmarNovaSenha').value;
+
+            const feedbackRedefinicao =
+                document.getElementById('feedbackRedefinicao');
+
+            if (novaSenha.length < 8) {
+
+                mostrarFeedbackRedefinicao(
+                    'A senha deve ter pelo menos 8 caracteres.',
+                    '#ef4444'
+                );
+
+                return;
+            }
+
+            if (novaSenha !== confirmarNovaSenha) {
+
+                mostrarFeedbackRedefinicao(
+                    'As senhas não coincidem.',
+                    '#ef4444'
+                );
+
+                return;
+            }
+
+            // Por enquanto apenas teste visual.
+            // O próximo passo será conectar ao backend.
+
+            mostrarFeedbackRedefinicao(
+                'As senhas estão corretas. Vamos concluir a redefinição.',
+                '#10b981'
+            );
+
+            console.log('Nova senha pronta para ser enviada ao backend.');
+
+        });
+    }
+
+
+    // ==========================================
+    // FUNÇÃO - MENSAGEM PRINCIPAL
     // ==========================================
 
     function exibirMensagem(texto, corHex) {
@@ -228,4 +292,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
+    // ==========================================
+    // FUNÇÃO - FEEDBACK DO MODAL
+    // ==========================================
+
+    function mostrarFeedbackRedefinicao(texto, corHex) {
+
+        const feedback =
+            document.getElementById('feedbackRedefinicao');
+
+        if (feedback) {
+
+            feedback.style.display = 'block';
+            feedback.style.color = corHex;
+            feedback.textContent = texto;
+        }
+    }
+
 });
+
