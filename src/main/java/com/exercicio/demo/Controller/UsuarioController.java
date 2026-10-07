@@ -447,55 +447,107 @@ public ResponseEntity<?> validarCodigoRedefinicao(
             );
         }
     }
+@PostMapping("/redefinir-senha")
+public ResponseEntity<?> redefinirSenha(
+        @RequestBody Map<String, String> payload) {
 
-    @PostMapping("/redefinir-senha")
-    public ResponseEntity<?> redefinirSenha(
-            @RequestBody Map<String, String> payload) {
+    String email = payload.get("email");
+    String codigo = payload.get("codigo");
+    String novaSenha = payload.get("novaSenha");
 
-        String email = payload.get("email");
-        String novaSenha = payload.get("novaSenha");
+    if (email == null
+            || codigo == null
+            || novaSenha == null
+            || email.isBlank()
+            || codigo.isBlank()
+            || novaSenha.isBlank()) {
 
-        if (email == null
-                || novaSenha == null
-                || email.isBlank()
-                || novaSenha.isBlank()) {
-
-            return ResponseEntity.badRequest().body(
-                Map.of(
-                    "message",
-                    "E-mail e nova senha são obrigatórios."
-                )
-            );
-        }
-
-        boolean atualizado =
-                usuarioService.atualizarSenha(
-                    email.trim().toLowerCase(),
-                    novaSenha
-                );
-
-        if (atualizado) {
-
-            return ResponseEntity.ok(
-                Map.of(
-                    "message",
-                    "Senha redefinida com sucesso!"
-                )
-            );
-
-        } else {
-
-            return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(
-                    Map.of(
-                        "message",
-                        "Usuário não encontrado."
-                    )
-                );
-        }
+        return ResponseEntity.badRequest().body(
+            Map.of(
+                "message",
+                "E-mail, código e nova senha são obrigatórios."
+            )
+        );
     }
 
+    String emailLimpo = email.trim().toLowerCase();
+    String codigoLimpo = codigo.trim();
+
+    Optional<Usuario> usuarioOpt =
+            usuarioRepository.findByEmail(emailLimpo);
+
+    if (usuarioOpt.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+            Map.of(
+                "message",
+                "Usuário não encontrado."
+            )
+        );
+    }
+
+    Usuario usuario = usuarioOpt.get();
+
+    // Verifica se existe um código de recuperação
+    if (usuario.getCodigoRedefinicaoSenha() == null) {
+        return ResponseEntity.badRequest().body(
+            Map.of(
+                "message",
+                "Código de recuperação inválido ou expirado."
+            )
+        );
+    }
+
+    // Verifica se o código informado é o correto
+    if (!usuario.getCodigoRedefinicaoSenha().equals(codigoLimpo)) {
+        return ResponseEntity.badRequest().body(
+            Map.of(
+                "message",
+                "Código de recuperação inválido."
+            )
+        );
+    }
+
+    // Verifica se o código ainda está dentro do prazo
+    if (usuario.getExpiracaoCodigoRedefinicao() == null
+            || java.time.LocalDateTime.now()
+                .isAfter(usuario.getExpiracaoCodigoRedefinicao())) {
+
+        return ResponseEntity.badRequest().body(
+            Map.of(
+                "message",
+                "O código de recuperação expirou."
+            )
+        );
+    }
+
+    // Atualiza a senha usando o método que já utiliza BCrypt
+    boolean atualizado =
+            usuarioService.atualizarSenha(
+                emailLimpo,
+                novaSenha
+            );
+
+    if (!atualizado) {
+        return ResponseEntity.internalServerError().body(
+            Map.of(
+                "message",
+                "Não foi possível atualizar a senha."
+            )
+        );
+    }
+
+    // Invalida o código depois de usar
+    usuario.setCodigoRedefinicaoSenha(null);
+    usuario.setExpiracaoCodigoRedefinicao(null);
+    usuarioRepository.save(usuario);
+
+    return ResponseEntity.ok(
+        Map.of(
+            "message",
+            "Senha redefinida com sucesso!"
+        )
+    );
+}
     // Endpoint de alteração de senha logado
     // (valida senha antiga)
     @PutMapping("/alterar-senha")

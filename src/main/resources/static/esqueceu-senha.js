@@ -224,58 +224,118 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+// ==========================================
+// ETAPA 3 - NOVA SENHA
+// ==========================================
+if (formRedefinirSenha) {
 
-    // ==========================================
-    // ETAPA 3 - NOVA SENHA
-    // ==========================================
+    formRedefinirSenha.addEventListener('submit', async (e) => {
 
-    if (formRedefinirSenha) {
+        e.preventDefault();
 
-        formRedefinirSenha.addEventListener('submit', (e) => {
+        const emailInput = document.getElementById('email');
+        const codigoInput = document.getElementById('codigo');
+        const novaSenhaInput = document.getElementById('novaSenha');
+        const confirmarNovaSenhaInput =
+            document.getElementById('confirmarNovaSenha');
 
-            e.preventDefault();
+        const novaSenha = novaSenhaInput.value;
+        const confirmarNovaSenha =
+            confirmarNovaSenhaInput.value;
 
-            const novaSenha =
-                document.getElementById('novaSenha').value;
+        const email = emailInput
+            ? emailInput.value.trim()
+            : '';
 
-            const confirmarNovaSenha =
-                document.getElementById('confirmarNovaSenha').value;
+        const codigo = codigoInput
+            ? codigoInput.value.trim()
+            : '';
 
-            const feedbackRedefinicao =
-                document.getElementById('feedbackRedefinicao');
+        const btnRedefinirSenha =
+            document.getElementById('btnRedefinirSenha');
 
-            if (novaSenha.length < 8) {
-
-                mostrarFeedbackRedefinicao(
-                    'A senha deve ter pelo menos 8 caracteres.',
-                    '#ef4444'
-                );
-
-                return;
-            }
-
-            if (novaSenha !== confirmarNovaSenha) {
-
-                mostrarFeedbackRedefinicao(
-                    'As senhas não coincidem.',
-                    '#ef4444'
-                );
-
-                return;
-            }
-
-            // Por enquanto apenas teste visual.
-            // O próximo passo será conectar ao backend.
-
+        if (novaSenha.length < 8) {
             mostrarFeedbackRedefinicao(
-                'As senhas estão corretas. Vamos concluir a redefinição.',
-                '#10b981'
+                'A senha deve ter pelo menos 8 caracteres.',
+                '#ef4444'
+            );
+            return;
+        }
+
+        if (novaSenha !== confirmarNovaSenha) {
+            mostrarFeedbackRedefinicao(
+                'As senhas não coincidem.',
+                '#ef4444'
+            );
+            return;
+        }
+
+        btnRedefinirSenha.disabled = true;
+
+        mostrarFeedbackRedefinicao(
+            'Redefinindo sua senha...',
+            '#3b82f6'
+        );
+
+        try {
+
+            const response = await fetch(
+                '/api/usuarios/redefinir-senha',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        codigo: codigo,
+                        novaSenha: novaSenha
+                    })
+                }
             );
 
-            console.log('Nova senha pronta para ser enviada ao backend.');
+            const data =
+                await response.json().catch(() => ({}));
 
-        });
-    }
+            if (response.ok) {
+
+                mostrarFeedbackRedefinicao(
+                    'Senha redefinida com sucesso! Você será direcionado para o login.',
+                    '#10b981'
+                );
+
+                setTimeout(() => {
+                    window.location.href = 'telaLogin.html';
+                }, 2000);
+
+            } else {
+
+                mostrarFeedbackRedefinicao(
+                    data.mensagem ||
+                    data.message ||
+                    'Não foi possível redefinir a senha.',
+                    '#ef4444'
+                );
+
+                btnRedefinirSenha.disabled = false;
+            }
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao redefinir senha:',
+                erro
+            );
+
+            mostrarFeedbackRedefinicao(
+                'Erro ao conectar com o servidor. Tente novamente mais tarde.',
+                '#ef4444'
+            );
+
+            btnRedefinirSenha.disabled = false;
+        }
+    });
+}
 
 
     // ==========================================
