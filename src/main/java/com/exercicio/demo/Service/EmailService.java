@@ -1,159 +1,102 @@
 package com.exercicio.demo.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    @Value("${RESEND_API_KEY}")
+    private String resendApiKey;
 
-    private static final String REMETENTE = "joseravi444@gmail.com";
-
-    private static final String IP_LOCAL = "192.168.18.19";
-
-    private static final String PORTA_FRONT = "5500";
-
-    public void enviarCodigoVerificacao(String destinatario, String codigo) {
-
-        try {
-
-            MimeMessage message = mailSender.createMimeMessage();
-
-            MimeMessageHelper helper =
-                    new MimeMessageHelper(message, true, "UTF-8");
-
-            helper.setFrom(REMETENTE);
-            helper.setTo(destinatario);
-
-            helper.setSubject("Seu código de verificação");
-
-            String conteudoHtml =
-                    "<div style='font-family: Arial, sans-serif; padding: 20px; text-align: center;'>"
-                    + "<h2>Confirmação de Cadastro</h2>"
-                    + "<p>Seu código para ativar a conta é:</p>"
-                    + "<h1 style='color: #4CAF50; letter-spacing: 4px;'>"
-                    + codigo
-                    + "</h1>"
-                    + "</div>";
-
-            helper.setText(conteudoHtml, true);
-
-            mailSender.send(message);
-
-        } catch (MessagingException e) {
-
-            throw new RuntimeException(
-                    "Erro ao enviar o e-mail de verificação.",
-                    e
-            );
-        }
-    }
-
-    public void enviarLinkRedefinicaoSenha(String destinatario) {
-
-        try {
-
-            MimeMessage message = mailSender.createMimeMessage();
-
-            MimeMessageHelper helper =
-                    new MimeMessageHelper(message, true, "UTF-8");
-
-            helper.setFrom(REMETENTE);
-            helper.setTo(destinatario);
-
-            helper.setSubject("Redefinição de Senha");
-
-            String linkRedefinicao =
-                    "http://" + IP_LOCAL + ":" + PORTA_FRONT
-                    + "/redefinir-senha.html?email="
-                    + destinatario;
-
-            String conteudoHtml =
-                    "<div style='font-family: Arial, sans-serif; padding: 20px; text-align: center;'>"
-                    + "<h2>Redefinição de Senha</h2>"
-                    + "<p>Você solicitou a redefinição de senha. "
-                    + "Clique no botão abaixo para criar uma nova senha:</p>"
-                    + "<a href='" + linkRedefinicao + "' "
-                    + "style='display: inline-block; padding: 12px 24px; "
-                    + "background-color: #007bff; color: white; "
-                    + "text-decoration: none; border-radius: 5px; margin-top: 15px;'>"
-                    + "Redefinir Senha"
-                    + "</a>"
-                    + "<p style='margin-top: 20px; font-size: 12px; color: #777;'>"
-                    + "Se você não solicitou isso, ignore este e-mail."
-                    + "</p>"
-                    + "</div>";
-
-            helper.setText(conteudoHtml, true);
-
-            mailSender.send(message);
-
-        } catch (MessagingException e) {
-
-            throw new RuntimeException(
-                    "Erro ao enviar o e-mail de redefinição de senha.",
-                    e
-            );
-        }
-    }
+    private static final String REMETENTE = "onboarding@resend.dev";
 
     public void enviarCodigoRedefinicaoSenha(
             String destinatario,
             String codigo
     ) {
 
+        String conteudoHtml =
+                "<div style='font-family: Arial, sans-serif; "
+                + "padding: 20px; text-align: center;'>"
+                + "<h2>Redefinição de Senha</h2>"
+                + "<p>Você solicitou a redefinição da sua senha "
+                + "no FinanceControl.</p>"
+                + "<p>Seu código de recuperação é:</p>"
+                + "<h1 style='color: #4CAF50; letter-spacing: 6px;'>"
+                + codigo
+                + "</h1>"
+                + "<p>Esse código é válido por 10 minutos.</p>"
+                + "<p style='margin-top: 20px; font-size: 12px; color: #777;'>"
+                + "Se você não solicitou essa alteração, ignore este e-mail."
+                + "</p>"
+                + "</div>";
+
+        String json = """
+                {
+                    "from": "%s",
+                    "to": ["%s"],
+                    "subject": "Código para redefinir sua senha",
+                    "html": %s
+                }
+                """.formatted(
+                        REMETENTE,
+                        destinatario,
+                        escapeJson(conteudoHtml)
+                );
+
         try {
 
-            MimeMessage message = mailSender.createMimeMessage();
+            HttpClient client = HttpClient.newHttpClient();
 
-            MimeMessageHelper helper =
-                    new MimeMessageHelper(message, true, "UTF-8");
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.resend.com/emails"))
+                    .header("Authorization", "Bearer " + resendApiKey)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(
+                            json,
+                            StandardCharsets.UTF_8
+                    ))
+                    .build();
 
-            helper.setFrom(REMETENTE);
-            helper.setTo(destinatario);
+            HttpResponse<String> response =
+                    client.send(
+                            request,
+                            HttpResponse.BodyHandlers.ofString()
+                    );
 
-            helper.setSubject("Código para redefinir sua senha");
+            if (response.statusCode() < 200 ||
+                    response.statusCode() >= 300) {
 
-            String conteudoHtml =
-                    "<div style='font-family: Arial, sans-serif; "
-                    + "padding: 20px; text-align: center;'>"
+                throw new RuntimeException(
+                        "Erro ao enviar e-mail pelo Resend: "
+                        + response.body()
+                );
+            }
 
-                    + "<h2>Redefinição de Senha</h2>"
-
-                    + "<p>Você solicitou a redefinição da sua senha "
-                    + "no FinanceControl.</p>"
-
-                    + "<p>Seu código de recuperação é:</p>"
-
-                    + "<h1 style='color: #4CAF50; letter-spacing: 6px;'>"
-                    + codigo
-                    + "</h1>"
-
-                    + "<p>Esse código é válido por 10 minutos.</p>"
-
-                    + "<p style='margin-top: 20px; font-size: 12px; color: #777;'>"
-                    + "Se você não solicitou essa alteração, ignore este e-mail."
-                    + "</p>"
-
-                    + "</div>";
-
-            helper.setText(conteudoHtml, true);
-
-            mailSender.send(message);
-
-        } catch (MessagingException e) {
+        } catch (Exception e) {
 
             throw new RuntimeException(
                     "Erro ao enviar o código de redefinição de senha.",
                     e
             );
         }
+    }
+
+    private String escapeJson(String texto) {
+
+        return "\"" +
+                texto
+                        .replace("\\", "\\\\")
+                        .replace("\"", "\\\"")
+                        .replace("\n", "\\n")
+                        .replace("\r", "\\r")
+                + "\"";
     }
 }
