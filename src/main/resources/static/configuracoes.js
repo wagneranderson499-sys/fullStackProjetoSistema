@@ -335,9 +335,6 @@ async function handlePasswordUpdate(event) {
         feedback.className = "text-xs font-medium min-h-[16px] text-zinc-400";
     }
 
-    console.log("API_BASE_URL:", API_BASE_URL);
-    console.log("URL:", `${API_BASE_URL}/usuarios/alterar-senha`);
-    console.log("Email:", email);
 
  const response = await fetch('/api/usuarios/alterar-senha', {
     method: 'PUT',
