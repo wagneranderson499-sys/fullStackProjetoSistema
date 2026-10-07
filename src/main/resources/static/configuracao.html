@@ -187,12 +187,9 @@
             <form id="passwordForm" onsubmit="handlePasswordUpdate(event)" class="flex flex-col gap-4">
                 
                 <div class="flex flex-col gap-1">
-                    <div class="flex justify-between items-center">
-                        <label class="text-xs font-medium text-slate-400">Senha Atual</label>
-                        <button type="button" onclick="handleForgotPassword()" class="text-[11px] text-indigo-400 hover:underline font-medium">
-                            Esqueceu a senha?
-                        </button>
-                    </div>
+                   <div class="flex justify-between items-center">
+    <label class="text-xs font-medium text-slate-400">Senha Atual</label>
+</div>
                     <div class="relative">
                         <input type="password" id="currentPassword" required class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3.5 pr-10 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition">
                         <button type="button" onclick="togglePasswordVisibility('currentPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">

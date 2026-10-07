@@ -1,76 +1,214 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR" class="dark">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>FinanceControl - Recuperar Senha</title>
+
     <link rel="icon" type="image/png" href="logo.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
+
         tailwind.config = {
+
             darkMode: 'class',
+
             theme: {
+
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    },
+
                     colors: {
+
                         brand: {
+
                             50: '#eef2ff',
                             500: '#6366f1',
                             600: '#4f46e5',
                             700: '#4338ca'
+
                         }
+
                     }
+
                 },
+
             },
+
         }
+
     </script>
+
 </head>
+
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex items-center justify-center p-4 selection:bg-indigo-500 selection:text-slate-950">
+
     <div class="w-full max-w-md bg-slate-900 border border-slate-800/80 rounded-2xl p-8 shadow-2xl">
+
+        <!-- Logo e título -->
+
         <div class="flex flex-col items-center mb-8">
+
             <div class="flex items-center justify-center w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl mb-3">
-                <img src="logo.png" alt="Logo" class="w-7 h-7 object-contain">
+
+                <img
+                    src="logo.png"
+                    alt="Logo"
+                    class="w-7 h-7 object-contain"
+                >
+
             </div>
-            <h1 class="text-xl font-bold tracking-wide text-white">Finance<span class="text-indigo-400">Control</span></h1>
-            <p class="text-xs text-slate-400 mt-1 text-center">Digite seu e-mail para receber as instruções de redefinição</p>
+
+            <h1 class="text-xl font-bold tracking-wide text-white">
+
+                Finance<span class="text-indigo-400">Control</span>
+
+            </h1>
+
+            <p
+                id="textoInstrucao"
+                class="text-xs text-slate-400 mt-1 text-center"
+            >
+                Digite seu e-mail para receber o código de recuperação
+            </p>
+
         </div>
 
-        <!-- Mensagem de Feedback -->
-        <div id="mensagemFeedback" class="hidden mb-4 p-3 border rounded-xl text-xs text-center"></div>
 
-        <form id="formEsqueceuSenha" class="flex flex-col gap-4">
-            <div class="flex flex-col gap-1.5">
-                <label for="email" class="text-xs font-medium text-slate-400">E-mail cadastrado</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    placeholder="seu@email.com" 
+        <!-- Mensagem de Feedback -->
+
+        <div
+            id="mensagemFeedback"
+            class="hidden mb-4 p-3 border rounded-xl text-xs text-center"
+        ></div>
+
+
+        <form
+            id="formEsqueceuSenha"
+            class="flex flex-col gap-4"
+        >
+
+            <!-- E-MAIL -->
+
+            <div
+                id="campoEmail"
+                class="flex flex-col gap-1.5"
+            >
+
+                <label
+                    for="email"
+                    class="text-xs font-medium text-slate-400"
+                >
+                    E-mail cadastrado
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="seu@email.com"
                     required
                     class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
                 >
+
             </div>
 
-            <button 
-                type="submit" 
+
+            <!-- CÓDIGO -->
+
+            <div
+                id="campoCodigo"
+                class="hidden flex-col gap-1.5"
+            >
+
+                <label
+                    for="codigo"
+                    class="text-xs font-medium text-slate-400"
+                >
+                    Código de recuperação
+                </label>
+
+                <input
+                    type="text"
+                    id="codigo"
+                    placeholder="Digite o código de 6 dígitos"
+                    maxlength="6"
+                    inputmode="numeric"
+                    autocomplete="one-time-code"
+                    class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-center tracking-[0.3em]"
+                >
+
+            </div>
+
+
+            <!-- BOTÃO ENVIAR CÓDIGO -->
+
+            <button
+                type="submit"
                 id="btnEnviar"
                 class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl text-sm shadow-lg shadow-indigo-600/20 transition flex items-center justify-center gap-2 mt-2"
             >
-                Enviar link de recuperação
+                Enviar código de recuperação
             </button>
+
+
+            <!-- BOTÃO VALIDAR CÓDIGO -->
+
+            <button
+                type="button"
+                id="btnValidarCodigo"
+                class="hidden w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl text-sm shadow-lg shadow-indigo-600/20 transition items-center justify-center gap-2"
+            >
+                Validar código
+            </button>
+
         </form>
 
+
+        <!-- Voltar para Login -->
+
         <div class="mt-6 border-t border-slate-800/80 pt-4 text-center">
+
             <p class="text-xs text-slate-400">
-                Lembrou a senha? 
-                <a href="telaLogin.html" class="text-indigo-400 hover:underline font-medium">Voltar para o Login</a>
+
+                Lembrou a senha?
+
+                <a
+                    href="telaLogin.html"
+                    class="text-indigo-400 hover:underline font-medium"
+                >
+                    Voltar para o Login
+                </a>
+
             </p>
+
         </div>
+
     </div>
 
+
     <!-- Import do JS externo -->
+
     <script src="esqueci-senha.js"></script>
+
 </body>
+
 </html>

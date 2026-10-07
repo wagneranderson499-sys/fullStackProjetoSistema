@@ -2,7 +2,9 @@ package com.exercicio.demo.Model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usuarios", schema = "app")
@@ -25,6 +27,11 @@ public class Usuario {
 
     private Boolean emailVerificado = false;
 
+    // Código e validade para recuperação de senha
+    private String codigoRedefinicaoSenha;
+
+    private LocalDateTime expiracaoCodigoRedefinicao;
+
     // Guarda o saldo do usuário com valor padrão 0.00
     @Column(precision = 10, scale = 2)
     private BigDecimal saldo = BigDecimal.ZERO;
@@ -43,7 +50,15 @@ public class Usuario {
     }
 
     // Construtor completo
-    public Usuario(Long id, String nome, String email, String senha, String codigoVerificacao, Boolean emailVerificado, BigDecimal saldo) {
+    public Usuario(
+            Long id,
+            String nome,
+            String email,
+            String senha,
+            String codigoVerificacao,
+            Boolean emailVerificado,
+            BigDecimal saldo
+    ) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -54,28 +69,86 @@ public class Usuario {
     }
 
     // Getters e Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getSenha() { return senha; }
-    public void setSenha(String senha) { this.senha = senha; }
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 
     // Métodos utilitários de compatibilidade para senha
-    public String getPassword() { return senha; }
-    public void setPassword(String password) { this.senha = password; }
 
-    public String getCodigoVerificacao() { return codigoVerificacao; }
-    public void setCodigoVerificacao(String codigoVerificacao) { this.codigoVerificacao = codigoVerificacao; }
+    public String getPassword() {
+        return senha;
+    }
 
-    public Boolean isEmailVerificado() { return emailVerificado; }
-    public void setEmailVerificado(Boolean emailVerificado) { this.emailVerificado = emailVerificado; }
+    public void setPassword(String password) {
+        this.senha = password;
+    }
 
-    public BigDecimal getSaldo() { return saldo; }
-    public void setSaldo(BigDecimal saldo) { this.saldo = saldo; }
+    public String getCodigoVerificacao() {
+        return codigoVerificacao;
+    }
+
+    public void setCodigoVerificacao(String codigoVerificacao) {
+        this.codigoVerificacao = codigoVerificacao;
+    }
+
+    public Boolean isEmailVerificado() {
+        return emailVerificado;
+    }
+
+    public void setEmailVerificado(Boolean emailVerificado) {
+        this.emailVerificado = emailVerificado;
+    }
+
+    public String getCodigoRedefinicaoSenha() {
+        return codigoRedefinicaoSenha;
+    }
+
+    public void setCodigoRedefinicaoSenha(String codigoRedefinicaoSenha) {
+        this.codigoRedefinicaoSenha = codigoRedefinicaoSenha;
+    }
+
+    public LocalDateTime getExpiracaoCodigoRedefinicao() {
+        return expiracaoCodigoRedefinicao;
+    }
+
+    public void setExpiracaoCodigoRedefinicao(LocalDateTime expiracaoCodigoRedefinicao) {
+        this.expiracaoCodigoRedefinicao = expiracaoCodigoRedefinicao;
+    }
+
+    public BigDecimal getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(BigDecimal saldo) {
+        this.saldo = saldo;
+    }
 }

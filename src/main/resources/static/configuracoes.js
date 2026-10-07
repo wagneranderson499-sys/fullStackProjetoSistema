@@ -378,40 +378,6 @@ async function handlePasswordUpdate(event) {
     }
 }
 
-async function handleForgotPassword() {
-    const email = localStorage.getItem('usuarioEmail') || localStorage.getItem('userEmail');
-    
-    if (!email) {
-        alert("E-mail não identificado. Por favor, faça login novamente.");
-        return;
-    }
-
-    if (confirm(`Deseja enviar um e-mail de redefinição para ${email}?`)) {
-        try {
-            const response = await fetch(`${API_BASE_URL}/usuarios/alterar-senha`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: email })
-            });
-
-            if (response.ok) {
-                alert("E-mail de redefinição enviado com sucesso! Verifique sua caixa de entrada.");
-                closePasswordModal();
-            } else {
-                alert("Erro ao enviar o e-mail de redefinição. Tente novamente mais tarde.");
-            }
-        } catch (error) {
-            console.error('Erro:', error);
-            alert("Erro ao conectar com o servidor.");
-        }
-    }
-}
-
-// Garante que o evento onClick do HTML consiga encontrar a função globalmente
-window.handleForgotPassword = handleForgotPassword
-
 function carregarUsuarioSidebar() {
     // 1. Pega o nome do usuário salvo no login usando a chave correta
     const nomeUsuario = localStorage.getItem('usuarioNome') || 'Usuário';
