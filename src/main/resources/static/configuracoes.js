@@ -329,23 +329,27 @@ async function handlePasswordUpdate(event) {
         return;
     }
 
-    try {
-        if (feedback) {
-            feedback.innerText = "Enviando alteração...";
-            feedback.className = "text-xs font-medium min-h-[16px] text-zinc-400";
-        }
+  try {
+    if (feedback) {
+        feedback.innerText = "Enviando alteração...";
+        feedback.className = "text-xs font-medium min-h-[16px] text-zinc-400";
+    }
 
-        const response = await fetch(`${API_BASE_URL}/usuarios/alterar-senha`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: email,
-                senhaAtual: currentPassword,
-                novaSenha: newPassword
-            })
-        });
+    console.log("API_BASE_URL:", API_BASE_URL);
+    console.log("URL:", `${API_BASE_URL}/usuarios/alterar-senha`);
+    console.log("Email:", email);
+
+    const response = await fetch(`${API_BASE_URL}/usuarios/alterar-senha`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email,
+            senhaAtual: currentPassword,
+            novaSenha: newPassword
+        })
+    });
 
         if (response.ok) {
             if (feedback) {
