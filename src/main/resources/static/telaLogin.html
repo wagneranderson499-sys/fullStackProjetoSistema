@@ -3,111 +3,433 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>FinanceControl - Login</title>
+
     <link rel="icon" type="image/png" href="logo.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tema global -->
+    <script src="theme.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    },
                 },
-            },
+            }
         }
 
         // Função para alternar visibilidade da senha
         function alternarSenha() {
             const campoSenha = document.getElementById('loginPassword');
             const iconeOlho = document.getElementById('iconeOlho');
-            
+
             if (campoSenha.type === 'password') {
                 campoSenha.type = 'text';
+
                 // Ícone de olho aberto / escondido
-                iconeOlho.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"></path>`;
+                iconeOlho.innerHTML = `
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22">
+                    </path>
+                `;
             } else {
                 campoSenha.type = 'password';
+
                 // Ícone de olho normal
-                iconeOlho.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>`;
+                iconeOlho.innerHTML = `
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
+                    </path>
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                    </path>
+                `;
             }
         }
     </script>
+
     <script src="auth.js" defer></script>
+
+    <style>
+        body,
+        .login-card,
+        .logo-container,
+        .login-input,
+        .bottom-border,
+        .error-message {
+            transition:
+                background-color 0.25s ease,
+                border-color 0.25s ease,
+                color 0.25s ease;
+        }
+
+        /* ================================
+           MODO ESCURO - PADRÃO
+        ================================= */
+
+        body {
+            background-color: #0F172A;
+            color: #E8EEF5;
+        }
+
+        .login-card {
+            background-color: #162033;
+            border-color: #263449;
+        }
+
+        .logo-container {
+            background-color: rgba(99, 102, 241, 0.10);
+            border-color: rgba(99, 102, 241, 0.20);
+        }
+
+        .logo-title {
+            color: #E8EEF5;
+        }
+
+        .logo-accent {
+            color: #6366F1;
+        }
+
+        .subtitle {
+            color: #94A3B8;
+        }
+
+        .input-label {
+            color: #94A3B8;
+        }
+
+        .login-input {
+            background-color: #0F172A;
+            border-color: #263449;
+            color: #E8EEF5;
+        }
+
+        .login-input::placeholder {
+            color: #64748B;
+        }
+
+        .login-input:focus {
+            border-color: #6366F1;
+        }
+
+        .forgot-password,
+        .register-link {
+            color: #818CF8;
+        }
+
+        .password-icon {
+            color: #64748B;
+        }
+
+        .password-icon:hover {
+            color: #94A3B8;
+        }
+
+        .login-button {
+            background-color: #6366F1;
+        }
+
+        .login-button:hover {
+            background-color: #818CF8;
+        }
+
+        .error-message {
+            background-color: rgba(239, 68, 68, 0.10);
+            border-color: rgba(239, 68, 68, 0.25);
+            color: #F87171;
+        }
+
+        .bottom-border {
+            border-color: #263449;
+        }
+
+        .register-text {
+            color: #94A3B8;
+        }
+
+        /* ================================
+           MODO CLARO
+        ================================= */
+
+        html.light-mode body {
+            background-color: #F8FAFC !important;
+            color: #162D50 !important;
+        }
+
+        html.light-mode .login-card {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+        }
+
+        html.light-mode .logo-container {
+            background-color: #E8EEF5 !important;
+            border-color: #D8E1EC !important;
+        }
+
+        html.light-mode .logo-title {
+            color: #162D50 !important;
+        }
+
+        html.light-mode .logo-accent {
+            color: #10B981 !important;
+        }
+
+        html.light-mode .subtitle {
+            color: #64748B !important;
+        }
+
+        html.light-mode .input-label {
+            color: #64748B !important;
+        }
+
+        html.light-mode .login-input {
+            background-color: #F8FAFC !important;
+            border-color: #E2E8F0 !important;
+            color: #162D50 !important;
+        }
+
+        html.light-mode .login-input::placeholder {
+            color: #94A3B8 !important;
+        }
+
+        html.light-mode .login-input:focus {
+            border-color: #162D50 !important;
+        }
+
+        html.light-mode .forgot-password,
+        html.light-mode .register-link {
+            color: #162D50 !important;
+        }
+
+        html.light-mode .password-icon {
+            color: #94A3B8 !important;
+        }
+
+        html.light-mode .password-icon:hover {
+            color: #64748B !important;
+        }
+
+        html.light-mode .login-button {
+            background-color: #162D50 !important;
+        }
+
+        html.light-mode .login-button:hover {
+            background-color: #213F69 !important;
+        }
+
+        html.light-mode .error-message {
+            background-color: #FEF2F2 !important;
+            border-color: #FECACA !important;
+            color: #DC2626 !important;
+        }
+
+        html.light-mode .bottom-border {
+            border-color: #E2E8F0 !important;
+        }
+
+        html.light-mode .register-text {
+            color: #64748B !important;
+        }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-slate-900 border border-slate-800/80 rounded-2xl p-8 shadow-2xl">
+
+<body class="font-sans antialiased min-h-screen flex items-center justify-center p-4">
+
+    <div class="login-card w-full max-w-md border rounded-2xl p-8 shadow-xl">
+
+        <!-- Logo -->
         <div class="flex flex-col items-center mb-8">
-            <div class="flex items-center justify-center w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl mb-3">
-                <img src="logo.png" alt="Logo" class="w-7 h-7 object-contain">
-            </div>
-            <h1 class="text-xl font-bold tracking-wide">Finance<span class="text-indigo-500">Control</span></h1>
-            <p class="text-xs text-slate-400 mt-1">Acesse sua conta para gerenciar suas finanças</p>
-        </div>
 
-        <!-- Área de Mensagem de Erro -->
-        <div id="mensagemErro" class="hidden mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-400 text-center">
-            E-mail ou senha incorretos.
-        </div>
-
-        <form id="loginForm" onsubmit="return fazerLogin(event)" class="flex flex-col gap-4">
-            <div class="flex flex-col gap-1.5">
-                <label for="loginEmail" class="text-xs font-medium text-slate-400">E-mail</label>
-                <input 
-                    type="email" 
-                    id="loginEmail" 
-                    placeholder="seu@email.com" 
-                    required
-                    class="bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500/80 transition"
+            <div class="logo-container w-16 h-16 rounded-2xl border flex items-center justify-center mb-4">
+                <img
+                    src="logo.png"
+                    alt="FinanceControl"
+                    class="w-10 h-10 object-contain"
                 >
             </div>
 
-            <div class="flex flex-col gap-1.5">
-                <div class="flex items-center justify-between">
-                    <label for="loginPassword" class="text-xs font-medium text-slate-400">Senha</label>
-                    <a href="esqueceu-senha.html" class="text-xs text-indigo-400 hover:underline font-medium transition">Esqueceu sua senha?</a>
+            <h1 class="logo-title text-2xl font-bold">
+                Finance<span class="logo-accent">Control</span>
+            </h1>
+
+            <p class="subtitle text-sm mt-2">
+                Entre na sua conta
+            </p>
+
+        </div>
+
+        <!-- Mensagem de erro -->
+        <div
+            id="mensagemErro"
+            class="error-message hidden border rounded-lg p-3 mb-5 text-sm"
+        >
+            E-mail ou senha incorretos.
+        </div>
+
+        <!-- Formulário -->
+        <form
+            id="loginForm"
+            onsubmit="return fazerLogin(event)"
+            class="space-y-5"
+        >
+
+            <!-- E-mail -->
+            <div>
+                <label
+                    for="loginEmail"
+                    class="input-label block text-sm font-medium mb-2"
+                >
+                    E-mail
+                </label>
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    required
+                    autocomplete="email"
+                    class="login-input w-full px-4 py-3 border rounded-xl outline-none transition"
+                    placeholder="Digite seu e-mail"
+                >
+            </div>
+
+            <!-- Senha -->
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <label
+                        for="loginPassword"
+                        class="input-label block text-sm font-medium"
+                    >
+                        Senha
+                    </label>
+
+                    <a
+                        href="esqueceu-senha.html"
+                        class="forgot-password text-sm transition"
+                    >
+                        Esqueceu a senha?
+                    </a>
                 </div>
+
                 <div class="relative">
-                    <input 
-                        type="password" 
-                        id="loginPassword" 
-                        placeholder="••••••••" 
+
+                    <input
+                        type="password"
+                        id="loginPassword"
                         required
-                        class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3.5 pr-10 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500/80 transition"
+                        autocomplete="current-password"
+                        class="login-input w-full px-4 py-3 pr-12 border rounded-xl outline-none transition"
+                        placeholder="Digite sua senha"
                     >
-                    <button 
-                        type="button" 
+
+                    <button
+                        type="button"
                         onclick="alternarSenha()"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition focus:outline-none"
+                        class="password-icon absolute right-3 top-1/2 -translate-y-1/2 transition"
+                        aria-label="Mostrar ou ocultar senha"
                     >
-                        <svg id="iconeOlho" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        <svg
+                            id="iconeOlho"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            class="w-5 h-5"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
+                            </path>
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                            </path>
                         </svg>
                     </button>
+
                 </div>
             </div>
 
-            <button 
-                type="submit" 
+            <!-- Botão Login -->
+            <button
+                type="submit"
                 id="btnLogin"
-                class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2 mt-2 shadow-lg shadow-indigo-600/20"
+                class="login-button w-full py-3 rounded-xl text-white font-semibold transition flex items-center justify-center gap-2"
             >
-                <span id="btnLoginText">Entrar</span>
-                <svg id="btnLoginSpinner" class="w-4 h-4 text-white animate-spin hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <span id="btnLoginText">
+                    Entrar
+                </span>
+
+                <svg
+                    id="btnLoginSpinner"
+                    class="hidden animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                >
+                    <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                    ></circle>
+
+                    <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    ></path>
                 </svg>
             </button>
+
         </form>
 
-        <div class="mt-6 border-t border-slate-800/80 pt-4 text-center">
-            <p class="text-xs text-slate-400">
-                Ainda não tem uma conta? 
-                <a href="cadastro.html" class="text-indigo-400 hover:underline font-medium">Cadastre-se</a>
+        <!-- Cadastro -->
+        <div class="bottom-border border-t mt-8 pt-6 text-center">
+
+            <p class="register-text text-sm">
+                Ainda não possui uma conta?
+                <a
+                    href="cadastro.html"
+                    class="register-link font-semibold transition"
+                >
+                    Criar conta
+                </a>
             </p>
+
         </div>
+
     </div>
+
 </body>
 </html>
