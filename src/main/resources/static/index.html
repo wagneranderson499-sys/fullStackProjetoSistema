@@ -1,215 +1,963 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+
+<html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinanceControl Pro - Painel Principal</title>
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca'
-                        }
-                    }
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FinanceControl Pro - Painel Principal</title>
+
+<link rel="icon" type="image/png" href="logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Tema global -->
+<script src="theme.js"></script>
+
+<script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
                 },
+                colors: {
+                    brand: {
+                        50: '#eef2ff',
+                        500: '#6366f1',
+                        600: '#4f46e5',
+                        700: '#4338ca'
+                    }
+                }
             },
-        }
-    </script>
+        },
+    }
+</script>
+
+<style>
+
+    /* ========================================
+       TRANSIÇÃO GLOBAL
+    ======================================== */
+
+    body,
+    aside,
+    main,
+    header,
+    section,
+    .dashboard-card,
+    .dashboard-input,
+    .dashboard-select,
+    .dashboard-title,
+    .dashboard-text,
+    .dashboard-label,
+    .dashboard-muted,
+    .dashboard-sidebar-text,
+    .dashboard-table,
+    .dashboard-table-head,
+    .dashboard-table-body,
+    .dashboard-count {
+
+        transition:
+            background-color 0.25s ease,
+            border-color 0.25s ease,
+            color 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+
+    /* ========================================
+       MODO ESCURO - PADRÃO
+    ======================================== */
+
+    body {
+        background-color: #020617;
+        color: #F8FAFC;
+    }
+
+    .dashboard-sidebar {
+        background-color: #0F172A;
+        border-color: rgba(30, 41, 59, 0.80);
+    }
+
+    .dashboard-main {
+        background-color: #020617;
+    }
+
+    .dashboard-header {
+        border-color: rgba(30, 41, 59, 0.60);
+    }
+
+    .dashboard-card {
+        background-color: #0F172A;
+        border-color: rgba(30, 41, 59, 0.80);
+    }
+
+    .dashboard-title {
+        color: #FFFFFF;
+    }
+
+    .dashboard-text {
+        color: #94A3B8;
+    }
+
+    .dashboard-label {
+        color: #CBD5E1;
+    }
+
+    .dashboard-muted {
+        color: #94A3B8;
+    }
+
+    .dashboard-sidebar-text {
+        color: #E2E8F0;
+    }
+
+    .dashboard-input,
+    .dashboard-select {
+        background-color: #020617;
+        border-color: #1E293B;
+        color: #F1F5F9;
+    }
+
+    .dashboard-input::placeholder {
+        color: #64748B;
+    }
+
+    .dashboard-input:focus,
+    .dashboard-select:focus {
+        outline: none;
+        border-color: #6366F1;
+        box-shadow: 0 0 0 1px #6366F1;
+    }
+
+    .dashboard-select option {
+        background-color: #0F172A;
+        color: #F1F5F9;
+    }
+
+    .dashboard-count {
+        background-color: #020617;
+        border-color: #1E293B;
+        color: #94A3B8;
+    }
+
+    .dashboard-table-head {
+        border-color: #1E293B;
+        color: #94A3B8;
+    }
+
+    .dashboard-table-body {
+        color: #CBD5E1;
+    }
+
+    .dashboard-table-body tr {
+        border-color: rgba(30, 41, 59, 0.60);
+    }
+
+    .dashboard-table-body tr:hover {
+        background-color: rgba(30, 41, 59, 0.30);
+    }
+
+
+    /* ========================================
+       MODO CLARO
+    ======================================== */
+
+    html.light-mode body {
+        background-color: #F8FAFC !important;
+        color: #162D50 !important;
+    }
+
+    html.light-mode .dashboard-sidebar {
+        background-color: #FFFFFF !important;
+        border-color: #E2E8F0 !important;
+    }
+
+    html.light-mode .dashboard-main {
+        background-color: #F8FAFC !important;
+    }
+
+    html.light-mode .dashboard-header {
+        border-color: #E2E8F0 !important;
+    }
+
+    html.light-mode .dashboard-card {
+        background-color: #FFFFFF !important;
+        border-color: #E2E8F0 !important;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05) !important;
+    }
+
+    /* TÍTULOS - COLORIDOS */
+
+    html.light-mode .dashboard-title {
+        color: #162D50 !important;
+    }
+
+    html.light-mode .dashboard-text {
+        color: #64748B !important;
+    }
+
+    html.light-mode .dashboard-label {
+        color: #475569 !important;
+    }
+
+    html.light-mode .dashboard-muted {
+        color: #64748B !important;
+    }
+
+    html.light-mode .dashboard-sidebar-text {
+        color: #162D50 !important;
+    }
+
+
+    /* INPUTS */
+
+    html.light-mode .dashboard-input,
+    html.light-mode .dashboard-select {
+        background-color: #F8FAFC !important;
+        border-color: #E2E8F0 !important;
+        color: #162D50 !important;
+    }
+
+    html.light-mode .dashboard-input::placeholder {
+        color: #94A3B8 !important;
+    }
+
+    html.light-mode .dashboard-input:focus,
+    html.light-mode .dashboard-select:focus {
+        border-color: #6366F1 !important;
+        box-shadow: 0 0 0 1px #6366F1 !important;
+    }
+
+    html.light-mode .dashboard-select option {
+        background-color: #FFFFFF !important;
+        color: #162D50 !important;
+    }
+
+
+    /* CONTADOR */
+
+    html.light-mode .dashboard-count {
+        background-color: #F8FAFC !important;
+        border-color: #E2E8F0 !important;
+        color: #7C3AED !important;
+    }
+
+
+    /* TABELA */
+
+    html.light-mode .dashboard-table-head {
+        border-color: #E2E8F0 !important;
+        color: #64748B !important;
+    }
+
+    html.light-mode .dashboard-table-body {
+        color: #475569 !important;
+    }
+
+    html.light-mode .dashboard-table-body tr {
+        border-color: #E2E8F0 !important;
+    }
+
+    html.light-mode .dashboard-table-body tr:hover {
+        background-color: #F8FAFC !important;
+    }
+
+
+    /* ========================================
+       LOGO E IDENTIDADE
+    ======================================== */
+
+    .dashboard-logo-box {
+        background-color: rgba(99, 102, 241, 0.10);
+        border-color: rgba(99, 102, 241, 0.20);
+    }
+
+    .dashboard-logo-title {
+        color: #FFFFFF;
+    }
+
+    .dashboard-logo-accent {
+        color: #818CF8;
+    }
+
+    .dashboard-logo-subtitle {
+        color: #94A3B8;
+    }
+
+    html.light-mode .dashboard-logo-box {
+        background-color: rgba(22, 45, 80, 0.06) !important;
+        border-color: #D8E1EC !important;
+    }
+
+    html.light-mode .dashboard-logo-title {
+        color: #162D50 !important;
+    }
+
+    html.light-mode .dashboard-logo-accent {
+        color: #4F46E5 !important;
+    }
+
+    html.light-mode .dashboard-logo-subtitle {
+        color: #64748B !important;
+    }
+
+
+    /* ========================================
+       NAVEGAÇÃO
+    ======================================== */
+
+    .dashboard-nav-item {
+        color: #94A3B8;
+    }
+
+    .dashboard-nav-item:hover {
+        background-color: rgba(30, 41, 59, 0.50);
+        color: #E2E8F0;
+    }
+
+    .dashboard-nav-icon {
+        color: #94A3B8;
+    }
+
+    html.light-mode .dashboard-nav-item {
+        color: #64748B !important;
+    }
+
+    html.light-mode .dashboard-nav-item:hover {
+        background-color: #F1F5F9 !important;
+        color: #4338CA !important;
+    }
+
+    html.light-mode .dashboard-nav-icon {
+        color: #6366F1 !important;
+    }
+
+    html.light-mode .dashboard-active-nav {
+        background-color: rgba(79, 70, 229, 0.08) !important;
+        border-color: rgba(79, 70, 229, 0.15) !important;
+        color: #4338CA !important;
+    }
+
+    html.light-mode .dashboard-active-nav svg {
+        color: #4F46E5 !important;
+    }
+
+
+    /* ========================================
+       USUÁRIO NO SIDEBAR
+    ======================================== */
+
+    .dashboard-avatar {
+        background-color: #1E293B;
+        color: #818CF8;
+        border-color: rgba(71, 85, 105, 0.60);
+    }
+
+    .dashboard-account-active {
+        color: #64748B;
+    }
+
+    html.light-mode .dashboard-avatar {
+        background-color: #EEF2FF !important;
+        color: #4F46E5 !important;
+        border-color: #E0E7FF !important;
+    }
+
+    html.light-mode .dashboard-account-active {
+        color: #64748B !important;
+    }
+
+
+    /* ========================================
+       VALORES - DESTAQUE
+    ======================================== */
+
+    .dashboard-balance {
+        color: #818CF8;
+    }
+
+    .dashboard-expenses {
+        color: #FB7185;
+    }
+
+    html.light-mode .dashboard-balance {
+        color: #059669 !important;
+    }
+
+    html.light-mode .dashboard-expenses {
+        color: #E11D48 !important;
+    }
+
+
+    /* ========================================
+       BOTÕES
+    ======================================== */
+
+    .dashboard-primary-button {
+        background-color: #4F46E5;
+        box-shadow: 0 10px 25px rgba(79, 70, 229, 0.20);
+    }
+
+    .dashboard-primary-button:hover {
+        background-color: #6366F1;
+        box-shadow: 0 10px 30px rgba(79, 70, 229, 0.30);
+    }
+
+    html.light-mode .dashboard-primary-button {
+        background-color: #162D50 !important;
+        box-shadow: 0 10px 25px rgba(22, 45, 80, 0.12) !important;
+    }
+
+    html.light-mode .dashboard-primary-button:hover {
+        background-color: #213F69 !important;
+        box-shadow: 0 10px 30px rgba(22, 45, 80, 0.20) !important;
+    }
+
+
+    /* ========================================
+       LOGOUT
+    ======================================== */
+
+    .dashboard-logout {
+        color: #64748B;
+    }
+
+    .dashboard-logout:hover {
+        color: #FB7185;
+    }
+
+    html.light-mode .dashboard-logout {
+        color: #94A3B8 !important;
+    }
+
+    html.light-mode .dashboard-logout:hover {
+        color: #E11D48 !important;
+    }
+
+
+    /* ========================================
+       TABELA - ELEMENTOS DINÂMICOS
+    ======================================== */
+
+    html.light-mode #expenseListBody td {
+        color: #475569;
+    }
+
+    html.light-mode #expenseListBody button {
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease,
+            border-color 0.2s ease;
+    }
+
+    html.light-mode #expenseListBody .text-slate-300 {
+        color: #475569 !important;
+    }
+
+    html.light-mode #expenseListBody .text-slate-400 {
+        color: #64748B !important;
+    }
+
+    html.light-mode #expenseListBody .text-slate-500 {
+        color: #94A3B8 !important;
+    }
+
+    html.light-mode #expenseListBody .bg-slate-800 {
+        background-color: #F1F5F9 !important;
+    }
+
+    html.light-mode #expenseListBody .border-slate-700 {
+        border-color: #E2E8F0 !important;
+    }
+
+    html.light-mode #expenseListBody .border-slate-800 {
+        border-color: #E2E8F0 !important;
+    }
+
+    html.light-mode #expenseListBody .divide-slate-800\/60 > :not([hidden]) ~ :not([hidden]) {
+        border-color: #E2E8F0 !important;
+    }
+
+</style>
+
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-slate-950">
-    <div class="flex min-h-screen w-full">
-        
-        <!-- Sidebar Navigation -->
-        <aside class="w-64 min-w-[256px] bg-slate-900 border-r border-slate-800/80 flex flex-col p-6 h-screen sticky top-0">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="flex items-center justify-center w-10 h-10 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
-                    <img src="logo.png" alt="Logo" class="w-6 h-6 object-contain">
-                </div>
-                <div>
-                    <h2 class="text-base font-bold tracking-wide text-white">Finance<span class="text-indigo-400">Control</span></h2>
-                    <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Gestão Pessoal</span>
-                </div>
+
+<body class="font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-slate-950">
+
+<div class="flex min-h-screen w-full">
+
+    <!-- Sidebar Navigation -->
+
+    <aside class="dashboard-sidebar w-64 min-w-[256px] flex flex-col p-6 h-screen sticky top-0 border-r">
+
+        <div class="flex items-center gap-3 mb-8">
+
+            <div class="dashboard-logo-box flex items-center justify-center w-10 h-10 border rounded-xl">
+
+                <img
+                    src="logo.png"
+                    alt="Logo"
+                    class="w-6 h-6 object-contain"
+                >
+
             </div>
 
-            <nav class="flex flex-col gap-1.5 flex-1">
-                <a href="index.html" class="flex items-center gap-3 px-3.5 py-2.5 bg-indigo-600/10 text-indigo-400 rounded-xl text-sm font-medium transition border border-indigo-500/20">
-                    <svg class="w-4 h-4 shrink-0 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 00-1 1m-6 0h6"></path>
-                    </svg>
-                    <span>Painel Geral</span>
-                </a>
+            <div>
 
-                <a href="grafico.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-xl text-sm font-medium transition border border-transparent">
-                    <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
-                    <span>Gráfico</span>
-                </a>
+                <h2 class="dashboard-logo-title text-base font-bold tracking-wide">
 
-                <a href="configuracao.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-xl text-sm font-medium transition border border-transparent">
-                    <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    <span>Configurações</span>
-                </a>
-            </nav>
+                    Finance<span class="dashboard-logo-accent">Control</span>
 
-            <!-- Rodapé do Sidebar / Dados do Usuário -->
-            <div class="border-t border-slate-800/80 pt-4 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div id="avatarUsuario" class="w-9 h-9 bg-slate-800 text-indigo-400 border border-slate-700/60 font-semibold text-xs rounded-xl flex items-center justify-center uppercase">
-                        --
-                    </div>
-                    <div class="flex flex-col">
-                        <span id="nomeUsuarioSidebar" class="text-xs font-semibold text-slate-200">Carregando...</span>
-                        <span class="text-[11px] text-slate-500">Conta Ativa</span>
-                    </div>
-                </div>
-                <button id="btnLogout" title="Sair" class="text-slate-500 hover:text-rose-400 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                    </svg>
-                </button>
+                </h2>
+
+                <span class="dashboard-logo-subtitle text-[11px] uppercase tracking-wider font-semibold">
+
+                    Gestão Pessoal
+
+                </span>
+
             </div>
-        </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 bg-slate-950 p-8 flex flex-col gap-6 overflow-y-auto">
-            <header class="flex items-center justify-between border-b border-slate-800/60 pb-5">
+        </div>
+
+
+        <nav class="flex flex-col gap-1.5 flex-1">
+
+            <!-- Painel Geral -->
+
+            <a
+                href="index.html"
+                class="dashboard-active-nav flex items-center gap-3 px-3.5 py-2.5 bg-indigo-600/10 text-indigo-400 rounded-xl text-sm font-medium transition border border-indigo-500/20"
+            >
+
+                <svg
+                    class="w-4 h-4 shrink-0 text-indigo-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                    ></path>
+
+                </svg>
+
+                <span>Painel Geral</span>
+
+            </a>
+
+
+            <!-- Gráfico -->
+
+            <a
+                href="grafico.html"
+                class="dashboard-nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition border border-transparent"
+            >
+
+                <svg
+                    class="dashboard-nav-icon w-4 h-4 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    ></path>
+
+                </svg>
+
+                <span>Gráfico</span>
+
+            </a>
+
+
+            <!-- Configurações -->
+
+            <a
+                href="configuracao.html"
+                class="dashboard-nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition border border-transparent"
+            >
+
+                <svg
+                    class="dashboard-nav-icon w-4 h-4 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31.826-2.37 2.37a1.724 1.724 0 001.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-2.37 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                    ></path>
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    ></path>
+
+                </svg>
+
+                <span>Configurações</span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- Rodapé do Sidebar / Dados do Usuário -->
+
+        <div class="dashboard-header border-t pt-4 flex items-center justify-between">
+
+            <div class="flex items-center gap-3">
+
+                <div
+                    id="avatarUsuario"
+                    class="dashboard-avatar w-9 h-9 font-semibold text-xs rounded-xl flex items-center justify-center uppercase"
+                >
+                    --
+                </div>
+
+                <div class="flex flex-col">
+
+                    <span
+                        id="nomeUsuarioSidebar"
+                        class="dashboard-sidebar-text text-xs font-semibold"
+                    >
+                        Carregando...
+                    </span>
+
+                    <span class="dashboard-account-active text-[11px]">
+                        Conta Ativa
+                    </span>
+
+                </div>
+
+            </div>
+
+            <button
+                id="btnLogout"
+                title="Sair"
+                class="dashboard-logout transition"
+            >
+
+                <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    ></path>
+
+                </svg>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+
+    <main class="dashboard-main flex-1 p-8 flex flex-col gap-6 overflow-y-auto">
+
+        <header class="dashboard-header flex items-center justify-between border-b pb-5">
+
+            <div>
+
+                <h1 class="dashboard-title text-xl font-bold">
+                    Visão Geral das Finanças
+                </h1>
+
+                <p class="dashboard-text text-xs mt-1">
+                    Acompanhe seu saldo e o histórico recente de lançamentos.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- Cards de Saldo -->
+
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+            <!-- Ajustar Saldo -->
+
+            <div class="dashboard-card border rounded-2xl p-5 flex flex-col justify-between gap-3 shadow-xl">
+
+                <h3 class="dashboard-muted text-xs font-semibold tracking-wider uppercase">
+                    Ajustar Saldo Inicial
+                </h3>
+
+                <div class="flex gap-2">
+
+                    <input
+                        type="number"
+                        id="inputSaldo"
+                        placeholder="0,00"
+                        step="0.01"
+                        class="dashboard-input flex-1 border rounded-xl px-3.5 py-2 text-sm transition"
+                    >
+
+                    <button
+                        type="button"
+                        id="btnSalvarSaldo"
+                        class="dashboard-primary-button text-white font-semibold px-4 py-2 rounded-xl text-xs transition"
+                    >
+                        Salvar
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- Saldo Líquido -->
+
+            <div class="dashboard-card border rounded-2xl p-5 flex flex-col justify-between shadow-xl">
+
+                <span class="dashboard-muted text-xs font-semibold tracking-wider uppercase">
+                    Saldo Líquido
+                </span>
+
+                <span
+                    class="dashboard-balance text-2xl font-bold mt-1"
+                    id="totalBalance"
+                >
+                    R$ 0,00
+                </span>
+
+            </div>
+
+
+            <!-- Total de Saídas -->
+
+            <div class="dashboard-card border rounded-2xl p-5 flex flex-col justify-between shadow-xl">
+
+                <span class="dashboard-muted text-xs font-semibold tracking-wider uppercase">
+                    Total de Saídas
+                </span>
+
+                <span
+                    class="dashboard-expenses text-2xl font-bold mt-1"
+                    id="totalExpenses"
+                >
+                    R$ 0,00
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- Formulário de Lançamento -->
+
+        <section class="dashboard-card border rounded-2xl p-5 shadow-xl">
+
+            <h3 class="dashboard-sidebar-text text-sm font-semibold mb-4">
+                Novo Lançamento
+            </h3>
+
+            <form
+                id="expenseForm"
+                class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end"
+            >
+
+                <!-- Descrição -->
+
+                <div class="flex flex-col gap-1.5">
+
+                    <label
+                        for="description"
+                        class="dashboard-label text-xs font-medium"
+                    >
+                        Descrição / Título
+                    </label>
+
+                    <input
+                        type="text"
+                        id="description"
+                        placeholder="Ex: Assinatura de Software, Mercado"
+                        required
+                        class="dashboard-input border rounded-xl px-3.5 py-2 text-sm transition"
+                    >
+
+                </div>
+
+
+                <!-- Valor -->
+
+                <div class="flex flex-col gap-1.5">
+
+                    <label
+                        for="amount"
+                        class="dashboard-label text-xs font-medium"
+                    >
+                        Valor (R$)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        step="0.01"
+                        placeholder="0,00"
+                        required
+                        class="dashboard-input border rounded-xl px-3.5 py-2 text-sm transition"
+                    >
+
+                </div>
+
+
+                <!-- Categoria -->
+
+                <div class="flex flex-col gap-1.5">
+
+                    <label
+                        for="category"
+                        class="dashboard-label text-xs font-medium"
+                    >
+                        Categoria
+                    </label>
+
+                    <select
+                        id="category"
+                        required
+                        class="dashboard-select category-select-dropdown border rounded-xl px-3.5 py-2 text-sm transition"
+                    >
+
+                        <option
+                            value=""
+                            disabled
+                            selected
+                        >
+                            Selecione uma categoria
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Botão -->
+
                 <div>
-                    <h1 class="text-xl font-bold text-white">Visão Geral das Finanças</h1>
-                    <p class="text-xs text-slate-400 mt-1">Acompanhe seu saldo e o histórico recente de lançamentos.</p>
-                </div>
-            </header>
 
-            <!-- Cards de Saldo -->
-            <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-between gap-3 shadow-xl">
-                    <h3 class="text-xs font-semibold text-slate-400 tracking-wider uppercase">
-                        Ajustar Saldo Inicial
-                    </h3>
-                    <div class="flex gap-2">
-                        <input 
-                            type="number" 
-                            id="inputSaldo" 
-                            placeholder="0,00" 
-                            step="0.01"
-                            class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
-                        >
-                        <button 
-                            type="button"
-                            id="btnSalvarSaldo" 
-                            class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2 rounded-xl text-xs transition shadow-lg shadow-indigo-600/20"
-                        >
-                            Salvar
-                        </button>
-                    </div>
+                    <button
+                        type="submit"
+                        class="dashboard-primary-button w-full text-white font-semibold px-4 py-2 rounded-xl text-sm transition"
+                    >
+                        Confirmar Lançamento
+                    </button>
+
                 </div>
 
-                <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-between shadow-xl">
-                    <span class="text-xs font-semibold text-slate-400 tracking-wider uppercase">Saldo Líquido</span>
-                    <span class="text-2xl font-bold text-indigo-400 mt-1" id="totalBalance">R$ 0,00</span>
-                </div>
+            </form>
 
-                <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-between shadow-xl">
-                    <span class="text-xs font-semibold text-slate-400 tracking-wider uppercase">Total de Saídas</span>
-                    <span class="text-2xl font-bold text-rose-400 mt-1" id="totalExpenses">R$ 0,00</span>
-                </div>
-            </section>
+        </section>
 
-            <!-- Formulário de Lançamento -->
-            <section class="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-xl">
-                <h3 class="text-sm font-semibold text-slate-200 mb-4">Novo Lançamento</h3>
-                
-                <form id="expenseForm" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                    <div class="flex flex-col gap-1.5">
-                        <label for="description" class="text-xs font-medium text-slate-300">Descrição / Título</label>
-                        <input 
-                            type="text" 
-                            id="description" 
-                            placeholder="Ex: Assinatura de Software, Mercado" 
-                            required 
-                            class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
-                        >
-                    </div>
 
-                    <div class="flex flex-col gap-1.5">
-                        <label for="amount" class="text-xs font-medium text-slate-300">Valor (R$)</label>
-                        <input 
-                            type="number" 
-                            id="amount" 
-                            step="0.01" 
-                            placeholder="0,00" 
-                            required 
-                            class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
-                        >
-                    </div>
+        <!-- Tabela de Histórico -->
 
-                    <div class="flex flex-col gap-1.5">
-                        <label for="category" class="text-xs font-medium text-slate-300">Categoria</label>
-                        <select 
-                            id="category" 
-                            required 
-                            class="category-select-dropdown bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition"
-                        >
-                            <option value="" disabled selected>Selecione uma categoria</option>
-                        </select>
-                    </div>
+        <section class="dashboard-card border rounded-2xl p-5 shadow-xl">
 
-                    <div>
-                        <button 
-                            type="submit" 
-                            class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2 rounded-xl text-sm transition shadow-lg shadow-indigo-600/20"
-                        >
-                            Confirmar Lançamento
-                        </button>
-                    </div>
-                </form>
-            </section>
+            <div class="flex items-center justify-between mb-4">
 
-            <!-- Tabela de Histórico -->
-            <section class="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-xl">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-sm font-semibold text-slate-200">Histórico de Transações</h2>
-                    <span class="bg-slate-950 border border-slate-800 text-slate-400 text-xs px-2.5 py-0.5 rounded-full font-mono" id="expenseCount">0 itens</span>
-                </div>
+                <h2 class="dashboard-sidebar-text text-sm font-semibold">
+                    Histórico de Transações
+                </h2>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr class="border-b border-slate-800 text-slate-400 text-xs font-medium uppercase tracking-wider">
-                                <th class="py-3 px-4">Descrição</th>
-                                <th class="py-3 px-4">Categoria</th>
-                                <th class="py-3 px-4 text-right">Valor</th>
-                                <th class="py-3 px-4 text-center w-24">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="expenseListBody" class="divide-y divide-slate-800/60 text-slate-300">
-                            <!-- Inserido dinamicamente via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
-    </div>
+                <span
+                    class="dashboard-count text-xs px-2.5 py-0.5 rounded-full font-mono"
+                    id="expenseCount"
+                >
+                    0 itens
+                </span>
 
-    <script src="dashboard.js" defer></script>
+            </div>
+
+
+            <div class="overflow-x-auto">
+
+                <table class="dashboard-table w-full text-left border-collapse text-sm">
+
+                    <thead>
+
+                        <tr class="dashboard-table-head border-b text-xs font-medium uppercase tracking-wider">
+
+                            <th class="py-3 px-4">
+                                Descrição
+                            </th>
+
+                            <th class="py-3 px-4">
+                                Categoria
+                            </th>
+
+                            <th class="py-3 px-4 text-right">
+                                Valor
+                            </th>
+
+                            <th class="py-3 px-4 text-center w-24">
+                                Ações
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody
+                        id="expenseListBody"
+                        class="dashboard-table-body divide-y text-slate-300"
+                    >
+                        <!-- Inserido dinamicamente via JS -->
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="dashboard.js" defer></script>
+
 </body>
+
 </html>

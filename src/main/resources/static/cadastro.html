@@ -1,165 +1,584 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>FinanceControl - Criar Conta</title>
+
     <link rel="icon" type="image/png" href="logo.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tema global -->
+    <script src="theme.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    },
                 },
             },
         }
     </script>
+
     <script src="auth.js" defer></script>
+
+    <style>
+        /* ========================================
+           TRANSIÇÃO DO TEMA
+        ======================================== */
+
+        body,
+        .register-card,
+        .register-logo,
+        .register-input,
+        .register-footer,
+        .register-label,
+        .register-subtitle,
+        .register-rule,
+        .register-login-text {
+            transition:
+                background-color 0.25s ease,
+                border-color 0.25s ease,
+                color 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        /* ========================================
+           MODO ESCURO - PADRÃO
+        ======================================== */
+
+        body {
+            background-color: #020617;
+            color: #F8FAFC;
+        }
+
+        .register-card {
+            background-color: rgba(15, 23, 42, 0.80);
+            border-color: rgba(30, 41, 59, 0.80);
+        }
+
+        .register-logo {
+            background: linear-gradient(
+                to top right,
+                rgba(99, 102, 241, 0.20),
+                rgba(129, 140, 248, 0.10)
+            );
+            border-color: rgba(99, 102, 241, 0.30);
+        }
+
+        .register-title {
+            color: #FFFFFF;
+        }
+
+        .register-subtitle {
+            color: #94A3B8;
+        }
+
+        .register-label {
+            color: #CBD5E1;
+        }
+
+        .register-input {
+            background-color: rgba(2, 6, 23, 0.60);
+            border-color: rgba(30, 41, 59, 0.80);
+            color: #F1F5F9;
+        }
+
+        .register-input::placeholder {
+            color: #475569;
+        }
+
+        .register-input:focus {
+            border-color: rgba(99, 102, 241, 0.80);
+            box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.80);
+            outline: none;
+        }
+
+        .password-toggle {
+            color: #64748B;
+        }
+
+        .password-toggle:hover {
+            color: #CBD5E1;
+        }
+
+        .register-rule {
+            color: #64748B;
+        }
+
+        .register-success {
+            background-color: rgba(16, 185, 129, 0.10);
+            border-color: rgba(16, 185, 129, 0.20);
+            color: #34D399;
+        }
+
+        .register-error {
+            background-color: rgba(244, 63, 94, 0.10);
+            border-color: rgba(244, 63, 94, 0.20);
+            color: #FB7185;
+        }
+
+        .register-button {
+            background-color: #4F46E5;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.20);
+        }
+
+        .register-button:hover {
+            background-color: #6366F1;
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.35);
+        }
+
+        .register-footer {
+            border-color: rgba(30, 41, 59, 0.80);
+        }
+
+        .register-login-text {
+            color: #94A3B8;
+        }
+
+        .register-login-link {
+            color: #818CF8;
+        }
+
+        .register-login-link:hover {
+            color: #A5B4FC;
+        }
+
+        .glow-top {
+            background-color: rgba(99, 102, 241, 0.10);
+        }
+
+        .glow-bottom {
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+
+        /* ========================================
+           MODO CLARO
+        ======================================== */
+
+        html.light-mode body {
+            background-color: #F8FAFC !important;
+            color: #162D50 !important;
+        }
+
+        html.light-mode .register-card {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08) !important;
+        }
+
+        html.light-mode .register-logo {
+            background: linear-gradient(
+                to top right,
+                rgba(22, 45, 80, 0.08),
+                rgba(16, 185, 129, 0.06)
+            ) !important;
+            border-color: #D8E1EC !important;
+            box-shadow: inset 0 0 15px rgba(22, 45, 80, 0.05) !important;
+        }
+
+        html.light-mode .register-title {
+            color: #162D50 !important;
+        }
+
+        html.light-mode .register-subtitle {
+            color: #64748B !important;
+        }
+
+        html.light-mode .register-label {
+            color: #475569 !important;
+        }
+
+        html.light-mode .register-input {
+            background-color: #F8FAFC !important;
+            border-color: #E2E8F0 !important;
+            color: #162D50 !important;
+        }
+
+        html.light-mode .register-input::placeholder {
+            color: #94A3B8 !important;
+        }
+
+        html.light-mode .register-input:focus {
+            border-color: #162D50 !important;
+            box-shadow: 0 0 0 1px #162D50 !important;
+        }
+
+        html.light-mode .password-toggle {
+            color: #94A3B8 !important;
+        }
+
+        html.light-mode .password-toggle:hover {
+            color: #64748B !important;
+        }
+
+        html.light-mode .register-rule {
+            color: #94A3B8 !important;
+        }
+
+        html.light-mode .register-success {
+            background-color: #ECFDF5 !important;
+            border-color: #A7F3D0 !important;
+            color: #059669 !important;
+        }
+
+        html.light-mode .register-error {
+            background-color: #FFF1F2 !important;
+            border-color: #FECDD3 !important;
+            color: #E11D48 !important;
+        }
+
+        html.light-mode .register-button {
+            background-color: #162D50 !important;
+            box-shadow: 0 10px 25px rgba(22, 45, 80, 0.15) !important;
+        }
+
+        html.light-mode .register-button:hover {
+            background-color: #213F69 !important;
+            box-shadow: 0 10px 30px rgba(22, 45, 80, 0.25) !important;
+        }
+
+        html.light-mode .register-footer {
+            border-color: #E2E8F0 !important;
+        }
+
+        html.light-mode .register-login-text {
+            color: #64748B !important;
+        }
+
+        html.light-mode .register-login-link {
+            color: #162D50 !important;
+        }
+
+        html.light-mode .register-login-link:hover {
+            color: #213F69 !important;
+        }
+
+        html.light-mode .glow-top {
+            background-color: rgba(22, 45, 80, 0.04) !important;
+        }
+
+        html.light-mode .glow-bottom {
+            background-color: rgba(16, 185, 129, 0.03) !important;
+        }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex items-center justify-center p-4 relative overflow-x-hidden selection:bg-indigo-500 selection:text-white">
 
-    <!-- Efeitos de iluminação de fundo (Glow UI) -->
-    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none"></div>
-    <div class="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-indigo-600/5 blur-[100px] rounded-full pointer-events-none"></div>
+<body class="font-sans antialiased min-h-screen flex items-center justify-center p-4 relative overflow-x-hidden selection:bg-indigo-500 selection:text-white">
 
-    <div class="w-full max-w-md bg-slate-900/80 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-8 shadow-2xl relative z-10 my-8">
+    <!-- Efeitos de iluminação de fundo -->
+    <div class="glow-top absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[350px] blur-[120px] rounded-full pointer-events-none"></div>
+
+    <div class="glow-bottom absolute -bottom-40 left-1/2 -translate-x-1/2 w-[500px] h-[300px] blur-[100px] rounded-full pointer-events-none"></div>
+
+    <div class="register-card w-full max-w-md backdrop-blur-xl border rounded-2xl p-8 shadow-2xl relative z-10 my-8">
+
         <!-- Cabeçalho -->
         <div class="flex flex-col items-center mb-6 text-center">
-            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-tr from-indigo-500/20 to-indigo-400/10 border border-indigo-500/30 rounded-xl mb-4 shadow-inner shadow-indigo-500/20">
-                <img src="logo.png" alt="Logo" class="w-7 h-7 object-contain">
+
+            <div class="register-logo flex items-center justify-center w-12 h-12 border rounded-xl mb-4 shadow-inner">
+
+                <img
+                    src="logo.png"
+                    alt="Logo"
+                    class="w-7 h-7 object-contain"
+                >
+
             </div>
-            <h1 class="text-2xl font-bold tracking-tight text-white">Criar nova conta</h1>
-            <p class="text-xs text-slate-400 mt-1.5">Preencha os campos para iniciar seu controle financeiro</p>
+
+            <h1 class="register-title text-2xl font-bold tracking-tight">
+                Criar nova conta
+            </h1>
+
+            <p class="register-subtitle text-xs mt-1.5">
+                Preencha os campos para iniciar seu controle financeiro
+            </p>
+
         </div>
 
-        <!-- Mensagem de Sucesso na Tela (Exibida via JS pós-carregamento) -->
-        <div id="successMessage" class="hidden bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs p-3.5 rounded-xl mb-5 text-center font-medium">
+        <!-- Mensagem de Sucesso na Tela -->
+        <div
+            id="successMessage"
+            class="register-success hidden border text-xs p-3.5 rounded-xl mb-5 text-center font-medium"
+        >
             Conta criada com sucesso! Redirecionando para o login...
         </div>
 
         <!-- Mensagem de Erro na Tela -->
-        <div id="errorMessage" class="hidden bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs p-3.5 rounded-xl mb-5 text-center font-medium"></div>
+        <div
+            id="errorMessage"
+            class="register-error hidden border text-xs p-3.5 rounded-xl mb-5 text-center font-medium"
+        ></div>
 
         <form id="registerForm" class="flex flex-col gap-4">
+
             <!-- Campo Nome Completo -->
             <div class="flex flex-col gap-1.5">
-                <label for="regName" class="text-xs font-medium text-slate-300">Nome Completo</label>
+
+                <label
+                    for="regName"
+                    class="register-label text-xs font-medium"
+                >
+                    Nome Completo
+                </label>
+
                 <div class="relative">
-                    <input 
-                        type="text" 
-                        id="regName" 
-                        placeholder="Seu nome" 
+
+                    <input
+                        type="text"
+                        id="regName"
+                        placeholder="Seu nome"
                         required
-                        class="w-full bg-slate-950/60 border border-slate-800/80 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/80 transition-all duration-200"
+                        class="register-input w-full border rounded-xl px-3.5 py-2.5 text-sm transition-all duration-200"
                     >
+
                 </div>
+
             </div>
 
             <!-- Campo E-mail -->
             <div class="flex flex-col gap-1.5">
-                <label for="regEmail" class="text-xs font-medium text-slate-300">E-mail</label>
+
+                <label
+                    for="regEmail"
+                    class="register-label text-xs font-medium"
+                >
+                    E-mail
+                </label>
+
                 <div class="relative">
-                    <input 
-                        type="email" 
-                        id="regEmail" 
-                        placeholder="seu@email.com" 
+
+                    <input
+                        type="email"
+                        id="regEmail"
+                        placeholder="seu@email.com"
                         required
-                        class="w-full bg-slate-950/60 border border-slate-800/80 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/80 transition-all duration-200"
+                        class="register-input w-full border rounded-xl px-3.5 py-2.5 text-sm transition-all duration-200"
                     >
+
                 </div>
+
             </div>
 
             <!-- Campo Senha -->
             <div class="flex flex-col gap-1.5">
-                <label for="regPassword" class="text-xs font-medium text-slate-300">Senha</label>
+
+                <label
+                    for="regPassword"
+                    class="register-label text-xs font-medium"
+                >
+                    Senha
+                </label>
+
                 <div class="relative flex items-center">
-                    <input 
-                        type="password" 
-                        id="regPassword" 
-                        placeholder="••••••••" 
+
+                    <input
+                        type="password"
+                        id="regPassword"
+                        placeholder="••••••••"
                         required
-                        class="w-full bg-slate-950/60 border border-slate-800/80 rounded-xl pl-3.5 pr-10 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/80 transition-all duration-200"
+                        class="register-input w-full border rounded-xl pl-3.5 pr-10 py-2.5 text-sm transition-all duration-200"
                     >
-                    <button 
-                        type="button" 
+
+                    <button
+                        type="button"
                         onclick="togglePasswordVisibility('regPassword', 'toggleRegPassIcon')"
-                        class="absolute right-3 text-slate-500 hover:text-slate-300 transition-colors p-1"
+                        class="password-toggle absolute right-3 transition-colors p-1"
                         tabindex="-1"
                         title="Alternar visibilidade da senha"
                     >
-                        <svg id="toggleRegPassIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+
+                        <svg
+                            id="toggleRegPassIcon"
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+
                         </svg>
+
                     </button>
+
                 </div>
-                
+
                 <!-- Lista de Validação de Senha -->
                 <ul class="text-[11px] space-y-1.5 mt-1.5 pl-1">
-                    <li id="ruleLength" class="text-slate-500 transition-colors duration-200 flex items-center gap-1.5">
-                        <span class="w-1 h-1 rounded-full bg-current inline-block"></span> Mínimo de 8 caracteres
+
+                    <li
+                        id="ruleLength"
+                        class="register-rule transition-colors duration-200 flex items-center gap-1.5"
+                    >
+                        <span class="w-1 h-1 rounded-full bg-current inline-block"></span>
+                        Mínimo de 8 caracteres
                     </li>
-                    <li id="ruleNumber" class="text-slate-500 transition-colors duration-200 flex items-center gap-1.5">
-                        <span class="w-1 h-1 rounded-full bg-current inline-block"></span> Pelo menos um número
+
+                    <li
+                        id="ruleNumber"
+                        class="register-rule transition-colors duration-200 flex items-center gap-1.5"
+                    >
+                        <span class="w-1 h-1 rounded-full bg-current inline-block"></span>
+                        Pelo menos um número
                     </li>
-                    <li id="ruleSpecial" class="text-slate-500 transition-colors duration-200 flex items-center gap-1.5">
-                        <span class="w-1 h-1 rounded-full bg-current inline-block"></span> Pelo menos um caractere especial (@, #, $, etc.)
+
+                    <li
+                        id="ruleSpecial"
+                        class="register-rule transition-colors duration-200 flex items-center gap-1.5"
+                    >
+                        <span class="w-1 h-1 rounded-full bg-current inline-block"></span>
+                        Pelo menos um caractere especial (@, #, $, etc.)
                     </li>
+
                 </ul>
+
             </div>
 
             <!-- Campo Confirmar Senha -->
             <div class="flex flex-col gap-1.5">
-                <label for="regConfirmPassword" class="text-xs font-medium text-slate-300">Confirmar Senha</label>
+
+                <label
+                    for="regConfirmPassword"
+                    class="register-label text-xs font-medium"
+                >
+                    Confirmar Senha
+                </label>
+
                 <div class="relative flex items-center">
-                    <input 
-                        type="password" 
-                        id="regConfirmPassword" 
-                        placeholder="••••••••" 
+
+                    <input
+                        type="password"
+                        id="regConfirmPassword"
+                        placeholder="••••••••"
                         required
-                        class="w-full bg-slate-950/60 border border-slate-800/80 rounded-xl pl-3.5 pr-10 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/80 transition-all duration-200"
+                        class="register-input w-full border rounded-xl pl-3.5 pr-10 py-2.5 text-sm transition-all duration-200"
                     >
-                    <button 
-                        type="button" 
+
+                    <button
+                        type="button"
                         onclick="togglePasswordVisibility('regConfirmPassword', 'toggleConfirmPassIcon')"
-                        class="absolute right-3 text-slate-500 hover:text-slate-300 transition-colors p-1"
+                        class="password-toggle absolute right-3 transition-colors p-1"
                         tabindex="-1"
                         title="Alternar visibilidade da senha"
                     >
-                        <svg id="toggleConfirmPassIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+
+                        <svg
+                            id="toggleConfirmPassIcon"
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+
                         </svg>
+
                     </button>
+
                 </div>
+
             </div>
 
             <!-- Botão de Envio -->
-            <button 
-                type="submit" 
+            <button
+                type="submit"
                 id="btnRegister"
-                class="mt-2 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/35 active:scale-[0.99]"
+                class="register-button mt-2 w-full text-white font-semibold py-2.5 rounded-xl text-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.99]"
             >
-                <span id="btnRegisterText">Criar Conta</span>
-                <svg id="btnRegisterSpinner" class="w-4 h-4 text-white animate-spin hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+
+                <span id="btnRegisterText">
+                    Criar Conta
+                </span>
+
+                <svg
+                    id="btnRegisterSpinner"
+                    class="w-4 h-4 text-white animate-spin hidden"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                >
+
+                    <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                    ></circle>
+
+                    <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+
                 </svg>
+
             </button>
+
         </form>
 
         <!-- Footer / Link para Login -->
-        <div class="mt-6 border-t border-slate-800/80 pt-4 text-center">
-            <p class="text-xs text-slate-400">
-                Já possui uma conta? 
-                <a href="telaLogin.html" class="text-indigo-400 hover:text-indigo-300 hover:underline font-medium transition-colors">Fazer Login</a>
+        <div class="register-footer mt-6 border-t pt-4 text-center">
+
+            <p class="register-login-text text-xs">
+
+                Já possui uma conta?
+
+                <a
+                    href="telaLogin.html"
+                    class="register-login-link hover:underline font-medium transition-colors"
+                >
+                    Fazer Login
+                </a>
+
             </p>
+
         </div>
+
     </div>
 
 </body>
+
 </html>

@@ -1,20 +1,37 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+
+<html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>FinanceControl Pro - Configurações</title>
+
     <link rel="icon" type="image/png" href="logo.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Tema global -->
+    <script src="theme.js"></script>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    },
                     colors: {
                         brand: {
                             50: '#eef2ff',
@@ -27,259 +44,1259 @@
             },
         }
     </script>
+
+    <style>
+
+        /* =========================
+           MODO ESCURO
+        ========================= */
+
+        body {
+            background: #020617;
+            color: #f1f5f9;
+        }
+
+        .config-sidebar {
+            background: #0f172a;
+            border-color: rgba(30, 41, 59, 0.8);
+        }
+
+        .config-main {
+            background: #020617;
+        }
+
+        .config-border {
+            border-color: rgba(30, 41, 59, 0.8);
+        }
+
+        .config-card {
+            background: #0f172a;
+            border-color: rgba(30, 41, 59, 0.8);
+        }
+
+        .config-title {
+            color: #f1f5f9;
+        }
+
+        .config-heading {
+            color: #e2e8f0;
+        }
+
+        .config-text {
+            color: #94a3b8;
+        }
+
+        .config-muted {
+            color: #64748b;
+        }
+
+        .config-sidebar-text {
+            color: #94a3b8;
+        }
+
+        .config-sidebar-title {
+            color: #ffffff;
+        }
+
+        .config-logo-accent {
+            color: #818cf8;
+        }
+
+        .config-nav-icon {
+            color: #94a3b8;
+        }
+
+        .config-active-nav {
+            background: rgba(79, 70, 229, 0.1);
+            color: #818cf8;
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .config-active-icon {
+            color: #818cf8;
+        }
+
+        .config-avatar {
+            background: #1e293b;
+            color: #818cf8;
+            border-color: rgba(51, 65, 85, 0.6);
+        }
+
+        .config-account {
+            color: #e2e8f0;
+        }
+
+        .config-input {
+            background: #020617;
+            border-color: #1e293b;
+            color: #f1f5f9;
+        }
+
+        .config-input::placeholder {
+            color: #475569;
+        }
+
+        .config-input:focus {
+            border-color: #6366f1;
+        }
+
+        .config-button-secondary {
+            background: #1e293b;
+            border-color: rgba(51, 65, 85, 0.6);
+            color: #e2e8f0;
+        }
+
+        .config-button-secondary:hover {
+            background: #334155;
+        }
+
+        .config-icon-box {
+            background: #020617;
+            border-color: #1e293b;
+            color: #94a3b8;
+        }
+
+        .config-modal {
+            background: #0f172a;
+            border-color: #1e293b;
+        }
+
+        .config-modal-input {
+            background: #020617;
+            border-color: #1e293b;
+            color: #f1f5f9;
+        }
+
+        .config-modal-input::placeholder {
+            color: #334155;
+        }
+
+        .config-modal-input:focus {
+            border-color: #6366f1;
+        }
+
+        .config-requirements {
+            background: rgba(2, 6, 23, 0.8);
+            border-color: rgba(30, 41, 59, 0.8);
+            color: #94a3b8;
+        }
+
+        .config-cancel {
+            background: #1e293b;
+            color: #cbd5e1;
+        }
+
+        .config-cancel:hover {
+            background: #334155;
+        }
+
+
+        /* =========================
+           BOTÃO CLARO / ESCURO
+        ========================= */
+
+        .theme-toggle {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #cbd5e1;
+        }
+
+        .theme-toggle:hover {
+            background: #334155;
+            color: #ffffff;
+        }
+
+
+        /* =========================
+           CATEGORIAS SALVAS
+           RETÂNGULOS AZUIS
+        ========================= */
+
+        #categoryListContainer > * {
+            background: #172554;
+            border: 1px solid #2563eb;
+            color: #e2e8f0;
+        }
+
+        #categoryListContainer > *:hover {
+            background: #1e3a8a;
+        }
+
+
+        /* =========================
+           MODO CLARO
+        ========================= */
+
+        html.light-mode body {
+            background: #f8fafc;
+            color: #162d50;
+        }
+
+        html.light-mode .config-sidebar {
+            background: #ffffff;
+            border-color: #e2e8f0;
+        }
+
+        html.light-mode .config-main {
+            background: #f8fafc;
+        }
+
+        html.light-mode .config-border {
+            border-color: #e2e8f0;
+        }
+
+        html.light-mode .config-card {
+            background: #ffffff;
+            border-color: #e2e8f0;
+        }
+
+        html.light-mode .config-title {
+            color: #162d50;
+        }
+
+        html.light-mode .config-heading {
+            color: #243b5a;
+        }
+
+        html.light-mode .config-text {
+            color: #64748b;
+        }
+
+        html.light-mode .config-muted {
+            color: #64748b;
+        }
+
+        html.light-mode .config-sidebar-text {
+            color: #64748b;
+        }
+
+        html.light-mode .config-sidebar-title {
+            color: #162d50;
+        }
+
+        html.light-mode .config-logo-accent {
+            color: #4f46e5;
+        }
+
+        html.light-mode .config-nav-icon {
+            color: #64748b;
+        }
+
+        html.light-mode .config-active-nav {
+            background: #eef2ff;
+            color: #4338ca;
+            border-color: #c7d2fe;
+        }
+
+        html.light-mode .config-active-icon {
+            color: #4f46e5;
+        }
+
+        html.light-mode .config-avatar {
+            background: #eef2ff;
+            color: #4f46e5;
+            border-color: #c7d2fe;
+        }
+
+        html.light-mode .config-account {
+            color: #243b5a;
+        }
+
+        html.light-mode .config-input {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #162d50;
+        }
+
+        html.light-mode .config-input::placeholder {
+            color: #94a3b8;
+        }
+
+        html.light-mode .config-input:focus {
+            border-color: #6366f1;
+        }
+
+        html.light-mode .config-button-secondary {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            color: #243b5a;
+        }
+
+        html.light-mode .config-button-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        html.light-mode .config-icon-box {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            color: #64748b;
+        }
+
+        html.light-mode .config-modal {
+            background: #ffffff;
+            border-color: #e2e8f0;
+        }
+
+        html.light-mode .config-modal-input {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #162d50;
+        }
+
+        html.light-mode .config-modal-input::placeholder {
+            color: #94a3b8;
+        }
+
+        html.light-mode .config-requirements {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            color: #64748b;
+        }
+
+        html.light-mode .config-cancel {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        html.light-mode .config-cancel:hover {
+            background: #e2e8f0;
+        }
+
+
+        /* =========================
+           BOTÃO DE TEMA - MODO CLARO
+        ========================= */
+
+        html.light-mode .theme-toggle {
+            background: #eef2ff;
+            border-color: #c7d2fe;
+            color: #4338ca;
+        }
+
+        html.light-mode .theme-toggle:hover {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+
+        /* =========================
+           CATEGORIAS - MODO CLARO
+           RETÂNGULOS AZUL-CLARO
+        ========================= */
+html.light-mode #categoryListContainer > * {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    color: #1e3a8a !important;
+}
+
+html.light-mode #categoryListContainer > *:hover {
+    background: #bfdbfe;
+}
+
+html.light-mode #categoryListContainer > * * {
+    color: #1e3a8a !important;
+}
+
+
+        /* =========================
+           RESPONSIVIDADE
+        ========================= */
+
+        @media (max-width: 768px) {
+
+            .config-sidebar {
+                width: 220px;
+                min-width: 220px;
+                padding: 1rem;
+            }
+
+            .config-main {
+                padding: 1.5rem;
+            }
+
+        }
+
+    </style>
+
     <script src="configuracoes.js" defer></script>
+
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-slate-950">
+
+
+<body class="font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-slate-950">
+
     <div class="flex min-h-screen w-full">
-        
-        <!-- Sidebar -->
-        <aside class="w-64 min-w-[256px] bg-slate-900 border-r border-slate-800/80 flex flex-col p-6 h-screen sticky top-0">
+
+
+        <!-- =========================
+             SIDEBAR
+        ========================= -->
+
+        <aside class="config-sidebar w-64 min-w-[256px] border-r flex flex-col p-6 h-screen sticky top-0">
+
             <div class="flex items-center gap-3 mb-8">
+
                 <div class="flex items-center justify-center w-10 h-10 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
-                    <img src="logo.png" alt="Logo" class="w-6 h-6 object-contain">
+
+                    <img
+                        src="logo.png"
+                        alt="Logo"
+                        class="w-6 h-6 object-contain"
+                    >
+
                 </div>
+
                 <div>
-                    <h2 class="text-base font-bold tracking-wide text-white">Finance<span class="text-indigo-400">Control</span></h2>
-                    <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Gestão Pessoal</span>
+
+                    <h2 class="config-sidebar-title text-base font-bold tracking-wide">
+                        Finance<span class="config-logo-accent">Control</span>
+                    </h2>
+
+                    <span class="config-sidebar-text text-[11px] uppercase tracking-wider font-semibold">
+                        Gestão Pessoal
+                    </span>
+
                 </div>
+
             </div>
+
 
             <nav class="flex flex-col gap-1.5 flex-1">
-                <a href="index.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-lg text-sm font-medium transition">
-                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 00-1 1m-6 0h6"></path></svg>
+
+                <a
+                    href="index.html"
+                    class="config-sidebar-text flex items-center gap-3 px-3.5 py-2.5 hover:bg-slate-800/50 rounded-lg text-sm font-medium transition"
+                >
+
+                    <svg
+                        class="config-nav-icon w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 00-1 1m-6 0h6"
+                        ></path>
+
+                    </svg>
+
                     <span>Painel Geral</span>
+
                 </a>
-    
-                <a href="grafico.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-lg text-sm font-medium transition">
-                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+
+
+                <a
+                    href="grafico.html"
+                    class="config-sidebar-text flex items-center gap-3 px-3.5 py-2.5 hover:bg-slate-800/50 rounded-lg text-sm font-medium transition"
+                >
+
+                    <svg
+                        class="config-nav-icon w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                        ></path>
+
+                    </svg>
+
                     <span>Relatórios</span>
+
                 </a>
-                <a href="configuracoes.html" class="flex items-center gap-3 px-3.5 py-2.5 bg-indigo-600/10 text-indigo-400 rounded-lg text-sm font-medium transition border border-indigo-500/20">
-                    <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+
+
+                <a
+                    href="configuracoes.html"
+                    class="config-active-nav flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition border"
+                >
+
+                    <svg
+                        class="config-active-icon w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7zm7.94-3.5a1.92 1.92 0 010-1.5l1.13-1.76-1.5-2.6-2.02.55a1.93 1.93 0 01-1.3-.75l-.9-1.88h-3l-.9 1.88a1.93 1.93 0 01-1.3.75l-2.02-.55-1.5 2.6 1.13 1.76a1.92 1.92 0 010 1.5l-1.13 1.76 1.5 2.6 2.02-.55a1.93 1.93 0 011.3.75l.9 1.88h3l.9-1.88a1.93 1.93 0 011.3-.75l2.02.55 1.5-2.6-1.13-1.76z"
+                        ></path>
+
+                    </svg>
+
                     <span>Configurações</span>
+
                 </a>
+
             </nav>
-            
-            <div class="border-t border-slate-800/80 pt-4 flex items-center justify-between">
+
+
+            <!-- Usuário -->
+
+            <div class="border-t config-border pt-4 flex items-center justify-between">
+
                 <div class="flex items-center gap-3">
-                    <div id="avatarUsuario" class="w-9 h-9 bg-slate-800 text-indigo-400 border border-slate-700/60 font-semibold text-xs rounded-lg flex items-center justify-center overflow-hidden">
+
+                    <div
+                        id="avatarUsuario"
+                        class="config-avatar w-9 h-9 font-semibold text-xs rounded-lg flex items-center justify-center overflow-hidden"
+                    >
                         --
                     </div>
+
                     <div class="flex flex-col">
-                        <span id="nomeUsuarioSidebar" class="text-xs font-semibold text-slate-200">Carregando...</span>
-                        <span class="text-[11px] text-slate-500">Conta Ativa</span>
+
+                        <span
+                            id="nomeUsuarioSidebar"
+                            class="config-account text-xs font-semibold"
+                        >
+                            Carregando...
+                        </span>
+
+                        <span class="config-muted text-[11px]">
+                            Conta Ativa
+                        </span>
+
                     </div>
+
                 </div>
-                <button onclick="handleLogout()" title="Sair da Conta" class="text-slate-500 hover:text-rose-400 p-1.5 rounded-lg transition hover:bg-slate-800">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+
+                <button
+                    onclick="handleLogout()"
+                    title="Sair da Conta"
+                    class="config-muted hover:text-rose-400 p-1.5 rounded-lg transition hover:bg-slate-800"
+                >
+
+                    <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                        ></path>
+
+                    </svg>
+
                 </button>
+
             </div>
+
         </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 bg-slate-950 p-8 flex flex-col gap-6 overflow-y-auto">
-            <header class="border-b border-slate-800/60 pb-5">
-                <h1 class="text-xl font-bold text-slate-100">Central de Configurações</h1>
-                <p class="text-xs text-slate-400 mt-1">Gerencie suas credenciais, foto de perfil e categorias de finanças.</p>
+
+        <!-- =========================
+             MAIN CONTENT
+        ========================= -->
+
+        <main class="config-main flex-1 p-8 flex flex-col gap-6 overflow-y-auto">
+
+
+            <!-- Cabeçalho -->
+
+            <header class="border-b config-border pb-5 flex items-start justify-between gap-4">
+
+                <div>
+
+                    <h1 class="config-title text-xl font-bold">
+                        Central de Configurações
+                    </h1>
+
+                    <p class="config-text text-xs mt-1">
+                        Gerencie suas credenciais, foto de perfil e categorias de finanças.
+                    </p>
+
+                </div>
+
+
+                <!-- BOTÃO CLARO / ESCURO -->
+
+                <button
+                    type="button"
+                    onclick="alternarTema()"
+                    class="theme-toggle flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition shrink-0"
+                    title="Alternar tema"
+                >
+
+                    <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                        ></path>
+
+                    </svg>
+
+                    <span>Claro / Escuro</span>
+
+                </button>
+
             </header>
+
 
             <div class="max-w-3xl flex flex-col gap-5">
 
-                <!-- Profile Section -->
-                <section class="bg-slate-900 border border-slate-800/80 rounded-xl p-6">
+
+                <!-- =========================
+                     PROFILE
+                ========================= -->
+
+                <section class="config-card border rounded-xl p-6">
+
                     <div class="flex items-center gap-5">
-                        <div id="profileAvatarPreview" class="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700/80 flex items-center justify-center text-indigo-400 font-bold text-lg overflow-hidden shrink-0">
+
+                        <div
+                            id="profileAvatarPreview"
+                            class="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700/80 flex items-center justify-center text-indigo-400 font-bold text-lg overflow-hidden shrink-0"
+                        >
+
                             <span id="avatarInitials">AM</span>
-                            <img id="avatarImg" class="w-full h-full object-cover hidden" alt="Foto de Perfil">
+
+                            <img
+                                id="avatarImg"
+                                class="w-full h-full object-cover hidden"
+                                alt="Foto de Perfil"
+                            >
+
                         </div>
 
                         <div class="flex-1">
-                            <h2 class="text-sm font-semibold text-slate-200">Anderson Wagner</h2>
-                            <p class="text-xs text-slate-500">anderson@email.com</p>
-                            
+
+                            <h2 class="config-heading text-sm font-semibold">
+                                Anderson Wagner
+                            </h2>
+
+                            <p class="config-muted text-xs">
+                                anderson@email.com
+                            </p>
+
                             <div class="flex items-center gap-3 mt-3">
-                                <input type="file" id="profileImageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-                                <button type="button" onclick="document.getElementById('profileImageInput').click()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700/60 text-slate-200 text-xs font-medium px-3 py-1.5 rounded-lg transition">
+
+                                <input
+                                    type="file"
+                                    id="profileImageInput"
+                                    accept="image/*"
+                                    class="hidden"
+                                    onchange="handleImageUpload(event)"
+                                >
+
+                                <button
+                                    type="button"
+                                    onclick="document.getElementById('profileImageInput').click()"
+                                    class="config-button-secondary border text-xs font-medium px-3 py-1.5 rounded-lg transition"
+                                >
                                     Alterar Foto
                                 </button>
-                                <button type="button" onclick="removeProfileImage()" class="text-xs font-medium text-slate-500 hover:text-rose-400 transition">
+
+                                <button
+                                    type="button"
+                                    onclick="removeProfileImage()"
+                                    class="config-muted text-xs font-medium hover:text-rose-400 transition"
+                                >
                                     Remover
                                 </button>
+
                             </div>
+
                         </div>
+
                     </div>
+
                 </section>
 
-                <!-- Security Section -->
-                <section class="bg-slate-900 border border-slate-800/80 rounded-xl p-6 flex flex-col gap-4">
-                    <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+
+                <!-- =========================
+                     SECURITY
+                ========================= -->
+
+                <section class="config-card border rounded-xl p-6 flex flex-col gap-4">
+
+                    <div class="flex items-center justify-between pb-3 border-b config-border">
+
                         <div>
-                            <h2 class="text-sm font-semibold text-slate-200">Segurança da Conta</h2>
-                            <p class="text-xs text-slate-500">Controle de acesso e verificação de senha.</p>
+
+                            <h2 class="config-heading text-sm font-semibold">
+                                Segurança da Conta
+                            </h2>
+
+                            <p class="config-muted text-xs">
+                                Controle de acesso e verificação de senha.
+                            </p>
+
                         </div>
-                       <span class="text-[11px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-1 rounded-full font-medium">Segura</span>
+
+                        <span class="text-[11px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-1 rounded-full font-medium">
+                            Segura
+                        </span>
+
                     </div>
+
 
                     <div class="flex items-center justify-between py-2">
+
                         <div class="flex items-center gap-3">
-                            <div class="p-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-400">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+
+                            <div class="config-icon-box p-2 border rounded-lg">
+
+                                <svg
+                                    class="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                    ></path>
+
+                                </svg>
+
                             </div>
+
                             <div>
-                                <h3 class="text-xs font-semibold text-slate-200">Senha de Acesso</h3>
-                                <p class="text-[11px] text-slate-500">Recomendamos alterar sua senha periodicamente.</p>
+
+                                <h3 class="config-heading text-xs font-semibold">
+                                    Senha de Acesso
+                                </h3>
+
+                                <p class="config-muted text-[11px]">
+                                    Recomendamos alterar sua senha periodicamente.
+                                </p>
+
                             </div>
+
                         </div>
 
-                        <button type="button" onclick="openPasswordModal()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700/60 text-slate-200 text-xs font-medium px-4 py-2 rounded-lg transition">
+
+                        <button
+                            type="button"
+                            onclick="openPasswordModal()"
+                            class="config-button-secondary border text-xs font-medium px-4 py-2 rounded-lg transition"
+                        >
                             Alterar Senha
                         </button>
+
                     </div>
+
                 </section>
 
-                <!-- Categories Section -->
-                <section class="bg-slate-900 border border-slate-800/80 rounded-xl p-6">
-                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+
+                <!-- =========================
+                     CATEGORIES
+                ========================= -->
+
+                <section class="config-card border rounded-xl p-6">
+
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b config-border">
+
                         <div>
-                            <h2 class="text-sm font-semibold text-slate-200">Categorias Personalizadas</h2>
-                            <p class="text-xs text-slate-500">Gerencie a classificação das suas finanças.</p>
+
+                            <h2 class="config-heading text-sm font-semibold">
+                                Categorias Personalizadas
+                            </h2>
+
+                            <p class="config-muted text-xs">
+                                Gerencie a classificação das suas finanças.
+                            </p>
+
                         </div>
+
                     </div>
+
 
                     <div class="flex gap-3 mb-4">
-                        <input type="text" id="newCategoryName" placeholder="Nova Categoria (ex: Mercado, Lazer)" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition">
-                        <button type="button" onclick="addNewCategory()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg text-sm shadow-lg shadow-indigo-600/20 transition">
+
+                        <input
+                            type="text"
+                            id="newCategoryName"
+                            placeholder="Nova Categoria (ex: Mercado, Lazer)"
+                            class="config-input flex-1 border rounded-lg px-3.5 py-2 text-sm focus:outline-none transition"
+                        >
+
+                        <button
+                            type="button"
+                            onclick="addNewCategory()"
+                            class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg text-sm shadow-lg shadow-indigo-600/20 transition"
+                        >
                             Adicionar
                         </button>
+
                     </div>
 
-                    <div class="space-y-2" id="categoryListContainer"></div>
+
+                    <!-- Categorias salvas -->
+
+                    <div
+                        class="space-y-2"
+                        id="categoryListContainer"
+                    ></div>
+
                 </section>
 
-                <!-- Session Section -->
-                <section class="bg-slate-900 border border-slate-800/80 rounded-xl p-6 flex items-center justify-between">
+
+                <!-- =========================
+                     SESSION
+                ========================= -->
+
+                <section class="config-card border rounded-xl p-6 flex items-center justify-between">
+
                     <div>
-                        <h2 class="text-sm font-semibold text-rose-400">Sessão da Conta</h2>
-                        <p class="text-xs text-slate-500">Desconectar sua conta com segurança deste navegador.</p>
+
+                        <h2 class="text-sm font-semibold text-rose-400">
+                            Sessão da Conta
+                        </h2>
+
+                        <p class="config-muted text-xs">
+                            Desconectar sua conta com segurança deste navegador.
+                        </p>
+
                     </div>
 
-                    <button type="button" onclick="handleLogout()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+
+                    <button
+                        type="button"
+                        onclick="handleLogout()"
+                        class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2"
+                    >
+
+                        <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                            ></path>
+
+                        </svg>
+
                         <span>Sair do Sistema</span>
+
                     </button>
+
                 </section>
 
             </div>
+
         </main>
+
     </div>
 
-    <!-- MODAL 1: ALTERAR SENHA (PADRÃO) -->
-    <div id="passwordModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
-            
-            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-                <h3 class="text-base font-bold text-slate-100">Alterar Senha</h3>
-                <button onclick="closePasswordModal()" class="text-slate-500 hover:text-slate-300 p-1 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+
+    <!-- =========================
+         MODAL 1: ALTERAR SENHA
+    ========================= -->
+
+    <div
+        id="passwordModal"
+        class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50"
+    >
+
+        <div class="config-modal border rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+
+            <div class="flex items-center justify-between pb-4 border-b config-border mb-4">
+
+                <h3 class="config-title text-base font-bold">
+                    Alterar Senha
+                </h3>
+
+                <button
+                    onclick="closePasswordModal()"
+                    class="config-muted hover:text-slate-300 p-1 transition"
+                >
+
+                    <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                        ></path>
+
+                    </svg>
+
                 </button>
+
             </div>
 
-            <form id="passwordForm" onsubmit="handlePasswordUpdate(event)" class="flex flex-col gap-4">
-                
+
+            <form
+                id="passwordForm"
+                onsubmit="handlePasswordUpdate(event)"
+                class="flex flex-col gap-4"
+            >
+
                 <div class="flex flex-col gap-1">
-                   <div class="flex justify-between items-center">
-    <label class="text-xs font-medium text-slate-400">Senha Atual</label>
-</div>
+
+                    <div class="flex justify-between items-center">
+
+                        <label class="config-text text-xs font-medium">
+                            Senha Atual
+                        </label>
+
+                    </div>
+
+
                     <div class="relative">
-                        <input type="password" id="currentPassword" required class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3.5 pr-10 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition">
-                        <button type="button" onclick="togglePasswordVisibility('currentPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+
+                        <input
+                            type="password"
+                            id="currentPassword"
+                            required
+                            class="config-modal-input w-full border rounded-lg pl-3.5 pr-10 py-2 text-sm focus:outline-none transition"
+                        >
+
+                        <button
+                            type="button"
+                            onclick="togglePasswordVisibility('currentPassword', this)"
+                            class="config-muted hover:text-slate-300 absolute right-3 top-1/2 -translate-y-1/2"
+                        >
+
+                            <svg
+                                class="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                ></path>
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                ></path>
+
                             </svg>
+
                         </button>
+
                     </div>
+
                 </div>
 
+
                 <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-400">Nova Senha</label>
+
+                    <label class="config-text text-xs font-medium">
+                        Nova Senha
+                    </label>
+
                     <div class="relative">
-                        <input type="password" id="newPassword" required oninput="evaluatePasswordStrength()" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3.5 pr-10 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition">
-                        <button type="button" onclick="togglePasswordVisibility('newPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+
+                        <input
+                            type="password"
+                            id="newPassword"
+                            required
+                            oninput="evaluatePasswordStrength()"
+                            class="config-modal-input w-full border rounded-lg pl-3.5 pr-10 py-2 text-sm focus:outline-none transition"
+                        >
+
+                        <button
+                            type="button"
+                            onclick="togglePasswordVisibility('newPassword')"
+                            class="config-muted hover:text-slate-300 absolute right-3 top-1/2 -translate-y-1/2"
+                        >
+
+                            <svg
+                                class="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                ></path>
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                ></path>
+
+                            </svg>
+
                         </button>
+
                     </div>
+
+
                     <div class="w-full bg-slate-950 rounded-full h-1.5 mt-1 border border-slate-800/80 overflow-hidden">
-                        <div id="strengthMeter" class="h-full w-0 transition-all duration-300"></div>
+
+                        <div
+                            id="strengthMeter"
+                            class="h-full w-0 transition-all duration-300"
+                        ></div>
+
                     </div>
+
                 </div>
+
 
                 <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-400">Confirmar Nova Senha</label>
+
+                    <label class="config-text text-xs font-medium">
+                        Confirmar Nova Senha
+                    </label>
+
                     <div class="relative">
-                        <input type="password" id="confirmNewPassword" required class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3.5 pr-10 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition">
-                        <button type="button" onclick="togglePasswordVisibility('confirmNewPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+
+                        <input
+                            type="password"
+                            id="confirmNewPassword"
+                            required
+                            class="config-modal-input w-full border rounded-lg pl-3.5 pr-10 py-2 text-sm focus:outline-none transition"
+                        >
+
+                        <button
+                            type="button"
+                            onclick="togglePasswordVisibility('confirmNewPassword')"
+                            class="config-muted hover:text-slate-300 absolute right-3 top-1/2 -translate-y-1/2"
+                        >
+
+                            <svg
+                                class="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                ></path>
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                ></path>
+
+                            </svg>
+
                         </button>
+
                     </div>
+
                 </div>
 
-                <div class="bg-slate-950/80 border border-slate-800/80 rounded-lg p-3 text-[11px] flex flex-col gap-1 text-slate-400">
-                    <div id="req-length">• Mínimo de 8 caracteres</div>
-                    <div id="req-uppercase">• Ao menos 1 letra maiúscula</div>
-                    <div id="req-number">• Ao menos 1 número</div>
-                    <div id="req-special">• Ao menos 1 caractere especial (!@#$%)</div>
+
+                <div class="config-requirements border rounded-lg p-3 text-[11px] flex flex-col gap-1">
+
+                    <div id="req-length">
+                        • Mínimo de 8 caracteres
+                    </div>
+
+                    <div id="req-uppercase">
+                        • Ao menos 1 letra maiúscula
+                    </div>
+
+                    <div id="req-number">
+                        • Ao menos 1 número
+                    </div>
+
+                    <div id="req-special">
+                        • Ao menos 1 caractere especial (!@#$%)
+                    </div>
+
                 </div>
 
-                <span id="passwordFeedback" class="text-xs font-medium min-h-[16px]"></span>
+
+                <span
+                    id="passwordFeedback"
+                    class="text-xs font-medium min-h-[16px]"
+                ></span>
+
 
                 <div class="flex justify-end gap-3 mt-2">
-                    <button type="button" onclick="closePasswordModal()" class="bg-slate-800 text-slate-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-slate-700 transition">
+
+                    <button
+                        type="button"
+                        onclick="closePasswordModal()"
+                        class="config-cancel text-xs font-semibold px-4 py-2 rounded-lg hover:bg-slate-700 transition"
+                    >
                         Cancelar
                     </button>
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg text-xs shadow-lg shadow-indigo-600/20 transition">
+
+                    <button
+                        type="submit"
+                        class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg text-xs shadow-lg shadow-indigo-600/20 transition"
+                    >
                         Salvar Nova Senha
                     </button>
+
                 </div>
+
             </form>
+
         </div>
+
     </div>
 
-    <!-- MODAL 2: REDEFINIR SENHA VIA CÓDIGO DO E-MAIL -->
-    <div id="resetModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative space-y-4">
-            
-            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h3 class="text-base font-bold text-slate-100">Redefinir Senha</h3>
-                <button onclick="closeResetPasswordModal()" class="text-slate-500 hover:text-slate-300 p-1 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+
+    <!-- =========================
+         MODAL 2: REDEFINIR SENHA
+    ========================= -->
+
+    <div
+        id="resetModal"
+        class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50"
+    >
+
+        <div class="config-modal border rounded-2xl w-full max-w-md p-6 shadow-2xl relative space-y-4">
+
+            <div class="flex items-center justify-between pb-3 border-b config-border">
+
+                <h3 class="config-title text-base font-bold">
+                    Redefinir Senha
+                </h3>
+
+                <button
+                    onclick="closeResetPasswordModal()"
+                    class="config-muted hover:text-slate-300 p-1 transition"
+                >
+
+                    <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                        ></path>
+
+                    </svg>
+
                 </button>
+
             </div>
 
-            <p class="text-xs text-slate-400">Insira o código de 6 dígitos que enviamos para o seu e-mail e escolha sua nova senha.</p>
+
+            <p class="config-text text-xs">
+
+                Insira o código de 6 dígitos que enviamos para o seu e-mail e escolha sua nova senha.
+
+            </p>
+
 
             <div class="flex flex-col gap-3">
-                <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-400">Código de Verificação</label>
-                    <input type="text" id="resetCode" placeholder="Ex: 123456" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-slate-100 placeholder-slate-700 focus:outline-none focus:border-indigo-500 transition">
-                </div>
 
                 <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-400">Nova Senha</label>
-                    <input type="password" id="resetNewPassword" placeholder="Digite sua nova senha" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-slate-100 placeholder-slate-700 focus:outline-none focus:border-indigo-500 transition">
+
+                    <label class="config-text text-xs font-medium">
+                        Código de Verificação
+                    </label>
+
+                    <input
+                        type="text"
+                        id="resetCode"
+                        placeholder="Ex: 123456"
+                        class="config-modal-input w-full border rounded-lg px-3.5 py-2 text-sm focus:outline-none transition"
+                    >
+
                 </div>
+
+
+                <div class="flex flex-col gap-1">
+
+                    <label class="config-text text-xs font-medium">
+                        Nova Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="resetNewPassword"
+                        placeholder="Digite sua nova senha"
+                        class="config-modal-input w-full border rounded-lg px-3.5 py-2 text-sm focus:outline-none transition"
+                    >
+
+                </div>
+
             </div>
 
-            <div class="flex justify-end gap-3 pt-2 border-t border-slate-800">
-                <button type="button" onclick="closeResetPasswordModal()" class="bg-slate-800 text-slate-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-slate-700 transition">
+
+            <div class="flex justify-end gap-3 pt-2 border-t config-border">
+
+                <button
+                    type="button"
+                    onclick="closeResetPasswordModal()"
+                    class="config-cancel text-xs font-semibold px-4 py-2 rounded-lg hover:bg-slate-700 transition"
+                >
                     Cancelar
                 </button>
-                <button type="button" onclick="submitNewPassword()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg text-xs shadow-lg shadow-indigo-600/20 transition">
+
+                <button
+                    type="button"
+                    onclick="submitNewPassword()"
+                    class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg text-xs shadow-lg shadow-indigo-600/20 transition"
+                >
                     Confirmar Nova Senha
                 </button>
+
             </div>
+
         </div>
+
     </div>
 
+
 </body>
+
 </html>

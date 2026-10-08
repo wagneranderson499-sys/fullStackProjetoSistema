@@ -1,272 +1,500 @@
 <!DOCTYPE html>
-
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>FinanceControl - Recuperar Senha</title>
+
     <link rel="icon" type="image/png" href="logo.png">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-<script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tema global -->
+    <script src="theme.js"></script>
 
-<script>
-    tailwind.config = {
-        darkMode: 'class',
-        theme: {
-            extend: {
-                fontFamily: {
-                    sans: ['Inter', 'sans-serif']
-                },
-                colors: {
-                    brand: {
-                        50: '#eef2ff',
-                        500: '#6366f1',
-                        600: '#4f46e5',
-                        700: '#4338ca'
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca'
+                        }
                     }
-                }
+                },
             },
-        },
-    }
-</script>
+        }
+    </script>
 
+    <style>
+        /* ========================================
+           TRANSIÇÃO DO TEMA
+        ======================================== */
+
+        body,
+        .recovery-card,
+        .recovery-logo,
+        .recovery-input,
+        .recovery-label,
+        .recovery-text,
+        .recovery-footer,
+        .recovery-link,
+        .recovery-modal,
+        .feedback-box,
+        .recovery-button {
+            transition:
+                background-color 0.25s ease,
+                border-color 0.25s ease,
+                color 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        /* ========================================
+           MODO ESCURO - PADRÃO
+        ======================================== */
+
+        body {
+            background-color: #020617;
+            color: #F8FAFC;
+        }
+
+        .recovery-card {
+            background-color: #0F172A;
+            border-color: rgba(30, 41, 59, 0.80);
+        }
+
+        .recovery-logo {
+            background-color: rgba(99, 102, 241, 0.10);
+            border-color: rgba(99, 102, 241, 0.20);
+        }
+
+        .recovery-title {
+            color: #FFFFFF;
+        }
+
+        .recovery-brand {
+            color: #818CF8;
+        }
+
+        .recovery-text {
+            color: #94A3B8;
+        }
+
+        .recovery-label {
+            color: #94A3B8;
+        }
+
+        .recovery-input {
+            background-color: #020617;
+            border-color: #1E293B;
+            color: #F1F5F9;
+        }
+
+        .recovery-input::placeholder {
+            color: #475569;
+        }
+
+        .recovery-input:focus {
+            outline: none;
+            border-color: #6366F1;
+            box-shadow: 0 0 0 1px #6366F1;
+        }
+
+        .recovery-button {
+            background-color: #4F46E5;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.20);
+        }
+
+        .recovery-button:hover {
+            background-color: #6366F1;
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.35);
+        }
+
+        .recovery-footer {
+            border-color: rgba(30, 41, 59, 0.80);
+        }
+
+        .recovery-link {
+            color: #818CF8;
+        }
+
+        .recovery-link:hover {
+            color: #A5B4FC;
+        }
+
+        .feedback-box {
+            background-color: rgba(99, 102, 241, 0.08);
+            border-color: rgba(99, 102, 241, 0.20);
+            color: #A5B4FC;
+        }
+
+        .recovery-modal-overlay {
+            background-color: rgba(2, 6, 23, 0.80);
+        }
+
+        .recovery-modal {
+            background-color: #0F172A;
+            border-color: #1E293B;
+        }
+
+        /* ========================================
+           MODO CLARO
+        ======================================== */
+
+        html.light-mode body {
+            background-color: #F8FAFC !important;
+            color: #162D50 !important;
+        }
+
+        html.light-mode .recovery-card {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08) !important;
+        }
+
+        html.light-mode .recovery-logo {
+            background-color: rgba(22, 45, 80, 0.06) !important;
+            border-color: #D8E1EC !important;
+        }
+
+        html.light-mode .recovery-title {
+            color: #162D50 !important;
+        }
+
+        html.light-mode .recovery-brand {
+            color: #10B981 !important;
+        }
+
+        html.light-mode .recovery-text {
+            color: #64748B !important;
+        }
+
+        html.light-mode .recovery-label {
+            color: #475569 !important;
+        }
+
+        html.light-mode .recovery-input {
+            background-color: #F8FAFC !important;
+            border-color: #E2E8F0 !important;
+            color: #162D50 !important;
+        }
+
+        html.light-mode .recovery-input::placeholder {
+            color: #94A3B8 !important;
+        }
+
+        html.light-mode .recovery-input:focus {
+            border-color: #162D50 !important;
+            box-shadow: 0 0 0 1px #162D50 !important;
+        }
+
+        html.light-mode .recovery-button {
+            background-color: #162D50 !important;
+            box-shadow: 0 10px 25px rgba(22, 45, 80, 0.15) !important;
+        }
+
+        html.light-mode .recovery-button:hover {
+            background-color: #213F69 !important;
+            box-shadow: 0 10px 30px rgba(22, 45, 80, 0.25) !important;
+        }
+
+        html.light-mode .recovery-footer {
+            border-color: #E2E8F0 !important;
+        }
+
+        html.light-mode .recovery-link {
+            color: #162D50 !important;
+        }
+
+        html.light-mode .recovery-link:hover {
+            color: #213F69 !important;
+        }
+
+        html.light-mode .feedback-box {
+            background-color: #F8FAFC !important;
+            border-color: #D8E1EC !important;
+            color: #162D50 !important;
+        }
+
+        html.light-mode .recovery-modal-overlay {
+            background-color: rgba(15, 23, 42, 0.45) !important;
+        }
+
+        html.light-mode .recovery-modal {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+            box-shadow: 0 25px 50px rgba(15, 23, 42, 0.18) !important;
+        }
+
+        html.light-mode .modal-icon {
+            background-color: rgba(22, 45, 80, 0.06) !important;
+            border-color: #D8E1EC !important;
+        }
+
+        html.light-mode .modal-title {
+            color: #162D50 !important;
+        }
+
+        html.light-mode .modal-text {
+            color: #64748B !important;
+        }
+    </style>
 </head>
 
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex items-center justify-center p-4 selection:bg-indigo-500 selection:text-slate-950">
+<body class="font-sans antialiased min-h-screen flex items-center justify-center p-4 selection:bg-indigo-500 selection:text-white">
 
-<div class="w-full max-w-md bg-slate-900 border border-slate-800/80 rounded-2xl p-8 shadow-2xl">
+    <!-- Card principal -->
+    <div class="recovery-card w-full max-w-md border rounded-2xl p-8 shadow-2xl">
 
-    <!-- Logo e título -->
-    <div class="flex flex-col items-center mb-8">
+        <!-- Logo e título -->
+        <div class="flex flex-col items-center mb-8">
 
-        <div class="flex items-center justify-center w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl mb-3">
-            <img
-                src="logo.png"
-                alt="Logo"
-                class="w-7 h-7 object-contain"
-            >
-        </div>
+            <div class="recovery-logo flex items-center justify-center w-12 h-12 border rounded-xl mb-3">
 
-        <h1 class="text-xl font-bold tracking-wide text-white">
-            Finance<span class="text-indigo-400">Control</span>
-        </h1>
+                <img
+                    src="logo.png"
+                    alt="Logo"
+                    class="w-7 h-7 object-contain"
+                >
 
-        <p
-            id="textoInstrucao"
-            class="text-xs text-slate-400 mt-1 text-center"
-        >
-            Digite seu e-mail para receber o código de recuperação
-        </p>
-    </div>
-
-    <!-- Mensagem de Feedback -->
-    <div
-        id="mensagemFeedback"
-        class="hidden mb-4 p-3 border rounded-xl text-xs text-center"
-    ></div>
-
-    <form
-        id="formEsqueceuSenha"
-        class="flex flex-col gap-4"
-    >
-
-        <!-- E-MAIL -->
-        <div
-            id="campoEmail"
-            class="flex flex-col gap-1.5"
-        >
-            <label
-                for="email"
-                class="text-xs font-medium text-slate-400"
-            >
-                E-mail cadastrado
-            </label>
-
-            <input
-                type="email"
-                id="email"
-                placeholder="seu@email.com"
-                required
-                class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-            >
-        </div>
-
-        <!-- CÓDIGO -->
-        <div
-            id="campoCodigo"
-            class="hidden flex-col gap-1.5"
-        >
-            <label
-                for="codigo"
-                class="text-xs font-medium text-slate-400"
-            >
-                Código de recuperação
-            </label>
-
-            <input
-                type="text"
-                id="codigo"
-                placeholder="Digite o código de 6 dígitos"
-                maxlength="6"
-                inputmode="numeric"
-                autocomplete="one-time-code"
-                class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-center tracking-[0.3em]"
-            >
-        </div>
-
-        <!-- BOTÃO ENVIAR CÓDIGO -->
-        <button
-            type="submit"
-            id="btnEnviar"
-            class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl text-sm shadow-lg shadow-indigo-600/20 transition flex items-center justify-center gap-2 mt-2"
-        >
-            Enviar código de recuperação
-        </button>
-
-        <!-- BOTÃO VALIDAR CÓDIGO -->
-        <button
-            type="button"
-            id="btnValidarCodigo"
-            class="hidden w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl text-sm shadow-lg shadow-indigo-600/20 transition items-center justify-center gap-2"
-        >
-            Validar código
-        </button>
-
-    </form>
-
-    <!-- Voltar para Login -->
-    <div class="mt-6 border-t border-slate-800/80 pt-4 text-center">
-
-        <p class="text-xs text-slate-400">
-            Lembrou a senha?
-
-            <a
-                href="telaLogin.html"
-                class="text-indigo-400 hover:underline font-medium"
-            >
-                Voltar para o Login
-            </a>
-        </p>
-
-    </div>
-
-</div>
-
-
-<!-- MODAL DE REDEFINIÇÃO DE SENHA -->
-<div
-    id="modalRedefinirSenha"
-    class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4"
->
-
-    <div
-        class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl"
-    >
-
-        <!-- Título -->
-        <div class="text-center mb-6">
-
-            <div class="mx-auto flex items-center justify-center w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl mb-3">
-                <span class="text-xl">🔒</span>
             </div>
 
-            <h2 class="text-xl font-bold text-white">
-                Redefinir senha
-            </h2>
+            <h1 class="text-xl font-bold tracking-wide recovery-title">
+                Finance<span class="recovery-brand">Control</span>
+            </h1>
 
-            <p class="text-xs text-slate-400 mt-1">
-                Digite sua nova senha abaixo
+            <p
+                id="textoInstrucao"
+                class="recovery-text text-xs mt-1 text-center"
+            >
+                Digite seu e-mail para receber o código de recuperação
             </p>
 
         </div>
 
+        <!-- Mensagem de Feedback -->
+        <div
+            id="mensagemFeedback"
+            class="feedback-box hidden mb-4 p-3 border rounded-xl text-xs text-center"
+        ></div>
 
-        <!-- Formulário -->
         <form
-            id="formRedefinirSenha"
+            id="formEsqueceuSenha"
             class="flex flex-col gap-4"
         >
 
-            <!-- NOVA SENHA -->
-            <div class="flex flex-col gap-1.5">
-
-                <label
-                    for="novaSenha"
-                    class="text-xs font-medium text-slate-400"
-                >
-                    Nova senha
-                </label>
-
-                <input
-                    type="password"
-                    id="novaSenha"
-                    placeholder="Digite sua nova senha"
-                    minlength="8"
-                    required
-                    class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-                >
-
-            </div>
-
-
-            <!-- CONFIRMAR SENHA -->
-            <div class="flex flex-col gap-1.5">
-
-                <label
-                    for="confirmarNovaSenha"
-                    class="text-xs font-medium text-slate-400"
-                >
-                    Confirmar nova senha
-                </label>
-
-                <input
-                    type="password"
-                    id="confirmarNovaSenha"
-                    placeholder="Digite novamente sua nova senha"
-                    minlength="8"
-                    required
-                    class="bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-                >
-
-            </div>
-
-
-            <!-- FEEDBACK -->
+            <!-- E-MAIL -->
             <div
-                id="feedbackRedefinicao"
-                class="hidden p-3 border rounded-xl text-xs text-center"
-            ></div>
+                id="campoEmail"
+                class="flex flex-col gap-1.5"
+            >
 
+                <label
+                    for="email"
+                    class="recovery-label text-xs font-medium"
+                >
+                    E-mail cadastrado
+                </label>
 
-            <!-- BOTÃO -->
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="seu@email.com"
+                    required
+                    class="recovery-input w-full border rounded-xl px-3.5 py-2.5 text-sm transition"
+                >
+
+            </div>
+
+            <!-- CÓDIGO -->
+            <div
+                id="campoCodigo"
+                class="hidden flex-col gap-1.5"
+            >
+
+                <label
+                    for="codigo"
+                    class="recovery-label text-xs font-medium"
+                >
+                    Código de recuperação
+                </label>
+
+                <input
+                    type="text"
+                    id="codigo"
+                    placeholder="Digite o código de 6 dígitos"
+                    maxlength="6"
+                    inputmode="numeric"
+                    autocomplete="one-time-code"
+                    class="recovery-input w-full border rounded-xl px-3.5 py-2.5 text-sm transition text-center tracking-[0.3em]"
+                >
+
+            </div>
+
+            <!-- BOTÃO ENVIAR CÓDIGO -->
             <button
                 type="submit"
-                id="btnRedefinirSenha"
-                class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl text-sm shadow-lg shadow-indigo-600/20 transition mt-2"
+                id="btnEnviar"
+                class="recovery-button w-full text-white font-medium py-2.5 rounded-xl text-sm transition flex items-center justify-center gap-2 mt-2"
             >
-                Redefinir senha
+                Enviar código de recuperação
+            </button>
+
+            <!-- BOTÃO VALIDAR CÓDIGO -->
+            <button
+                type="button"
+                id="btnValidarCodigo"
+                class="recovery-button hidden w-full text-white font-medium py-2.5 rounded-xl text-sm transition items-center justify-center gap-2"
+            >
+                Validar código
             </button>
 
         </form>
 
+        <!-- Voltar para Login -->
+        <div class="recovery-footer mt-6 border-t pt-4 text-center">
+
+            <p class="recovery-text text-xs">
+
+                Lembrou a senha?
+
+                <a
+                    href="telaLogin.html"
+                    class="recovery-link hover:underline font-medium"
+                >
+                    Voltar para o Login
+                </a>
+
+            </p>
+
+        </div>
+
     </div>
 
-</div>
+
+    <!-- MODAL DE REDEFINIÇÃO DE SENHA -->
+    <div
+        id="modalRedefinirSenha"
+        class="recovery-modal-overlay hidden fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4"
+    >
+
+        <div
+            class="recovery-modal w-full max-w-md border rounded-2xl p-8 shadow-2xl"
+        >
+
+            <!-- Título -->
+            <div class="text-center mb-6">
+
+                <div class="modal-icon mx-auto flex items-center justify-center w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl mb-3">
+
+                    <span class="text-xl">🔒</span>
+
+                </div>
+
+                <h2 class="modal-title text-xl font-bold">
+                    Redefinir senha
+                </h2>
+
+                <p class="modal-text text-xs mt-1">
+                    Digite sua nova senha abaixo
+                </p>
+
+            </div>
 
 
-<!-- Import do JS externo -->
-<script src="esqueceu-senha.js"></script>
+            <!-- Formulário -->
+            <form
+                id="formRedefinirSenha"
+                class="flex flex-col gap-4"
+            >
 
+                <!-- NOVA SENHA -->
+                <div class="flex flex-col gap-1.5">
+
+                    <label
+                        for="novaSenha"
+                        class="recovery-label text-xs font-medium"
+                    >
+                        Nova senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="novaSenha"
+                        placeholder="Digite sua nova senha"
+                        minlength="8"
+                        required
+                        class="recovery-input w-full border rounded-xl px-3.5 py-2.5 text-sm transition"
+                    >
+
+                </div>
+
+
+                <!-- CONFIRMAR SENHA -->
+                <div class="flex flex-col gap-1.5">
+
+                    <label
+                        for="confirmarNovaSenha"
+                        class="recovery-label text-xs font-medium"
+                    >
+                        Confirmar nova senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmarNovaSenha"
+                        placeholder="Digite novamente sua nova senha"
+                        minlength="8"
+                        required
+                        class="recovery-input w-full border rounded-xl px-3.5 py-2.5 text-sm transition"
+                    >
+
+                </div>
+
+
+                <!-- FEEDBACK -->
+                <div
+                    id="feedbackRedefinicao"
+                    class="feedback-box hidden p-3 border rounded-xl text-xs text-center"
+                ></div>
+
+
+                <!-- BOTÃO -->
+                <button
+                    type="submit"
+                    id="btnRedefinirSenha"
+                    class="recovery-button w-full text-white font-medium py-2.5 rounded-xl text-sm transition mt-2"
+                >
+                    Redefinir senha
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Import do JS externo -->
+    <script src="esqueceu-senha.js"></script>
 
 </body>
+
 </html>

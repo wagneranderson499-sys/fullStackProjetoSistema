@@ -1,124 +1,664 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+
+<html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinanceControl - Relatórios</title>
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca'
-                        }
-                    }
+
+```
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FinanceControl - Relatórios</title>
+
+<link rel="icon" type="image/png" href="logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Tema global -->
+<script src="theme.js"></script>
+
+<script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif']
                 },
-            },
+                colors: {
+                    brand: {
+                        50: '#eef2ff',
+                        500: '#6366f1',
+                        600: '#4f46e5',
+                        700: '#4338ca'
+                    }
+                }
+            }
         }
-    </script>
-    <script src="grafico.js" defer></script>
+    }
+</script>
+
+<style>
+
+    /* ========================================
+       TRANSIÇÃO GLOBAL
+    ======================================== */
+
+    body,
+    aside,
+    main,
+    header,
+    section,
+    .dashboard-card,
+    .dashboard-title,
+    .dashboard-text,
+    .dashboard-sidebar-text,
+    .dashboard-muted,
+    .dashboard-table,
+    .dashboard-count {
+
+        transition:
+            background-color 0.25s ease,
+            border-color 0.25s ease,
+            color 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+
+    /* ========================================
+       MODO ESCURO - PADRÃO
+    ======================================== */
+
+    body {
+        background-color: #020617;
+        color: #F8FAFC;
+    }
+
+    .dashboard-sidebar {
+        background-color: #0F172A;
+        border-color: rgba(30, 41, 59, 0.80);
+    }
+
+    .dashboard-main {
+        background-color: #020617;
+    }
+
+    .dashboard-header {
+        border-color: rgba(30, 41, 59, 0.60);
+    }
+
+    .dashboard-card {
+        background-color: #0F172A;
+        border-color: rgba(30, 41, 59, 0.80);
+    }
+
+    .dashboard-title {
+        color: #FFFFFF;
+    }
+
+    .dashboard-text {
+        color: #94A3B8;
+    }
+
+    .dashboard-muted {
+        color: #94A3B8;
+    }
+
+    .dashboard-sidebar-text {
+        color: #E2E8F0;
+    }
+
+
+    /* ========================================
+       MODO CLARO
+    ======================================== */
+
+    html.light-mode body {
+        background-color: #F8FAFC !important;
+        color: #162D50 !important;
+    }
+
+    html.light-mode .dashboard-sidebar {
+        background-color: #FFFFFF !important;
+        border-color: #E2E8F0 !important;
+    }
+
+    html.light-mode .dashboard-main {
+        background-color: #F8FAFC !important;
+    }
+
+    html.light-mode .dashboard-header {
+        border-color: #E2E8F0 !important;
+    }
+
+    html.light-mode .dashboard-card {
+        background-color: #FFFFFF !important;
+        border-color: #E2E8F0 !important;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05) !important;
+    }
+
+
+    /* ========================================
+       TEXTOS DO MODO CLARO
+    ======================================== */
+
+    html.light-mode .dashboard-title {
+        color: #162D50 !important;
+    }
+
+    html.light-mode .dashboard-text {
+        color: #64748B !important;
+    }
+
+    html.light-mode .dashboard-muted {
+        color: #64748B !important;
+    }
+
+    html.light-mode .dashboard-sidebar-text {
+        color: #162D50 !important;
+    }
+
+
+    /* ========================================
+       LOGO
+    ======================================== */
+
+    .dashboard-logo-box {
+        background-color: rgba(99, 102, 241, 0.10);
+        border-color: rgba(99, 102, 241, 0.20);
+    }
+
+    .dashboard-logo-title {
+        color: #FFFFFF;
+    }
+
+    .dashboard-logo-accent {
+        color: #818CF8;
+    }
+
+    .dashboard-logo-subtitle {
+        color: #94A3B8;
+    }
+
+    html.light-mode .dashboard-logo-box {
+        background-color: rgba(79, 70, 229, 0.06) !important;
+        border-color: #D8E1EC !important;
+    }
+
+    html.light-mode .dashboard-logo-title {
+        color: #162D50 !important;
+    }
+
+    html.light-mode .dashboard-logo-accent {
+        color: #4F46E5 !important;
+    }
+
+    html.light-mode .dashboard-logo-subtitle {
+        color: #64748B !important;
+    }
+
+
+    /* ========================================
+       NAVEGAÇÃO
+    ======================================== */
+
+    .dashboard-nav-item {
+        color: #94A3B8;
+    }
+
+    .dashboard-nav-item:hover {
+        background-color: rgba(30, 41, 59, 0.50);
+        color: #E2E8F0;
+    }
+
+    .dashboard-nav-icon {
+        color: #94A3B8;
+    }
+
+    html.light-mode .dashboard-nav-item {
+        color: #64748B !important;
+    }
+
+    html.light-mode .dashboard-nav-item:hover {
+        background-color: #F1F5F9 !important;
+        color: #4338CA !important;
+    }
+
+    html.light-mode .dashboard-nav-icon {
+        color: #6366F1 !important;
+    }
+
+    html.light-mode .dashboard-active-nav {
+        background-color: rgba(79, 70, 229, 0.08) !important;
+        border-color: rgba(79, 70, 229, 0.15) !important;
+        color: #4338CA !important;
+    }
+
+    html.light-mode .dashboard-active-nav svg {
+        color: #4F46E5 !important;
+    }
+
+
+    /* ========================================
+       USUÁRIO
+    ======================================== */
+
+    .dashboard-avatar {
+        background-color: #1E293B;
+        color: #818CF8;
+        border-color: rgba(71, 85, 105, 0.60);
+    }
+
+    .dashboard-account-active {
+        color: #64748B;
+    }
+
+    html.light-mode .dashboard-avatar {
+        background-color: #EEF2FF !important;
+        color: #4F46E5 !important;
+        border-color: #E0E7FF !important;
+    }
+
+    html.light-mode .dashboard-account-active {
+        color: #64748B !important;
+    }
+
+
+    /* ========================================
+       VALORES DO RELATÓRIO
+    ======================================== */
+
+    html.light-mode #topCategory {
+        color: #4F46E5 !important;
+    }
+
+    html.light-mode #topCategoryAmount {
+        color: #7C3AED !important;
+    }
+
+    html.light-mode #monthTotal {
+        color: #E11D48 !important;
+    }
+
+
+    /* ========================================
+       LOGOUT
+    ======================================== */
+
+    .dashboard-logout {
+        color: #64748B;
+    }
+
+    .dashboard-logout:hover {
+        color: #FB7185;
+    }
+
+    html.light-mode .dashboard-logout {
+        color: #94A3B8 !important;
+    }
+
+    html.light-mode .dashboard-logout:hover {
+        color: #E11D48 !important;
+    }
+
+
+    /* ========================================
+       RESPONSIVIDADE
+    ======================================== */
+
+    @media (max-width: 768px) {
+
+        .dashboard-sidebar {
+            width: 220px;
+            min-width: 220px;
+        }
+
+        .dashboard-main {
+            padding: 1.25rem;
+        }
+
+    }
+
+    @media (max-width: 640px) {
+
+        .dashboard-layout {
+            flex-direction: column;
+        }
+
+        .dashboard-sidebar {
+            width: 100%;
+            min-width: 100%;
+            height: auto;
+            min-height: auto;
+            position: relative;
+            border-right: none;
+            border-bottom: 1px solid #1E293B;
+        }
+
+        html.light-mode .dashboard-sidebar {
+            border-bottom-color: #E2E8F0;
+        }
+
+        .dashboard-sidebar nav {
+            overflow-x: auto;
+        }
+
+        .dashboard-main {
+            width: 100%;
+            padding: 1rem;
+        }
+
+    }
+
+</style>
+
+<script src="grafico.js" defer></script>
+```
+
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-slate-950">
-    <div class="flex min-h-screen w-full">
-        
-        <!-- Sidebar Navigation -->
-        <aside class="w-64 min-w-[256px] bg-slate-900 border-r border-slate-800/80 flex flex-col p-6 h-screen sticky top-0">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="flex items-center justify-center w-10 h-10 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
-                    <img src="logo.png" alt="Logo" class="w-6 h-6 object-contain">
-                </div>
-                <div>
-                    <h2 class="text-base font-bold tracking-wide text-white">Finance<span class="text-indigo-400">Control</span></h2>
-                    <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Gestão Pessoal</span>
-                </div>
+
+<body class="font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-slate-950">
+
+```
+<div class="dashboard-layout flex min-h-screen w-full">
+
+
+    <!-- Sidebar Navigation -->
+
+    <aside class="dashboard-sidebar w-64 min-w-[256px] bg-slate-900 border-r border-slate-800/80 flex flex-col p-6 h-screen sticky top-0">
+
+        <div class="flex items-center gap-3 mb-8">
+
+            <div class="dashboard-logo-box flex items-center justify-center w-10 h-10 border rounded-xl">
+
+                <img
+                    src="logo.png"
+                    alt="Logo"
+                    class="w-6 h-6 object-contain"
+                >
+
             </div>
 
-            <nav class="flex flex-col gap-1.5 flex-1">
-                <a href="index.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-xl text-sm font-medium transition border border-transparent">
-                    <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 00-1 1m-6 0h6"></path>
-                    </svg>
-                    <span>Painel Geral</span>
-                </a>
+            <div>
 
-                <a href="grafico.html" class="flex items-center gap-3 px-3.5 py-2.5 bg-indigo-600/10 text-indigo-400 rounded-xl text-sm font-medium transition border border-indigo-500/20">
-                    <svg class="w-4 h-4 shrink-0 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
-                    <span>Gráfico</span>
-                </a>
+                <h2 class="dashboard-logo-title text-base font-bold tracking-wide">
 
-                <a href="configuracao.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-xl text-sm font-medium transition border border-transparent">
-                    <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    <span>Configurações</span>
-                </a>
-            </nav>
+                    Finance<span class="dashboard-logo-accent">Control</span>
 
-            <div class="border-t border-slate-800/80 pt-4 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div id="avatarUsuario" class="w-9 h-9 bg-slate-800 text-indigo-400 border border-slate-700/60 font-semibold text-xs rounded-xl flex items-center justify-center uppercase">
-                        --
-                    </div>
-                    <div class="flex flex-col">
-                        <span id="nomeUsuarioSidebar" class="text-xs font-semibold text-slate-200">Carregando...</span>
-                        <span class="text-[11px] text-slate-500">Conta Ativa</span>
-                    </div>
+                </h2>
+
+                <span class="dashboard-logo-subtitle text-[11px] uppercase tracking-wider font-semibold">
+
+                    Gestão Pessoal
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="flex flex-col gap-1.5 flex-1">
+
+
+            <!-- Painel Geral -->
+
+            <a
+                href="index.html"
+                class="dashboard-nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition border border-transparent"
+            >
+
+                <svg
+                    class="dashboard-nav-icon w-4 h-4 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 00-1 1m-6 0h6"
+                    ></path>
+
+                </svg>
+
+                <span>Painel Geral</span>
+
+            </a>
+
+
+            <!-- Gráfico -->
+
+            <a
+                href="grafico.html"
+                class="dashboard-active-nav flex items-center gap-3 px-3.5 py-2.5 bg-indigo-600/10 text-indigo-400 rounded-xl text-sm font-medium transition border border-indigo-500/20"
+            >
+
+                <svg
+                    class="w-4 h-4 shrink-0 text-indigo-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    ></path>
+
+                </svg>
+
+                <span>Gráfico</span>
+
+            </a>
+
+
+            <!-- Configurações -->
+
+            <a
+                href="configuracao.html"
+                class="dashboard-nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition border border-transparent"
+            >
+
+                <svg
+                    class="dashboard-nav-icon w-4 h-4 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924-1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31.826-2.37-2.37a1.724 1.724 0 001.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-2.37 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                    ></path>
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    ></path>
+
+                </svg>
+
+                <span>Configurações</span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- Rodapé do Sidebar -->
+
+        <div class="dashboard-header border-t border-slate-800/80 pt-4 flex items-center justify-between">
+
+            <div class="flex items-center gap-3">
+
+                <div
+                    id="avatarUsuario"
+                    class="dashboard-avatar w-9 h-9 font-semibold text-xs rounded-xl flex items-center justify-center uppercase"
+                >
+                    --
                 </div>
-                <button id="btnLogout" title="Sair" class="text-slate-500 hover:text-rose-400 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                    </svg>
-                </button>
-            </div> 
-        </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 bg-slate-950 p-8 flex flex-col gap-6 overflow-y-auto">
-            <header class="flex items-center justify-between border-b border-slate-800/60 pb-5">
-                <div>
-                    <h1 class="text-xl font-bold text-white">Relatório e Análise de Gastos</h1>
-                    <p class="text-xs text-slate-400 mt-1">Visualize a distribuição dos seus gastos por categoria.</p>
-                </div>
-            </header>
+                <div class="flex flex-col">
 
-            <!-- Cards Resumo -->
-            <section class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-xl">
-                    <span class="text-xs font-semibold text-slate-400 tracking-wider uppercase">Maior Categoria de Gasto</span>
-                    <h2 class="text-2xl font-bold text-slate-100 mt-2" id="topCategory">--</h2>
-                    <span class="text-xs text-indigo-400 font-medium mt-1 block" id="topCategoryAmount">R$ 0,00</span>
+                    <span
+                        id="nomeUsuarioSidebar"
+                        class="dashboard-sidebar-text text-xs font-semibold"
+                    >
+                        Carregando...
+                    </span>
+
+                    <span class="dashboard-account-active text-[11px]">
+                        Conta Ativa
+                    </span>
+
                 </div>
 
-                <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-xl">
-                    <span class="text-xs font-semibold text-slate-400 tracking-wider uppercase">Total de Gastos no Período</span>
-                    <h2 class="text-2xl font-bold text-rose-400 mt-2" id="monthTotal">R$ 0,00</h2>
-                </div>
-            </section>
+            </div>
 
-            <!-- Container do Gráfico -->
-            <section class="bg-slate-900 border border-slate-800/80 rounded-2xl p-6 flex flex-col items-center shadow-xl">
-                <h3 class="text-sm font-semibold text-slate-200 mb-6 self-start">Distribuição por Categoria</h3>
-                <div class="w-full max-w-md h-80 relative">
-                    <canvas id="expensesChart"></canvas>
-                </div>
-            </section>
-        </main>
-    </div>
+
+            <button
+                id="btnLogout"
+                title="Sair"
+                class="dashboard-logout transition"
+            >
+
+                <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    ></path>
+
+                </svg>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+
+    <main class="dashboard-main flex-1 bg-slate-950 p-8 flex flex-col gap-6 overflow-y-auto">
+
+
+        <!-- Cabeçalho -->
+
+        <header class="dashboard-header flex items-center justify-between border-b border-slate-800/60 pb-5">
+
+            <div>
+
+                <h1 class="dashboard-title text-xl font-bold">
+                    Relatório e Análise de Gastos
+                </h1>
+
+                <p class="dashboard-text text-xs mt-1">
+                    Visualize a distribuição dos seus gastos por categoria.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- Cards Resumo -->
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+
+            <!-- Maior Categoria -->
+
+            <div class="dashboard-card border rounded-2xl p-5 shadow-xl">
+
+                <span class="dashboard-muted text-xs font-semibold tracking-wider uppercase">
+                    Maior Categoria de Gasto
+                </span>
+
+                <h2
+                    class="text-2xl font-bold text-slate-100 mt-2"
+                    id="topCategory"
+                >
+                    --
+                </h2>
+
+                <span
+                    class="text-xs font-medium mt-1 block"
+                    id="topCategoryAmount"
+                >
+                    R$ 0,00
+                </span>
+
+            </div>
+
+
+            <!-- Total -->
+
+            <div class="dashboard-card border rounded-2xl p-5 shadow-xl">
+
+                <span class="dashboard-muted text-xs font-semibold tracking-wider uppercase">
+                    Total de Gastos no Período
+                </span>
+
+                <h2
+                    class="text-2xl font-bold mt-2"
+                    id="monthTotal"
+                >
+                    R$ 0,00
+                </h2>
+
+            </div>
+
+        </section>
+
+
+        <!-- Container do Gráfico -->
+
+        <section class="dashboard-card border rounded-2xl p-6 flex flex-col items-center shadow-xl">
+
+            <h3 class="dashboard-sidebar-text text-sm font-semibold mb-6 self-start">
+                Distribuição por Categoria
+            </h3>
+
+            <div class="w-full max-w-md h-80 relative">
+
+                <canvas id="expensesChart"></canvas>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+```
+
 </body>
+
 </html>
