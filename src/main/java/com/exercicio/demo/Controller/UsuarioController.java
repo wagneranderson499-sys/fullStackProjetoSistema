@@ -332,16 +332,20 @@ System.out.println("E-MAIL LIMPO: [" + emailLimpo + "]");
                 )
             );
 
-        } catch (Exception e) {
+    } catch (Exception e) {
 
-            return ResponseEntity.internalServerError().body(
-                Map.of(
-                    "message",
-                    "Erro ao enviar o código por e-mail: "
-                    + e.getMessage()
-                )
-            );
-        }
+    e.printStackTrace();
+
+    return ResponseEntity.internalServerError().body(
+        Map.of(
+            "message",
+            "Erro ao enviar o código por e-mail: "
+                + e.getClass().getName()
+                + " - "
+                + e.getMessage()
+        )
+    );
+}
     }
 
     @PostMapping("/validar-codigo-redefinicao")
@@ -627,4 +631,38 @@ public ResponseEntity<?> redefinirSenha(
             )
         );
     }
-}
+
+
+@PutMapping("/{id}/nome")
+public ResponseEntity<?> atualizarNome(
+        @PathVariable Long id,
+        @RequestBody Map<String, String> payload) {
+
+    String novoNome = payload.get("nome");
+
+    if (novoNome == null || novoNome.trim().isEmpty()) {
+        return ResponseEntity.badRequest().body(
+            Map.of("message", "O nome é obrigatório.")
+        );
+    }
+
+    Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+
+    if (usuarioOpt.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+            Map.of("message", "Usuário não encontrado.")
+        );
+    }
+
+    Usuario usuario = usuarioOpt.get();
+    usuario.setNome(novoNome.trim());
+
+    usuarioRepository.save(usuario);
+
+    return ResponseEntity.ok(
+        Map.of(
+            "message", "Nome atualizado com sucesso!",
+            "nome", usuario.getNome()
+        )
+    );
+}}
