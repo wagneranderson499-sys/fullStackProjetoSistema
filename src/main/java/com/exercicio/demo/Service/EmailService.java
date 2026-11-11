@@ -12,8 +12,8 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class EmailService {
 
-        @Value("${RESEND_API_KEY}")
-        private String resendApiKey;
+        @Value("${resend.api.key}")
+private String resendApiKey;
 
         private static final String REMETENTE = "onboarding@resend.dev";
 
