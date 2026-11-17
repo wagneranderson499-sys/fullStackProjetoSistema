@@ -182,23 +182,23 @@
     <!-- HEADER -->
     <header class="w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md fixed top-0 z-50">
 
-        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="max-w-6xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
 
             <!-- LOGO -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1.5 sm:gap-3 min-w-0">
 
                 <div class="theme-logo-container flex items-center justify-center w-9 h-9 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
                     <img src="logo.png" alt="Logo" class="w-5 h-5 object-contain">
                 </div>
 
-                <span class="theme-logo-text text-base font-bold tracking-wide">
+                <span class="theme-logo-text text-sm sm:text-base font-bold tracking-tight sm:tracking-wide whitespace-nowrap">
                     Finance<span class="theme-logo-accent text-indigo-500">Control</span>
                 </span>
 
             </div>
 
             <!-- NAVEGAÇÃO -->
-            <nav class="flex items-center gap-2 sm:gap-4">
+            <nav class="flex items-center gap-1 sm:gap-4 shrink-0">
 
                 <!-- BOTÃO TEMA -->
                 <button
@@ -206,7 +206,7 @@
                     type="button"
                     onclick="alternarTema()"
                     aria-label="Alternar tema"
-                    class="theme-toggle w-9 h-9 flex items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 transition"
+                    class="theme-toggle w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 transition"
                 >
 
                     <!-- Lua -->
@@ -258,7 +258,7 @@
                 <!-- ENTRAR -->
                 <a
                     href="telaLogin.html"
-                    class="theme-login-link text-xs font-medium text-slate-400 hover:text-slate-100 transition px-2 sm:px-3 py-2"
+                    class="theme-login-link text-[11px] sm:text-xs font-medium text-slate-400 hover:text-slate-100 transition px-1 sm:px-3 py-2 whitespace-nowrap"
                 >
                     Entrar
                 </a>
@@ -266,7 +266,7 @@
                 <!-- CRIAR CONTA -->
                 <a
                     href="cadastro.html"
-                    class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs px-4 py-2 rounded-lg transition shadow-lg shadow-indigo-950"
+                    class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-[11px] sm:text-xs px-2.5 sm:px-4 py-2 rounded-lg transition shadow-lg shadow-indigo-950 whitespace-nowrap"
                 >
                     Criar Conta
                 </a>
@@ -278,7 +278,7 @@
 
 
     <!-- CONTEÚDO PRINCIPAL -->
-    <main class="flex-1 max-w-5xl mx-auto px-6 pt-32 pb-16 flex flex-col items-center text-center justify-center">
+    <main class="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-12 sm:pb-16 flex flex-col items-center text-center justify-center">
 
         <!-- BADGE -->
         <div class="theme-badge inline-flex items-center gap-2 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full mb-6">
@@ -293,7 +293,7 @@
 
 
         <!-- TÍTULO -->
-        <h1 class="theme-title text-3xl md:text-5xl font-bold text-slate-100 tracking-tight leading-tight max-w-3xl">
+        <h1 class="theme-title text-2xl sm:text-3xl md:text-5xl font-bold text-slate-100 tracking-tight leading-tight max-w-3xl">
             Assuma o controle total das suas finanças com clareza e precisão
         </h1>
 
@@ -343,12 +343,12 @@
 
 
         <!-- CARDS -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 text-left w-full">
+        <div class="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 mt-12 sm:mt-20 text-left w-full">
 
             <!-- CARD 1 -->
-            <div class="theme-card bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6">
+            <div class="theme-card bg-slate-900/60 border border-slate-800/80 rounded-xl sm:rounded-2xl p-2.5 sm:p-6 min-w-0">
 
-                <div class="theme-card-icon w-10 h-10 bg-slate-800 border border-slate-700/60 text-indigo-400 rounded-xl flex items-center justify-center mb-4">
+                <div class="theme-card-icon w-8 h-8 sm:w-10 sm:h-10 bg-slate-800 border border-slate-700/60 text-indigo-400 rounded-xl flex items-center justify-center mb-4">
 
                     <svg
                         class="w-5 h-5"
@@ -366,11 +366,11 @@
 
                 </div>
 
-                <h3 class="theme-card-title text-sm font-semibold text-slate-100 mb-1">
+                <h3 class="theme-card-title text-[11px] leading-tight sm:text-sm font-semibold text-slate-100 mb-1">
                     Painel Dinâmico
                 </h3>
 
-                <p class="theme-card-text text-xs text-slate-400 leading-relaxed">
+                <p class="theme-card-text text-[10px] leading-snug sm:text-xs text-slate-400 leading-relaxed">
                     Acompanhe seu saldo livre disponível e o total de gastos atualizado em tempo real.
                 </p>
 
@@ -378,9 +378,9 @@
 
 
             <!-- CARD 2 -->
-            <div class="theme-card bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6">
+            <div class="theme-card bg-slate-900/60 border border-slate-800/80 rounded-xl sm:rounded-2xl p-2.5 sm:p-6 min-w-0">
 
-                <div class="theme-card-icon w-10 h-10 bg-slate-800 border border-slate-700/60 text-indigo-400 rounded-xl flex items-center justify-center mb-4">
+                <div class="theme-card-icon w-8 h-8 sm:w-10 sm:h-10 bg-slate-800 border border-slate-700/60 text-indigo-400 rounded-xl flex items-center justify-center mb-4">
 
                     <svg
                         class="w-5 h-5"
@@ -398,11 +398,11 @@
 
                 </div>
 
-                <h3 class="theme-card-title text-sm font-semibold text-slate-100 mb-1">
+                <h3 class="theme-card-title text-[11px] leading-tight sm:text-sm font-semibold text-slate-100 mb-1">
                     Categorização Clara
                 </h3>
 
-                <p class="theme-card-text text-xs text-slate-400 leading-relaxed">
+                <p class="theme-card-text text-[10px] leading-snug sm:text-xs text-slate-400 leading-relaxed">
                     Classifique cada transação entre contas fixas, despesas do dia a dia ou imprevistos.
                 </p>
 
@@ -410,9 +410,9 @@
 
 
             <!-- CARD 3 -->
-            <div class="theme-card bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6">
+            <div class="theme-card bg-slate-900/60 border border-slate-800/80 rounded-xl sm:rounded-2xl p-2.5 sm:p-6 min-w-0">
 
-                <div class="theme-card-icon w-10 h-10 bg-slate-800 border border-slate-700/60 text-indigo-400 rounded-xl flex items-center justify-center mb-4">
+                <div class="theme-card-icon w-8 h-8 sm:w-10 sm:h-10 bg-slate-800 border border-slate-700/60 text-indigo-400 rounded-xl flex items-center justify-center mb-4">
 
                     <svg
                         class="w-5 h-5"
@@ -430,11 +430,11 @@
 
                 </div>
 
-                <h3 class="theme-card-title text-sm font-semibold text-slate-100 mb-1">
+                <h3 class="theme-card-title text-[11px] leading-tight sm:text-sm font-semibold text-slate-100 mb-1">
                     Relatórios Visuais
                 </h3>
 
-                <p class="theme-card-text text-xs text-slate-400 leading-relaxed">
+                <p class="theme-card-text text-[10px] leading-snug sm:text-xs text-slate-400 leading-relaxed">
                     Entenda para onde vai o seu dinheiro com gráficos de rosca práticos e objetivos.
                 </p>
 
