@@ -495,6 +495,41 @@
 
 </style>
 
+<style>
+/* Ajustes responsivos para celulares — FinanceControl */
+@media (max-width: 767px) {
+  html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+  input, select, textarea { max-width: 100%; font-size: 16px; }
+  img, canvas, svg { max-width: 100%; }
+  .login-card, .register-card, .recovery-card { padding: 1.25rem !important; margin-left: auto; margin-right: auto; }
+  .dashboard-layout, body > div.flex.min-h-screen.w-full { flex-direction: column; min-width: 0; }
+  .dashboard-sidebar, .config-sidebar {
+    width: 100% !important; min-width: 0 !important; height: auto !important;
+    position: relative !important; top: auto !important;
+    padding: .75rem 1rem !important; border-right: 0 !important;
+    border-bottom: 1px solid rgba(148,163,184,.2);
+  }
+  .dashboard-sidebar > div:first-child, .config-sidebar > div:first-child { margin-bottom: .5rem !important; }
+  .dashboard-sidebar nav, .config-sidebar nav {
+    flex-direction: row !important; flex-wrap: nowrap !important;
+    gap: .35rem !important; overflow-x: auto; flex: initial !important;
+    scrollbar-width: thin; padding-bottom: .25rem;
+  }
+  .dashboard-sidebar nav a, .config-sidebar nav a {
+    flex-shrink: 0; white-space: nowrap; padding: .55rem .7rem !important;
+    font-size: .75rem !important;
+  }
+  .dashboard-sidebar nav a svg, .config-sidebar nav a svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+  .dashboard-sidebar ~ main, .config-sidebar ~ main,
+  .dashboard-layout > main, body > div.flex.min-h-screen.w-full > main {
+    width: 100% !important; min-width: 0 !important; max-width: 100% !important;
+    padding: 1rem !important; overflow-x: hidden;
+  }
+  main .grid { min-width: 0; }
+  main table { min-width: 0; }
+  .dashboard-table { display: block; max-width: 100%; overflow-x: auto; }
+}
+</style>
 </head>
 
 <body class="font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-slate-950">
