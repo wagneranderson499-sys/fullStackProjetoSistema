@@ -125,7 +125,7 @@ private String resendApiKey;
                 escapeJson(codigo),
                 emailjsPrivateKey == null || emailjsPrivateKey.isBlank()
                         ? ""
-                        : ",\\n                    \\"accessToken\\": " + escapeJson(emailjsPrivateKey)
+                        : ", \"accessToken\": " + escapeJson(emailjsPrivateKey)
         );
 
         try {
