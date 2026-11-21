@@ -49,11 +49,44 @@ function getStorageKey(tipo) {
     return `${tipo}_${usuarioId}`;
 }
 
+// Período selecionado: o mês atual é o limite máximo.
+let periodoSelecionado = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+function chaveMes(data) {
+    const d = new Date(data);
+    return Number.isNaN(d.getTime()) ? '' : `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+function periodoAtualChave() { return chaveMes(periodoSelecionado); }
+function moverMes(direcao) {
+    const destino = new Date(periodoSelecionado.getFullYear(), periodoSelecionado.getMonth() + direcao, 1);
+    const atual = new Date();
+    if (destino > new Date(atual.getFullYear(), atual.getMonth(), 1)) return;
+    periodoSelecionado = destino;
+    atualizarDashboard();
+}
+function exportarCSV() {
+    const linhas = obterLancamentosLocais().filter(item => chaveMes(item.data) === periodoAtualChave());
+    const escapar = valor => '\"' + String(valor ?? '').replace(/\"/g, '\"\"') + '\"';
+    const csv = '\\uFEFF' + [['Data', 'Descrição', 'Categoria', 'Valor (R$)'], ...linhas.map(item => [
+        new Date(item.data).toLocaleDateString('pt-BR'), item.descricao, item.categoria, Number(item.valor).toFixed(2).replace('.', ',')
+    ])].map(colunas => colunas.map(escapar).join(';')).join('\\r\\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `financecontrol-${periodoAtualChave()}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 // ==========================================
 // INICIALIZAÇÃO DA DASHBOARD
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     checarAutenticacao();
+    document.getElementById('mesAnterior')?.addEventListener('click', () => moverMes(-1));
+    document.getElementById('mesProximo')?.addEventListener('click', () => moverMes(1));
+    document.getElementById('btnExportarCSV')?.addEventListener('click', exportarCSV);
     carregarUsuario();
     
     // Inicializa Dropdown de Categorias dinâmicas
@@ -232,8 +265,17 @@ function deletarLancamento(id) {
 // ATUALIZAR INTERFACE E TABELA
 // ------------------------------------------
 function atualizarDashboard() {
-    const lancamentos = obterLancamentosLocais();
+    const todosLancamentos = obterLancamentosLocais();
+    const lancamentos = todosLancamentos.filter(item => chaveMes(item.data) === periodoAtualChave());
     const saldoInicial = obterSaldoInicialLocal();
+    const rotuloMes = document.getElementById('mesSelecionado');
+    if (rotuloMes) rotuloMes.textContent = periodoSelecionado.toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+    const proximo = document.getElementById('mesProximo');
+    if (proximo) {
+        const atual = new Date();
+        proximo.disabled = periodoSelecionado.getFullYear() === atual.getFullYear() && periodoSelecionado.getMonth() === atual.getMonth();
+        proximo.style.opacity = proximo.disabled ? '0.4' : '1';
+    }
 
     const inputSaldo = document.getElementById('inputSaldo');
     if (inputSaldo && document.activeElement !== inputSaldo) {
