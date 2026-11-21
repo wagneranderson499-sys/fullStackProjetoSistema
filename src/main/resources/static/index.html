@@ -774,6 +774,16 @@
         </header>
 
 
+        <!-- Histórico mensal e exportação -->
+        <section class="dashboard-card border rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3" aria-label="Período e exportação">
+            <div class="flex items-center gap-2 flex-wrap">
+                <button id="mesAnterior" type="button" class="dashboard-primary-button text-white px-3 py-2 rounded-lg" aria-label="Mês anterior">‹</button>
+                <span id="mesSelecionado" class="dashboard-sidebar-text font-semibold text-sm min-w-[125px] text-center" aria-live="polite"></span>
+                <button id="mesProximo" type="button" class="dashboard-primary-button text-white px-3 py-2 rounded-lg" aria-label="Próximo mês">›</button>
+            </div>
+            <button id="btnExportarCSV" type="button" class="dashboard-primary-button text-white font-semibold px-4 py-2 rounded-xl text-xs">Exportar CSV do mês</button>
+        </section>
+
         <!-- Cards de Saldo -->
 
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
